@@ -78,14 +78,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Aliados UAM" },
+      { name: "description", content: "Hola Assistant enables multilingual conversations, allowing users to interact in Spanish." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Aliados UAM" },
+      { property: "og:description", content: "Hola Assistant enables multilingual conversations, allowing users to interact in Spanish." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Aliados UAM" },
+      { name: "twitter:description", content: "Hola Assistant enables multilingual conversations, allowing users to interact in Spanish." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7fede1c4-60d2-4d5b-900b-e4d4d3c55286/id-preview-4e7db04b--0abe20d8-c287-4fd0-bc05-7209dad0f45b.lovable.app-1782395740123.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7fede1c4-60d2-4d5b-900b-e4d4d3c55286/id-preview-4e7db04b--0abe20d8-c287-4fd0-bc05-7209dad0f45b.lovable.app-1782395740123.png" },
     ],
     links: [
       {
