@@ -20,6 +20,7 @@ function isExpired(ally: Ally) {
 
 export function AllyCard({ ally }: { ally: Ally }) {
   const tl = TRAFFIC_META[ally.traffic_light];
+  const expired = isExpired(ally);
   return (
     <Link
       to="/aliados/$id"
