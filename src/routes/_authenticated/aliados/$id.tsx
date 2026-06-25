@@ -88,9 +88,21 @@ function AllyDetail() {
               <h1 className="text-2xl font-bold">{ally.name}</h1>
               <Badge variant="secondary">{STATUS_LABEL[ally.status]}</Badge>
               {isActive && ally.category && <Badge variant="outline">{CATEGORY_LABEL[ally.category]}</Badge>}
+              {expired && (
+                <Badge variant="outline" className="border-rose-300 text-rose-700 dark:border-rose-900 dark:text-rose-300 bg-rose-50 dark:bg-rose-950/40 gap-1">
+                  <AlertTriangle className="w-3.5 h-3.5" /> Contrato vencido
+                </Badge>
+              )}
             </div>
             {ally.sector && <p className="text-sm text-muted-foreground mt-1">{ally.sector}</p>}
             <p className={`text-xs mt-2 ${tl.text}`}>{TRAFFIC_HELP[ally.status][ally.traffic_light]}</p>
+
+            {expired && (
+              <div className="mt-3 flex items-center gap-2 rounded-md border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 px-3 py-2 text-sm">
+                <AlertTriangle className="w-4 h-4" />
+                <span>Contrato vencido el {ally.valid_until}. Renovar o actualizar la vigencia.</span>
+              </div>
+            )}
 
             <div className="grid sm:grid-cols-2 gap-2 text-sm mt-4">
               {ally.contact_name && <div className="flex items-center gap-2"><User2 className="w-4 h-4 text-muted-foreground" /> {ally.contact_name}</div>}
