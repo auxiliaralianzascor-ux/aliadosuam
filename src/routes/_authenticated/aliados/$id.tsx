@@ -45,6 +45,14 @@ function AllyDetail() {
 
   const tl = TRAFFIC_META[ally.traffic_light];
   const isActive = ally.status === "active";
+  const expired = (() => {
+    if (!isActive || !ally.valid_until) return false;
+    const d = new Date(ally.valid_until);
+    if (Number.isNaN(d.getTime())) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return d < today;
+  })();
 
   const promote = async () => {
     const next: AllyStatus = ally.status === "conversation" ? "pending" : "active";
