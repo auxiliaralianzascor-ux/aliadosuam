@@ -163,12 +163,28 @@ function FollowupsSection({ allyId, isActive }: { allyId: string; isActive: bool
         </TabsList>
         {areas.map((a) => (
           <TabsContent key={a} value={a} className="space-y-4 mt-4">
-            <NewActivityForm allyId={allyId} area={a} />
-            <ActivityList allyId={allyId} area={a} />
+            <AreaSection allyId={allyId} area={a} />
           </TabsContent>
         ))}
       </Tabs>
     </Card>
+  );
+}
+
+function AreaSection({ allyId, area }: { allyId: string; area: FollowupArea }) {
+  const { data: perms } = useMyPermissions();
+  const canEdit = canEditArea(perms, area);
+  return (
+    <>
+      {canEdit ? (
+        <NewActivityForm allyId={allyId} area={area} />
+      ) : (
+        <div className="rounded-lg border p-3 bg-muted/20 text-xs text-muted-foreground flex items-center gap-1.5">
+          <Lock className="w-3.5 h-3.5" /> Solo lectura · no tienes permisos para registrar en {AREA_LABEL[area]}.
+        </div>
+      )}
+      <ActivityList allyId={allyId} area={area} canEdit={canEdit} />
+    </>
   );
 }
 
@@ -226,7 +242,7 @@ function NewActivityForm({ allyId, area }: { allyId: string; area: FollowupArea 
   );
 }
 
-function ActivityList({ allyId, area }: { allyId: string; area: FollowupArea }) {
+function ActivityList({ allyId, area, canEdit }: { allyId: string; area: FollowupArea; canEdit: boolean }) {
   const { data: all = [], isLoading } = useActivities(allyId);
   const del = useDeleteActivity();
   const items = all.filter((a) => a.area === area);
@@ -248,14 +264,16 @@ function ActivityList({ allyId, area }: { allyId: string; area: FollowupArea }) 
               </div>
               <p className="text-sm mt-1 whitespace-pre-wrap">{it.description}</p>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-destructive"
-              onClick={() => del.mutate({ id: it.id, ally_id: allyId })}
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
+            {canEdit && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-destructive"
+                onClick={() => del.mutate({ id: it.id, ally_id: allyId })}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            )}
           </div>
         </li>
       ))}
