@@ -50,20 +50,19 @@ export function useSaveAlly() {
     mutationFn: async (input: Partial<Ally> & { id?: string }) => {
       const { data: userRes } = await supabase.auth.getUser();
       const user = userRes.user;
-      const payload: Record<string, unknown> = { ...input };
-      if (!input.id) payload.created_by = user?.id ?? null;
-      if (input.id) {
-        const { id, ...rest } = payload;
+      const { id, ...rest } = input;
+      if (id) {
         const { data, error } = await supabase
           .from("allies")
-          .update(rest)
-          .eq("id", id as string)
+          .update(rest as never)
+          .eq("id", id)
           .select()
           .single();
         if (error) throw error;
         return data;
       }
-      const { data, error } = await supabase.from("allies").insert(payload).select().single();
+      const insertPayload = { ...rest, created_by: user?.id ?? null } as never;
+      const { data, error } = await supabase.from("allies").insert(insertPayload).select().single();
       if (error) throw error;
       return data;
     },
@@ -109,7 +108,7 @@ export function useAddActivity() {
         responsible_id: user?.id ?? null,
         responsible_name: responsible_name || "Usuario",
       };
-      const { data, error } = await supabase.from("ally_activities").insert(payload).select().single();
+      const { data, error } = await supabase.from("ally_activities").insert(payload as never).select().single();
       if (error) throw error;
       return data;
     },
