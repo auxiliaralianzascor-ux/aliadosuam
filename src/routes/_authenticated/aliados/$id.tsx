@@ -14,7 +14,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Calendar, Edit2, Loader2, Lock, Mail, Phone, Plus, Trash2, User2, ArrowRightCircle } from "lucide-react";
+import { ArrowLeft, Calendar, Edit2, Loader2, Lock, Mail, Phone, Plus, Trash2, User2, ArrowRightCircle, AlertTriangle } from "lucide-react";
 import { AllyDialog } from "@/components/AllyDialog";
 import {
   AREA_LABEL, CATEGORY_LABEL, STATUS_LABEL, TRAFFIC_HELP, TRAFFIC_META,
