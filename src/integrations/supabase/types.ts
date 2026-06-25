@@ -136,6 +136,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_areas: {
+        Row: {
+          area: Database["public"]["Enums"]["followup_area"]
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          area: Database["public"]["Enums"]["followup_area"]
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          area?: Database["public"]["Enums"]["followup_area"]
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -162,6 +183,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_any_role: { Args: { _user_id: string }; Returns: boolean }
+      has_area: {
+        Args: {
+          _area: Database["public"]["Enums"]["followup_area"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
