@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useAlly, useActivities, useAddActivity, useDeleteAlly, useDeleteActivity, useSaveAlly } from "@/lib/allies-api";
+import { canEditArea, useMyPermissions } from "@/lib/permissions-api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +14,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Calendar, Edit2, Loader2, Mail, Phone, Plus, Trash2, User2, ArrowRightCircle } from "lucide-react";
+import { ArrowLeft, Calendar, Edit2, Loader2, Lock, Mail, Phone, Plus, Trash2, User2, ArrowRightCircle } from "lucide-react";
 import { AllyDialog } from "@/components/AllyDialog";
 import {
   AREA_LABEL, CATEGORY_LABEL, STATUS_LABEL, TRAFFIC_HELP, TRAFFIC_META,
@@ -32,6 +33,8 @@ function AllyDetail() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
   const { data: ally, isLoading } = useAlly(id);
+  const { data: perms } = useMyPermissions();
+  const isAdmin = !!perms?.isAdmin;
   const [editOpen, setEditOpen] = useState(false);
   const deleteAlly = useDeleteAlly();
   const saveAlly = useSaveAlly();
@@ -98,30 +101,38 @@ function AllyDetail() {
           </div>
 
           <div className="flex flex-col gap-2 shrink-0">
-            <Button variant="outline" onClick={() => setEditOpen(true)}><Edit2 className="w-4 h-4" /> Editar</Button>
-            {ally.status !== "active" && (
-              <Button variant="secondary" onClick={promote}>
-                <ArrowRightCircle className="w-4 h-4" />
-                Pasar a {ally.status === "conversation" ? "Pendiente" : "Activo"}
-              </Button>
+            {isAdmin ? (
+              <>
+                <Button variant="outline" onClick={() => setEditOpen(true)}><Edit2 className="w-4 h-4" /> Editar</Button>
+                {ally.status !== "active" && (
+                  <Button variant="secondary" onClick={promote}>
+                    <ArrowRightCircle className="w-4 h-4" />
+                    Pasar a {ally.status === "conversation" ? "Pendiente" : "Activo"}
+                  </Button>
+                )}
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /> Eliminar</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>¿Eliminar este aliado?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Se eliminarán también todos los seguimientos asociados. Esta acción no se puede deshacer.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDelete}>Eliminar</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </>
+            ) : (
+              <div className="text-xs text-muted-foreground flex items-center gap-1.5 rounded-md border px-3 py-2 bg-muted/40">
+                <Lock className="w-3.5 h-3.5" /> Solo administradores editan la ficha
+              </div>
             )}
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="ghost" className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /> Eliminar</Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>¿Eliminar este aliado?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Se eliminarán también todos los seguimientos asociados. Esta acción no se puede deshacer.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete}>Eliminar</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
           </div>
         </div>
       </Card>
@@ -152,12 +163,28 @@ function FollowupsSection({ allyId, isActive }: { allyId: string; isActive: bool
         </TabsList>
         {areas.map((a) => (
           <TabsContent key={a} value={a} className="space-y-4 mt-4">
-            <NewActivityForm allyId={allyId} area={a} />
-            <ActivityList allyId={allyId} area={a} />
+            <AreaSection allyId={allyId} area={a} />
           </TabsContent>
         ))}
       </Tabs>
     </Card>
+  );
+}
+
+function AreaSection({ allyId, area }: { allyId: string; area: FollowupArea }) {
+  const { data: perms } = useMyPermissions();
+  const canEdit = canEditArea(perms, area);
+  return (
+    <>
+      {canEdit ? (
+        <NewActivityForm allyId={allyId} area={area} />
+      ) : (
+        <div className="rounded-lg border p-3 bg-muted/20 text-xs text-muted-foreground flex items-center gap-1.5">
+          <Lock className="w-3.5 h-3.5" /> Solo lectura · no tienes permisos para registrar en {AREA_LABEL[area]}.
+        </div>
+      )}
+      <ActivityList allyId={allyId} area={area} canEdit={canEdit} />
+    </>
   );
 }
 
@@ -215,7 +242,7 @@ function NewActivityForm({ allyId, area }: { allyId: string; area: FollowupArea 
   );
 }
 
-function ActivityList({ allyId, area }: { allyId: string; area: FollowupArea }) {
+function ActivityList({ allyId, area, canEdit }: { allyId: string; area: FollowupArea; canEdit: boolean }) {
   const { data: all = [], isLoading } = useActivities(allyId);
   const del = useDeleteActivity();
   const items = all.filter((a) => a.area === area);
@@ -237,14 +264,16 @@ function ActivityList({ allyId, area }: { allyId: string; area: FollowupArea }) 
               </div>
               <p className="text-sm mt-1 whitespace-pre-wrap">{it.description}</p>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-destructive"
-              onClick={() => del.mutate({ id: it.id, ally_id: allyId })}
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
+            {canEdit && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-destructive"
+                onClick={() => del.mutate({ id: it.id, ally_id: allyId })}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            )}
           </div>
         </li>
       ))}
