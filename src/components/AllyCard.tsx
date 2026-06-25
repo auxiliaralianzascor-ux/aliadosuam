@@ -27,7 +27,12 @@ export function AllyCard({ ally }: { ally: Ally }) {
       params={{ id: ally.id }}
       className="block group"
     >
-      <Card className={`p-4 border-l-4 ${tl.border} hover:shadow-md transition-shadow h-full`}>
+      <Card className={`p-4 border-l-4 ${tl.border} hover:shadow-md transition-shadow h-full ${expired ? "ring-1 ring-rose-300 dark:ring-rose-900" : ""}`}>
+        {expired && (
+          <div className="mb-2 flex items-center gap-1.5 rounded-md bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 px-2 py-1 text-xs font-medium">
+            <AlertTriangle className="w-3.5 h-3.5" /> Contrato vencido
+          </div>
+        )}
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
