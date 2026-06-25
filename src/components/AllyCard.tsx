@@ -1,13 +1,22 @@
 import { Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, CalendarDays, Mail, Phone } from "lucide-react";
+import { Building2, CalendarDays, Mail, Phone, AlertTriangle } from "lucide-react";
 import {
   type Ally,
   CATEGORY_LABEL,
   STATUS_LABEL,
   TRAFFIC_META,
 } from "@/lib/allies-types";
+
+function isExpired(ally: Ally) {
+  if (ally.status !== "active" || !ally.valid_until) return false;
+  const d = new Date(ally.valid_until);
+  if (Number.isNaN(d.getTime())) return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return d < today;
+}
 
 export function AllyCard({ ally }: { ally: Ally }) {
   const tl = TRAFFIC_META[ally.traffic_light];
