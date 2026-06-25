@@ -5,10 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
-import { Plus, Search, Loader2, Handshake, Clock, MessageCircle } from "lucide-react";
+import { Plus, Search, Loader2, Handshake, Clock, MessageCircle, FileSpreadsheet } from "lucide-react";
 import { useAllies } from "@/lib/allies-api";
+import { useMyPermissions } from "@/lib/permissions-api";
 import { AllyDialog } from "@/components/AllyDialog";
 import { AllyCard } from "@/components/AllyCard";
+import { exportAlliesToDrive } from "@/lib/drive-export.functions";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 import {
   type AllyStatus,
   type AllyCategory,
@@ -25,7 +29,11 @@ export const Route = createFileRoute("/_authenticated/aliados/")({
 
 function AlliesPage() {
   const { data: allies = [], isLoading } = useAllies();
+  const { data: perms } = useMyPermissions();
+  const isAdmin = !!perms?.isAdmin;
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const exportFn = useServerFn(exportAlliesToDrive);
   const [defaultStatus, setDefaultStatus] = useState<AllyStatus>("active");
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<AllyStatus>("active");
@@ -81,9 +89,34 @@ function AlliesPage() {
           <h1 className="text-2xl font-bold">Aliados</h1>
           <p className="text-sm text-muted-foreground">Conversaciones, pendientes y aliados activos en un solo lugar.</p>
         </div>
-        <Button onClick={() => openNew(tab)}>
-          <Plus className="w-4 h-4" /> Nuevo aliado
-        </Button>
+        {isAdmin && (
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              disabled={exporting}
+              onClick={async () => {
+                setExporting(true);
+                try {
+                  const r = await exportFn();
+                  toast.success("Exportado a tu Google Drive", {
+                    description: r.webViewLink ? "Abrir archivo" : r.name,
+                    action: r.webViewLink ? { label: "Abrir", onClick: () => window.open(r.webViewLink!, "_blank") } : undefined,
+                  });
+                } catch (e: unknown) {
+                  toast.error(e instanceof Error ? e.message : "No se pudo exportar");
+                } finally {
+                  setExporting(false);
+                }
+              }}
+            >
+              {exporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileSpreadsheet className="w-4 h-4" />}
+              Exportar a Drive
+            </Button>
+            <Button onClick={() => openNew(tab)}>
+              <Plus className="w-4 h-4" /> Nuevo aliado
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-3 gap-3">
@@ -150,9 +183,11 @@ function AlliesPage() {
             ) : filtered.length === 0 ? (
               <Card className="p-10 text-center text-muted-foreground">
                 <p>No hay aliados en esta vista todavía.</p>
-                <Button variant="outline" className="mt-3" onClick={() => openNew(s)}>
-                  <Plus className="w-4 h-4" /> Agregar el primero
-                </Button>
+                {isAdmin && (
+                  <Button variant="outline" className="mt-3" onClick={() => openNew(s)}>
+                    <Plus className="w-4 h-4" /> Agregar el primero
+                  </Button>
+                )}
               </Card>
             ) : (
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">

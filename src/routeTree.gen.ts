@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
 import { Route as AuthenticatedAliadosIndexRouteImport } from './routes/_authenticated/aliados/index'
 import { Route as AuthenticatedAliadosIdRouteImport } from './routes/_authenticated/aliados/$id'
 
@@ -29,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAliadosIndexRoute =
   AuthenticatedAliadosIndexRouteImport.update({
     id: '/aliados/',
@@ -44,12 +50,14 @@ const AuthenticatedAliadosIdRoute = AuthenticatedAliadosIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/usuarios': typeof AuthenticatedUsuariosRoute
   '/aliados/$id': typeof AuthenticatedAliadosIdRoute
   '/aliados/': typeof AuthenticatedAliadosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/usuarios': typeof AuthenticatedUsuariosRoute
   '/aliados/$id': typeof AuthenticatedAliadosIdRoute
   '/aliados': typeof AuthenticatedAliadosIndexRoute
 }
@@ -58,19 +66,21 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/_authenticated/aliados/$id': typeof AuthenticatedAliadosIdRoute
   '/_authenticated/aliados/': typeof AuthenticatedAliadosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/aliados/$id' | '/aliados/'
+  fullPaths: '/' | '/auth' | '/usuarios' | '/aliados/$id' | '/aliados/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/aliados/$id' | '/aliados'
+  to: '/' | '/auth' | '/usuarios' | '/aliados/$id' | '/aliados'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/usuarios'
     | '/_authenticated/aliados/$id'
     | '/_authenticated/aliados/'
   fileRoutesById: FileRoutesById
@@ -104,6 +114,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/usuarios': {
+      id: '/_authenticated/usuarios'
+      path: '/usuarios'
+      fullPath: '/usuarios'
+      preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/aliados/': {
       id: '/_authenticated/aliados/'
       path: '/aliados'
@@ -122,11 +139,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedAliadosIdRoute: typeof AuthenticatedAliadosIdRoute
   AuthenticatedAliadosIndexRoute: typeof AuthenticatedAliadosIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedAliadosIdRoute: AuthenticatedAliadosIdRoute,
   AuthenticatedAliadosIndexRoute: AuthenticatedAliadosIndexRoute,
 }
