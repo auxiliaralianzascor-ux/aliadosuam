@@ -14,7 +14,128 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      allies: {
+        Row: {
+          category: Database["public"]["Enums"]["ally_category"] | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          notes: string | null
+          sector: string | null
+          status: Database["public"]["Enums"]["ally_status"]
+          traffic_light: Database["public"]["Enums"]["traffic_light"]
+          updated_at: string
+          valid_from: string | null
+          valid_until: string | null
+        }
+        Insert: {
+          category?: Database["public"]["Enums"]["ally_category"] | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          sector?: string | null
+          status?: Database["public"]["Enums"]["ally_status"]
+          traffic_light?: Database["public"]["Enums"]["traffic_light"]
+          updated_at?: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["ally_category"] | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          sector?: string | null
+          status?: Database["public"]["Enums"]["ally_status"]
+          traffic_light?: Database["public"]["Enums"]["traffic_light"]
+          updated_at?: string
+          valid_from?: string | null
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
+      ally_activities: {
+        Row: {
+          activity_date: string
+          activity_type: string
+          ally_id: string
+          area: Database["public"]["Enums"]["followup_area"]
+          created_at: string
+          description: string
+          id: string
+          responsible_id: string | null
+          responsible_name: string
+        }
+        Insert: {
+          activity_date?: string
+          activity_type?: string
+          ally_id: string
+          area?: Database["public"]["Enums"]["followup_area"]
+          created_at?: string
+          description: string
+          id?: string
+          responsible_id?: string | null
+          responsible_name: string
+        }
+        Update: {
+          activity_date?: string
+          activity_type?: string
+          ally_id?: string
+          area?: Database["public"]["Enums"]["followup_area"]
+          created_at?: string
+          description?: string
+          id?: string
+          responsible_id?: string | null
+          responsible_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ally_activities_ally_id_fkey"
+            columns: ["ally_id"]
+            isOneToOne: false
+            referencedRelation: "allies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string
+          email: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name: string
+          email?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          email?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +144,15 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      ally_category: "latente" | "emergente" | "estrategico" | "activo"
+      ally_status: "conversation" | "pending" | "active"
+      followup_area:
+        | "direccion"
+        | "econti"
+        | "mercadeo"
+        | "graduados"
+        | "general"
+      traffic_light: "green" | "yellow" | "red"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +279,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      ally_category: ["latente", "emergente", "estrategico", "activo"],
+      ally_status: ["conversation", "pending", "active"],
+      followup_area: [
+        "direccion",
+        "econti",
+        "mercadeo",
+        "graduados",
+        "general",
+      ],
+      traffic_light: ["green", "yellow", "red"],
+    },
   },
 } as const
