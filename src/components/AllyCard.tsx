@@ -7,6 +7,7 @@ import {
   CATEGORY_LABEL,
   STATUS_LABEL,
   TRAFFIC_META,
+  getAllyContacts,
 } from "@/lib/allies-types";
 
 function isExpired(ally: Ally) {
