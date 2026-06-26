@@ -5,18 +5,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Trash2 } from "lucide-react";
 import { useSaveAlly } from "@/lib/allies-api";
 import {
   type Ally,
   type AllyCategory,
+  type AllyContact,
   type AllyStatus,
   type TrafficLight,
   STATUS_LABEL,
   CATEGORY_LABEL,
   TRAFFIC_META,
   TRAFFIC_HELP,
+  getAllyContacts,
 } from "@/lib/allies-types";
 import { toast } from "sonner";
+
+const emptyContact = (): AllyContact => ({ name: "", position: "", email: "", phone: "" });
 
 interface Props {
   open: boolean;
