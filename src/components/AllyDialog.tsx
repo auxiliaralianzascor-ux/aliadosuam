@@ -153,19 +153,45 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
               </Select>
               <p className="text-xs text-muted-foreground mt-1">{TRAFFIC_HELP[form.status][form.traffic_light]}</p>
             </div>
-            <div>
-              <Label>Contacto</Label>
-              <Input value={form.contact_name} onChange={(e) => setForm({ ...form, contact_name: e.target.value })} />
+            <div className="sm:col-span-2 space-y-3">
+              <div className="flex items-center justify-between">
+                <Label>Contactos</Label>
+                <Button type="button" variant="outline" size="sm" onClick={addContact}>
+                  <Plus className="w-3.5 h-3.5" /> Añadir contacto
+                </Button>
+              </div>
+              {form.contacts.map((c, idx) => (
+                <div key={idx} className="rounded-md border p-3 bg-muted/20 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-muted-foreground">Contacto {idx + 1}</span>
+                    {form.contacts.length > 1 && (
+                      <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeContact(idx)}>
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    )}
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-2">
+                    <div>
+                      <Label className="text-xs">Nombre</Label>
+                      <Input value={c.name} onChange={(e) => updateContact(idx, { name: e.target.value })} />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Cargo</Label>
+                      <Input value={c.position} onChange={(e) => updateContact(idx, { position: e.target.value })} placeholder="Ej. Gerente de RRHH" />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Correo</Label>
+                      <Input type="email" value={c.email} onChange={(e) => updateContact(idx, { email: e.target.value })} />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Teléfono</Label>
+                      <Input value={c.phone} onChange={(e) => updateContact(idx, { phone: e.target.value })} />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div>
-              <Label>Correo de contacto</Label>
-              <Input type="email" value={form.contact_email} onChange={(e) => setForm({ ...form, contact_email: e.target.value })} />
-            </div>
-            <div>
-              <Label>Teléfono</Label>
-              <Input value={form.contact_phone} onChange={(e) => setForm({ ...form, contact_phone: e.target.value })} />
-            </div>
-            <div />
+
             <div>
               <Label>Vigencia desde</Label>
               <Input type="date" value={form.valid_from} onChange={(e) => setForm({ ...form, valid_from: e.target.value })} />
