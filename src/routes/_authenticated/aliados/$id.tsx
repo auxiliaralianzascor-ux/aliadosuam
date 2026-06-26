@@ -105,16 +105,37 @@ function AllyDetail() {
               </div>
             )}
 
-            <div className="grid sm:grid-cols-2 gap-2 text-sm mt-4">
-              {ally.contact_name && <div className="flex items-center gap-2"><User2 className="w-4 h-4 text-muted-foreground" /> {ally.contact_name}</div>}
-              {ally.contact_email && <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-muted-foreground" /> {ally.contact_email}</div>}
-              {ally.contact_phone && <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-muted-foreground" /> {ally.contact_phone}</div>}
-              {(ally.valid_from || ally.valid_until) && (
-                <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-muted-foreground" />
-                  Vigencia: {ally.valid_from ?? "—"} → {ally.valid_until ?? "—"}
+            {(() => {
+              const contacts = getAllyContacts(ally);
+              if (contacts.length === 0) return null;
+              return (
+                <div className="mt-4 space-y-3">
+                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Contactos</div>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {contacts.map((c, i) => (
+                      <div key={i} className="rounded-md border p-3 bg-muted/20 space-y-1 text-sm">
+                        {c.name && (
+                          <div className="flex items-center gap-2 font-medium">
+                            <User2 className="w-4 h-4 text-muted-foreground" /> {c.name}
+                          </div>
+                        )}
+                        {c.position && <div className="text-xs text-muted-foreground pl-6">{c.position}</div>}
+                        {c.email && <div className="flex items-center gap-2 text-xs"><Mail className="w-3.5 h-3.5 text-muted-foreground" /> {c.email}</div>}
+                        {c.phone && <div className="flex items-center gap-2 text-xs"><Phone className="w-3.5 h-3.5 text-muted-foreground" /> {c.phone}</div>}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              )}
-            </div>
+              );
+            })()}
+
+            {(ally.valid_from || ally.valid_until) && (
+              <div className="mt-3 flex items-center gap-2 text-sm">
+                <Calendar className="w-4 h-4 text-muted-foreground" />
+                Vigencia: {ally.valid_from ?? "—"} → {ally.valid_until ?? "—"}
+              </div>
+            )}
+
 
             {ally.notes && (
               <div className="mt-4 rounded-md bg-muted/40 p-3 text-sm whitespace-pre-wrap">{ally.notes}</div>
