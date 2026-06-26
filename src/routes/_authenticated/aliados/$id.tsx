@@ -18,6 +18,7 @@ import { ArrowLeft, Calendar, Edit2, Loader2, Lock, Mail, Phone, Plus, Trash2, U
 import { AllyDialog } from "@/components/AllyDialog";
 import {
   AREA_LABEL, CATEGORY_LABEL, STATUS_LABEL, TRAFFIC_HELP, TRAFFIC_META,
+  getAllyContacts,
   type FollowupArea, type AllyStatus,
 } from "@/lib/allies-types";
 import { toast } from "sonner";
