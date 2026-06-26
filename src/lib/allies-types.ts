@@ -3,6 +3,13 @@ export type AllyCategory = "latente" | "emergente" | "estrategico" | "activo";
 export type TrafficLight = "green" | "yellow" | "red";
 export type FollowupArea = "direccion" | "econti" | "mercadeo" | "graduados" | "general";
 
+export interface AllyContact {
+  name: string;
+  position: string;
+  email: string;
+  phone: string;
+}
+
 export interface Ally {
   id: string;
   name: string;
@@ -13,12 +20,27 @@ export interface Ally {
   contact_name: string | null;
   contact_email: string | null;
   contact_phone: string | null;
+  contacts: AllyContact[] | null;
   notes: string | null;
   valid_from: string | null;
   valid_until: string | null;
   created_by: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export function getAllyContacts(ally: Pick<Ally, "contacts" | "contact_name" | "contact_email" | "contact_phone">): AllyContact[] {
+  const list = Array.isArray(ally.contacts) ? ally.contacts : [];
+  if (list.length > 0) return list;
+  if (ally.contact_name || ally.contact_email || ally.contact_phone) {
+    return [{
+      name: ally.contact_name ?? "",
+      position: "",
+      email: ally.contact_email ?? "",
+      phone: ally.contact_phone ?? "",
+    }];
+  }
+  return [];
 }
 
 export interface AllyActivity {
