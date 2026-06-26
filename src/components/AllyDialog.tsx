@@ -5,18 +5,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus, Trash2 } from "lucide-react";
 import { useSaveAlly } from "@/lib/allies-api";
 import {
   type Ally,
   type AllyCategory,
+  type AllyContact,
   type AllyStatus,
   type TrafficLight,
   STATUS_LABEL,
   CATEGORY_LABEL,
   TRAFFIC_META,
   TRAFFIC_HELP,
+  getAllyContacts,
 } from "@/lib/allies-types";
 import { toast } from "sonner";
+
+const emptyContact = (): AllyContact => ({ name: "", position: "", email: "", phone: "" });
 
 interface Props {
   open: boolean;
@@ -27,23 +32,47 @@ interface Props {
 
 export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
   const save = useSaveAlly();
-  const [form, setForm] = useState(() => ({
-    name: ally?.name ?? "",
-    sector: ally?.sector ?? "",
-    status: (ally?.status ?? defaultStatus ?? "conversation") as AllyStatus,
-    category: (ally?.category ?? "activo") as AllyCategory,
-    traffic_light: (ally?.traffic_light ?? "yellow") as TrafficLight,
-    contact_name: ally?.contact_name ?? "",
-    contact_email: ally?.contact_email ?? "",
-    contact_phone: ally?.contact_phone ?? "",
-    valid_from: ally?.valid_from ?? "",
-    valid_until: ally?.valid_until ?? "",
-    notes: ally?.notes ?? "",
-  }));
+  const [form, setForm] = useState(() => {
+    const initialContacts = ally ? getAllyContacts(ally) : [];
+    return {
+      name: ally?.name ?? "",
+      sector: ally?.sector ?? "",
+      status: (ally?.status ?? defaultStatus ?? "conversation") as AllyStatus,
+      category: (ally?.category ?? "activo") as AllyCategory,
+      traffic_light: (ally?.traffic_light ?? "yellow") as TrafficLight,
+      contacts: initialContacts.length > 0 ? initialContacts : [emptyContact()],
+      valid_from: ally?.valid_from ?? "",
+      valid_until: ally?.valid_until ?? "",
+      notes: ally?.notes ?? "",
+    };
+  });
+
+  const updateContact = (idx: number, patch: Partial<AllyContact>) => {
+    setForm((f) => ({
+      ...f,
+      contacts: f.contacts.map((c, i) => (i === idx ? { ...c, ...patch } : c)),
+    }));
+  };
+  const addContact = () =>
+    setForm((f) => ({ ...f, contacts: [...f.contacts, emptyContact()] }));
+  const removeContact = (idx: number) =>
+    setForm((f) => ({
+      ...f,
+      contacts: f.contacts.length > 1 ? f.contacts.filter((_, i) => i !== idx) : f.contacts,
+    }));
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim()) return toast.error("El nombre es obligatorio");
+    const cleanContacts = form.contacts
+      .map((c) => ({
+        name: c.name.trim(),
+        position: c.position.trim(),
+        email: c.email.trim(),
+        phone: c.phone.trim(),
+      }))
+      .filter((c) => c.name || c.position || c.email || c.phone);
+    const primary = cleanContacts[0];
     try {
       await save.mutateAsync({
         id: ally?.id,
@@ -52,9 +81,10 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
         status: form.status,
         category: form.status === "active" ? form.category : null,
         traffic_light: form.traffic_light,
-        contact_name: form.contact_name || null,
-        contact_email: form.contact_email || null,
-        contact_phone: form.contact_phone || null,
+        contact_name: primary?.name || null,
+        contact_email: primary?.email || null,
+        contact_phone: primary?.phone || null,
+        contacts: cleanContacts,
         valid_from: form.valid_from || null,
         valid_until: form.valid_until || null,
         notes: form.notes || null,
@@ -123,19 +153,45 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
               </Select>
               <p className="text-xs text-muted-foreground mt-1">{TRAFFIC_HELP[form.status][form.traffic_light]}</p>
             </div>
-            <div>
-              <Label>Contacto</Label>
-              <Input value={form.contact_name} onChange={(e) => setForm({ ...form, contact_name: e.target.value })} />
+            <div className="sm:col-span-2 space-y-3">
+              <div className="flex items-center justify-between">
+                <Label>Contactos</Label>
+                <Button type="button" variant="outline" size="sm" onClick={addContact}>
+                  <Plus className="w-3.5 h-3.5" /> Añadir contacto
+                </Button>
+              </div>
+              {form.contacts.map((c, idx) => (
+                <div key={idx} className="rounded-md border p-3 bg-muted/20 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-muted-foreground">Contacto {idx + 1}</span>
+                    {form.contacts.length > 1 && (
+                      <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => removeContact(idx)}>
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    )}
+                  </div>
+                  <div className="grid sm:grid-cols-2 gap-2">
+                    <div>
+                      <Label className="text-xs">Nombre</Label>
+                      <Input value={c.name} onChange={(e) => updateContact(idx, { name: e.target.value })} />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Cargo</Label>
+                      <Input value={c.position} onChange={(e) => updateContact(idx, { position: e.target.value })} placeholder="Ej. Gerente de RRHH" />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Correo</Label>
+                      <Input type="email" value={c.email} onChange={(e) => updateContact(idx, { email: e.target.value })} />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Teléfono</Label>
+                      <Input value={c.phone} onChange={(e) => updateContact(idx, { phone: e.target.value })} />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-            <div>
-              <Label>Correo de contacto</Label>
-              <Input type="email" value={form.contact_email} onChange={(e) => setForm({ ...form, contact_email: e.target.value })} />
-            </div>
-            <div>
-              <Label>Teléfono</Label>
-              <Input value={form.contact_phone} onChange={(e) => setForm({ ...form, contact_phone: e.target.value })} />
-            </div>
-            <div />
+
             <div>
               <Label>Vigencia desde</Label>
               <Input type="date" value={form.valid_from} onChange={(e) => setForm({ ...form, valid_from: e.target.value })} />

@@ -7,6 +7,7 @@ import {
   CATEGORY_LABEL,
   STATUS_LABEL,
   TRAFFIC_META,
+  getAllyContacts,
 } from "@/lib/allies-types";
 
 function isExpired(ally: Ally) {
@@ -57,23 +58,41 @@ export function AllyCard({ ally }: { ally: Ally }) {
         </div>
 
         <div className="mt-3 space-y-1 text-xs text-muted-foreground">
-          {ally.contact_name && <div className="truncate">👤 {ally.contact_name}</div>}
-          {ally.contact_email && (
-            <div className="flex items-center gap-1.5 truncate">
-              <Mail className="w-3 h-3" /> {ally.contact_email}
-            </div>
-          )}
-          {ally.contact_phone && (
-            <div className="flex items-center gap-1.5">
-              <Phone className="w-3 h-3" /> {ally.contact_phone}
-            </div>
-          )}
+          {(() => {
+            const contacts = getAllyContacts(ally);
+            const primary = contacts[0];
+            const extra = contacts.length - 1;
+            if (!primary) return null;
+            return (
+              <>
+                {primary.name && (
+                  <div className="truncate">
+                    👤 {primary.name}{primary.position ? ` · ${primary.position}` : ""}
+                  </div>
+                )}
+                {primary.email && (
+                  <div className="flex items-center gap-1.5 truncate">
+                    <Mail className="w-3 h-3" /> {primary.email}
+                  </div>
+                )}
+                {primary.phone && (
+                  <div className="flex items-center gap-1.5">
+                    <Phone className="w-3 h-3" /> {primary.phone}
+                  </div>
+                )}
+                {extra > 0 && (
+                  <div className="text-[11px] italic">+{extra} contacto{extra > 1 ? "s" : ""} más</div>
+                )}
+              </>
+            );
+          })()}
           {ally.valid_until && (
             <div className="flex items-center gap-1.5">
               <CalendarDays className="w-3 h-3" /> Vigencia hasta {ally.valid_until}
             </div>
           )}
         </div>
+
       </Card>
     </Link>
   );
