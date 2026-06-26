@@ -32,23 +32,47 @@ interface Props {
 
 export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
   const save = useSaveAlly();
-  const [form, setForm] = useState(() => ({
-    name: ally?.name ?? "",
-    sector: ally?.sector ?? "",
-    status: (ally?.status ?? defaultStatus ?? "conversation") as AllyStatus,
-    category: (ally?.category ?? "activo") as AllyCategory,
-    traffic_light: (ally?.traffic_light ?? "yellow") as TrafficLight,
-    contact_name: ally?.contact_name ?? "",
-    contact_email: ally?.contact_email ?? "",
-    contact_phone: ally?.contact_phone ?? "",
-    valid_from: ally?.valid_from ?? "",
-    valid_until: ally?.valid_until ?? "",
-    notes: ally?.notes ?? "",
-  }));
+  const [form, setForm] = useState(() => {
+    const initialContacts = ally ? getAllyContacts(ally) : [];
+    return {
+      name: ally?.name ?? "",
+      sector: ally?.sector ?? "",
+      status: (ally?.status ?? defaultStatus ?? "conversation") as AllyStatus,
+      category: (ally?.category ?? "activo") as AllyCategory,
+      traffic_light: (ally?.traffic_light ?? "yellow") as TrafficLight,
+      contacts: initialContacts.length > 0 ? initialContacts : [emptyContact()],
+      valid_from: ally?.valid_from ?? "",
+      valid_until: ally?.valid_until ?? "",
+      notes: ally?.notes ?? "",
+    };
+  });
+
+  const updateContact = (idx: number, patch: Partial<AllyContact>) => {
+    setForm((f) => ({
+      ...f,
+      contacts: f.contacts.map((c, i) => (i === idx ? { ...c, ...patch } : c)),
+    }));
+  };
+  const addContact = () =>
+    setForm((f) => ({ ...f, contacts: [...f.contacts, emptyContact()] }));
+  const removeContact = (idx: number) =>
+    setForm((f) => ({
+      ...f,
+      contacts: f.contacts.length > 1 ? f.contacts.filter((_, i) => i !== idx) : f.contacts,
+    }));
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim()) return toast.error("El nombre es obligatorio");
+    const cleanContacts = form.contacts
+      .map((c) => ({
+        name: c.name.trim(),
+        position: c.position.trim(),
+        email: c.email.trim(),
+        phone: c.phone.trim(),
+      }))
+      .filter((c) => c.name || c.position || c.email || c.phone);
+    const primary = cleanContacts[0];
     try {
       await save.mutateAsync({
         id: ally?.id,
@@ -57,9 +81,10 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
         status: form.status,
         category: form.status === "active" ? form.category : null,
         traffic_light: form.traffic_light,
-        contact_name: form.contact_name || null,
-        contact_email: form.contact_email || null,
-        contact_phone: form.contact_phone || null,
+        contact_name: primary?.name || null,
+        contact_email: primary?.email || null,
+        contact_phone: primary?.phone || null,
+        contacts: cleanContacts,
         valid_from: form.valid_from || null,
         valid_until: form.valid_until || null,
         notes: form.notes || null,
