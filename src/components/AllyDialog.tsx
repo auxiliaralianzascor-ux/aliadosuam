@@ -32,7 +32,7 @@ interface Props {
 
 export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
   const save = useSaveAlly();
-  const [form, setForm] = useState(() => {
+  const buildInitial = () => {
     const initialContacts = ally ? getAllyContacts(ally) : [];
     return {
       name: ally?.name ?? "",
@@ -45,7 +45,13 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
       valid_until: ally?.valid_until ?? "",
       notes: ally?.notes ?? "",
     };
-  });
+  };
+  const [form, setForm] = useState(buildInitial);
+
+  useEffect(() => {
+    if (open) setForm(buildInitial());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, ally?.id, defaultStatus]);
 
   const updateContact = (idx: number, patch: Partial<AllyContact>) => {
     setForm((f) => ({
