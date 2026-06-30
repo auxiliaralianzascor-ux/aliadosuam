@@ -12,7 +12,7 @@ export const Route = createFileRoute("/_authenticated/usuarios")({
   component: UsersPage,
 });
 
-const AREAS: FollowupArea[] = ["direccion", "econti", "mercadeo", "graduados", "general"];
+const AREAS: FollowupArea[] = ["direccion", "econti", "mercadeo", "graduados", "proyectos", "general"];
 
 function UsersPage() {
   const { data: perms, isLoading: permsLoading } = useMyPermissions();

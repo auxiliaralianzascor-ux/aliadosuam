@@ -21,6 +21,7 @@ const AREA_LABEL: Record<string, string> = {
   econti: "Econti",
   mercadeo: "Mercadeo",
   graduados: "Graduados",
+  proyectos: "Proyectos",
   general: "General",
 };
 
