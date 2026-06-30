@@ -1,7 +1,7 @@
 export type AllyStatus = "conversation" | "pending" | "active";
 export type AllyCategory = "latente" | "emergente" | "estrategico" | "activo";
 export type TrafficLight = "green" | "yellow" | "red";
-export type FollowupArea = "direccion" | "econti" | "mercadeo" | "graduados" | "general";
+export type FollowupArea = "direccion" | "econti" | "mercadeo" | "graduados" | "proyectos" | "general";
 
 export interface AllyContact {
   name: string;
