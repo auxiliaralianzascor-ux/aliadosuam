@@ -69,7 +69,9 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim()) return toast.error("El nombre es obligatorio");
+    if (save.isPending) return;
+    const name = form.name.trim();
+    if (!name) return toast.error("El nombre es obligatorio");
     const cleanContacts = form.contacts
       .map((c) => ({
         name: c.name.trim(),
@@ -80,6 +82,15 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
       .filter((c) => c.name || c.position || c.email || c.phone);
     const primary = cleanContacts[0];
     try {
+      // Duplicate name check (case-insensitive)
+      const { supabase } = await import("@/integrations/supabase/client");
+      let dupQuery = supabase.from("allies").select("id,name").ilike("name", name);
+      if (ally?.id) dupQuery = dupQuery.neq("id", ally.id);
+      const { data: dupes, error: dupErr } = await dupQuery;
+      if (dupErr) throw dupErr;
+      if (dupes && dupes.length > 0) {
+        return toast.error("Ya existe un aliado con este nombre");
+      }
       await save.mutateAsync({
         id: ally?.id,
         name: form.name.trim(),
