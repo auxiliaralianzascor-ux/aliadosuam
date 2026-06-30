@@ -1,0 +1,1 @@
+ALTER TYPE public.followup_area ADD VALUE IF NOT EXISTS 'proyectos';

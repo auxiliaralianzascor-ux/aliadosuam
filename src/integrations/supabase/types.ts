@@ -212,6 +212,7 @@ export type Database = {
         | "mercadeo"
         | "graduados"
         | "general"
+        | "proyectos"
       traffic_light: "green" | "yellow" | "red"
     }
     CompositeTypes: {
@@ -349,6 +350,7 @@ export const Constants = {
         "mercadeo",
         "graduados",
         "general",
+        "proyectos",
       ],
       traffic_light: ["green", "yellow", "red"],
     },
