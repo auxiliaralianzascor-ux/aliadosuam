@@ -30,12 +30,14 @@ export const exportAlliesToDrive = createServerFn({ method: "POST" })
     const { supabase, userId } = context;
 
     // Admin only
-    const { data: isAdmin, error: roleErr } = await supabase.rpc("has_role", {
-      _user_id: userId,
-      _role: "admin",
-    });
+    const { data: roleRow, error: roleErr } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("role", "admin")
+      .maybeSingle();
     if (roleErr) throw new Error(roleErr.message);
-    if (!isAdmin) throw new Error("Solo administradores pueden exportar.");
+    if (!roleRow) throw new Error("Solo administradores pueden exportar.");
 
     const [{ data: allies, error: ae }, { data: activities, error: aae }] = await Promise.all([
       supabase.from("allies").select("*").order("name"),
