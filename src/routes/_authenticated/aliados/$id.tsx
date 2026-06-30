@@ -188,7 +188,7 @@ function AllyDetail() {
 
 function FollowupsSection({ allyId, isActive }: { allyId: string; isActive: boolean }) {
   const areas: FollowupArea[] = isActive
-    ? ["direccion", "econti", "mercadeo", "graduados"]
+    ? ["direccion", "econti", "mercadeo", "graduados", "proyectos"]
     : ["general"];
   const [tab, setTab] = useState<FollowupArea>(areas[0]);
 

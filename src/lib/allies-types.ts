@@ -73,6 +73,7 @@ export const AREA_LABEL: Record<FollowupArea, string> = {
   econti: "Econti",
   mercadeo: "Mercadeo",
   graduados: "Graduados",
+  proyectos: "Proyectos",
   general: "General",
 };
 
