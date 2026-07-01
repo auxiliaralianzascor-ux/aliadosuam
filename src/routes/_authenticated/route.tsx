@@ -47,6 +47,13 @@ function AuthedLayout() {
             >
               <Handshake className="w-4 h-4" /> <span className="hidden sm:inline">Aliados</span>
             </Link>
+            <Link
+              to="/descuentos"
+              activeProps={{ className: "bg-muted text-foreground" }}
+              className="px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted/60 inline-flex items-center gap-1.5"
+            >
+              <Percent className="w-4 h-4" /> <span className="hidden sm:inline">Descuentos</span>
+            </Link>
             {perms?.isAdmin && (
               <Link
                 to="/usuarios"
