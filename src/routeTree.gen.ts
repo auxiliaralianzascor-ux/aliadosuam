@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
+import { Route as AuthenticatedDescuentosRouteImport } from './routes/_authenticated/descuentos'
 import { Route as AuthenticatedAliadosIndexRouteImport } from './routes/_authenticated/aliados/index'
 import { Route as AuthenticatedAliadosIdRouteImport } from './routes/_authenticated/aliados/$id'
 
@@ -35,6 +36,11 @@ const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
   path: '/usuarios',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDescuentosRoute = AuthenticatedDescuentosRouteImport.update({
+  id: '/descuentos',
+  path: '/descuentos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAliadosIndexRoute =
   AuthenticatedAliadosIndexRouteImport.update({
     id: '/aliados/',
@@ -50,6 +56,7 @@ const AuthenticatedAliadosIdRoute = AuthenticatedAliadosIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/descuentos': typeof AuthenticatedDescuentosRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/aliados/$id': typeof AuthenticatedAliadosIdRoute
   '/aliados/': typeof AuthenticatedAliadosIndexRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/descuentos': typeof AuthenticatedDescuentosRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/aliados/$id': typeof AuthenticatedAliadosIdRoute
   '/aliados': typeof AuthenticatedAliadosIndexRoute
@@ -66,20 +74,28 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/descuentos': typeof AuthenticatedDescuentosRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/_authenticated/aliados/$id': typeof AuthenticatedAliadosIdRoute
   '/_authenticated/aliados/': typeof AuthenticatedAliadosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/usuarios' | '/aliados/$id' | '/aliados/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/descuentos'
+    | '/usuarios'
+    | '/aliados/$id'
+    | '/aliados/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/usuarios' | '/aliados/$id' | '/aliados'
+  to: '/' | '/auth' | '/descuentos' | '/usuarios' | '/aliados/$id' | '/aliados'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/descuentos'
     | '/_authenticated/usuarios'
     | '/_authenticated/aliados/$id'
     | '/_authenticated/aliados/'
@@ -121,6 +137,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/descuentos': {
+      id: '/_authenticated/descuentos'
+      path: '/descuentos'
+      fullPath: '/descuentos'
+      preLoaderRoute: typeof AuthenticatedDescuentosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/aliados/': {
       id: '/_authenticated/aliados/'
       path: '/aliados'
@@ -139,12 +162,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDescuentosRoute: typeof AuthenticatedDescuentosRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedAliadosIdRoute: typeof AuthenticatedAliadosIdRoute
   AuthenticatedAliadosIndexRoute: typeof AuthenticatedAliadosIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDescuentosRoute: AuthenticatedDescuentosRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedAliadosIdRoute: AuthenticatedAliadosIdRoute,
   AuthenticatedAliadosIndexRoute: AuthenticatedAliadosIndexRoute,
