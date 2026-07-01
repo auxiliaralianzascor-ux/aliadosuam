@@ -115,6 +115,47 @@ export type Database = {
           },
         ]
       }
+      ally_discounts: {
+        Row: {
+          ally_id: string
+          created_at: string
+          econti: string | null
+          id: string
+          ingles: string | null
+          posgrado: string | null
+          pregrado: string | null
+          updated_at: string
+        }
+        Insert: {
+          ally_id: string
+          created_at?: string
+          econti?: string | null
+          id?: string
+          ingles?: string | null
+          posgrado?: string | null
+          pregrado?: string | null
+          updated_at?: string
+        }
+        Update: {
+          ally_id?: string
+          created_at?: string
+          econti?: string | null
+          id?: string
+          ingles?: string | null
+          posgrado?: string | null
+          pregrado?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ally_discounts_ally_id_fkey"
+            columns: ["ally_id"]
+            isOneToOne: true
+            referencedRelation: "allies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
