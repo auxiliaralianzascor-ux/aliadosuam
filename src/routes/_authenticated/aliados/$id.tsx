@@ -39,8 +39,10 @@ function AllyDetail() {
   const { data: perms } = useMyPermissions();
   const isAdmin = !!perms?.isAdmin;
   const [editOpen, setEditOpen] = useState(false);
+  const [discountOpen, setDiscountOpen] = useState(false);
   const deleteAlly = useDeleteAlly();
   const saveAlly = useSaveAlly();
+  const { data: discount } = useAllyDiscount(id);
 
   if (isLoading || !ally) {
     return <div className="grid place-items-center py-20 text-muted-foreground"><Loader2 className="w-6 h-6 animate-spin" /></div>;
@@ -62,6 +64,12 @@ function AllyDetail() {
     try {
       await saveAlly.mutateAsync({ id: ally.id, status: next, category: next === "active" ? (ally.category ?? "activo") : null });
       toast.success(`Movido a ${STATUS_LABEL[next]}`);
+      if (next === "active" && isAdmin) {
+        const hasDiscounts = discount && (discount.pregrado || discount.posgrado || discount.ingles || discount.econti);
+        if (!hasDiscounts && window.confirm("¿Este aliado lleva descuentos? Puedes registrarlos ahora o más tarde desde su ficha.")) {
+          setDiscountOpen(true);
+        }
+      }
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Error");
     }
