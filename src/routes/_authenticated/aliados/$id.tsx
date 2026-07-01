@@ -189,9 +189,39 @@ function AllyDetail() {
         </div>
       </Card>
 
+      {isActive && (
+        <Card className="p-5">
+          <div className="flex items-center justify-between mb-3 gap-2">
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <Percent className="w-5 h-5" /> Descuentos
+            </h2>
+            {isAdmin && (
+              <Button variant="outline" size="sm" onClick={() => setDiscountOpen(true)}>
+                <Edit2 className="w-4 h-4" /> {discount ? "Editar descuentos" : "Agregar descuentos"}
+              </Button>
+            )}
+          </div>
+          {!discount || !(discount.pregrado || discount.posgrado || discount.ingles || discount.econti) ? (
+            <div className="text-sm text-muted-foreground">Sin descuentos registrados.</div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {DISCOUNT_CATEGORIES.map((c) =>
+                discount[c.key] ? (
+                  <div key={c.key} className="rounded-md border p-3 bg-muted/20">
+                    <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">{c.label}</div>
+                    <div className="text-sm whitespace-pre-wrap">{discount[c.key]}</div>
+                  </div>
+                ) : null,
+              )}
+            </div>
+          )}
+        </Card>
+      )}
+
       <FollowupsSection allyId={ally.id} isActive={isActive} />
 
       <AllyDialog open={editOpen} onOpenChange={setEditOpen} ally={ally} />
+      <DiscountDialog open={discountOpen} onOpenChange={setDiscountOpen} allyId={ally.id} allyName={ally.name} />
     </div>
   );
 }
