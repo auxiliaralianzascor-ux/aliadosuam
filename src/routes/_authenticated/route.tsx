@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect, Link, useRouter } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Users, LogOut, GraduationCap, ShieldCheck, Handshake } from "lucide-react";
+import { Users, LogOut, GraduationCap, ShieldCheck, Handshake, Percent } from "lucide-react";
 import { useMyPermissions } from "@/lib/permissions-api";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -46,6 +46,13 @@ function AuthedLayout() {
               className="px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted/60 inline-flex items-center gap-1.5"
             >
               <Handshake className="w-4 h-4" /> <span className="hidden sm:inline">Aliados</span>
+            </Link>
+            <Link
+              to="/descuentos"
+              activeProps={{ className: "bg-muted text-foreground" }}
+              className="px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted/60 inline-flex items-center gap-1.5"
+            >
+              <Percent className="w-4 h-4" /> <span className="hidden sm:inline">Descuentos</span>
             </Link>
             {perms?.isAdmin && (
               <Link

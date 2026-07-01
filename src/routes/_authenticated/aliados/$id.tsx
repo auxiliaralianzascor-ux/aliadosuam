@@ -14,8 +14,10 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Calendar, Edit2, Loader2, Lock, Mail, Phone, Plus, Trash2, User2, ArrowRightCircle, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Calendar, Edit2, Loader2, Lock, Mail, Phone, Plus, Trash2, User2, ArrowRightCircle, AlertTriangle, Percent } from "lucide-react";
 import { AllyDialog } from "@/components/AllyDialog";
+import { DiscountDialog } from "@/components/DiscountDialog";
+import { useAllyDiscount, DISCOUNT_CATEGORIES } from "@/lib/discounts-api";
 import {
   AREA_LABEL, CATEGORY_LABEL, STATUS_LABEL, TRAFFIC_HELP, TRAFFIC_META,
   getAllyContacts,
@@ -37,8 +39,10 @@ function AllyDetail() {
   const { data: perms } = useMyPermissions();
   const isAdmin = !!perms?.isAdmin;
   const [editOpen, setEditOpen] = useState(false);
+  const [discountOpen, setDiscountOpen] = useState(false);
   const deleteAlly = useDeleteAlly();
   const saveAlly = useSaveAlly();
+  const { data: discount } = useAllyDiscount(id);
 
   if (isLoading || !ally) {
     return <div className="grid place-items-center py-20 text-muted-foreground"><Loader2 className="w-6 h-6 animate-spin" /></div>;
@@ -60,6 +64,12 @@ function AllyDetail() {
     try {
       await saveAlly.mutateAsync({ id: ally.id, status: next, category: next === "active" ? (ally.category ?? "activo") : null });
       toast.success(`Movido a ${STATUS_LABEL[next]}`);
+      if (next === "active" && isAdmin) {
+        const hasDiscounts = discount && (discount.pregrado || discount.posgrado || discount.ingles || discount.econti);
+        if (!hasDiscounts && window.confirm("¿Este aliado lleva descuentos? Puedes registrarlos ahora o más tarde desde su ficha.")) {
+          setDiscountOpen(true);
+        }
+      }
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Error");
     }
@@ -179,9 +189,39 @@ function AllyDetail() {
         </div>
       </Card>
 
+      {isActive && (
+        <Card className="p-5">
+          <div className="flex items-center justify-between mb-3 gap-2">
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <Percent className="w-5 h-5" /> Descuentos
+            </h2>
+            {isAdmin && (
+              <Button variant="outline" size="sm" onClick={() => setDiscountOpen(true)}>
+                <Edit2 className="w-4 h-4" /> {discount ? "Editar descuentos" : "Agregar descuentos"}
+              </Button>
+            )}
+          </div>
+          {!discount || !(discount.pregrado || discount.posgrado || discount.ingles || discount.econti) ? (
+            <div className="text-sm text-muted-foreground">Sin descuentos registrados.</div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {DISCOUNT_CATEGORIES.map((c) =>
+                discount[c.key] ? (
+                  <div key={c.key} className="rounded-md border p-3 bg-muted/20">
+                    <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">{c.label}</div>
+                    <div className="text-sm whitespace-pre-wrap">{discount[c.key]}</div>
+                  </div>
+                ) : null,
+              )}
+            </div>
+          )}
+        </Card>
+      )}
+
       <FollowupsSection allyId={ally.id} isActive={isActive} />
 
       <AllyDialog open={editOpen} onOpenChange={setEditOpen} ally={ally} />
+      <DiscountDialog open={discountOpen} onOpenChange={setDiscountOpen} allyId={ally.id} allyName={ally.name} />
     </div>
   );
 }
