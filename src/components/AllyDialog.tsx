@@ -11,6 +11,7 @@ import {
   type Ally,
   type AllyCategory,
   type AllyContact,
+  type AllyDirection,
   type AllyStatus,
   type TrafficLight,
   STATUS_LABEL,
@@ -28,9 +29,10 @@ interface Props {
   onOpenChange: (v: boolean) => void;
   ally?: Ally | null;
   defaultStatus?: AllyStatus;
+  direction?: AllyDirection;
 }
 
-export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
+export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction = "alianzas" }: Props) {
   const save = useSaveAlly();
   const buildInitial = () => {
     const initialContacts = ally ? getAllyContacts(ally) : [];
