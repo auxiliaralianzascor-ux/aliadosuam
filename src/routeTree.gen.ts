@@ -15,7 +15,12 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
 import { Route as AuthenticatedDescuentosRouteImport } from './routes/_authenticated/descuentos'
 import { Route as AuthenticatedAliadosIndexRouteImport } from './routes/_authenticated/aliados/index'
+import { Route as AuthenticatedAlianzasDescuentosRouteImport } from './routes/_authenticated/alianzas/descuentos'
 import { Route as AuthenticatedAliadosIdRouteImport } from './routes/_authenticated/aliados/$id'
+import { Route as AuthenticatedInvestigacionAliadosIndexRouteImport } from './routes/_authenticated/investigacion/aliados/index'
+import { Route as AuthenticatedAlianzasAliadosIndexRouteImport } from './routes/_authenticated/alianzas/aliados/index'
+import { Route as AuthenticatedInvestigacionAliadosIdRouteImport } from './routes/_authenticated/investigacion/aliados/$id'
+import { Route as AuthenticatedAlianzasAliadosIdRouteImport } from './routes/_authenticated/alianzas/aliados/$id'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -47,11 +52,41 @@ const AuthenticatedAliadosIndexRoute =
     path: '/aliados/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAlianzasDescuentosRoute =
+  AuthenticatedAlianzasDescuentosRouteImport.update({
+    id: '/alianzas/descuentos',
+    path: '/alianzas/descuentos',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAliadosIdRoute = AuthenticatedAliadosIdRouteImport.update({
   id: '/aliados/$id',
   path: '/aliados/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedInvestigacionAliadosIndexRoute =
+  AuthenticatedInvestigacionAliadosIndexRouteImport.update({
+    id: '/investigacion/aliados/',
+    path: '/investigacion/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasAliadosIndexRoute =
+  AuthenticatedAlianzasAliadosIndexRouteImport.update({
+    id: '/alianzas/aliados/',
+    path: '/alianzas/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInvestigacionAliadosIdRoute =
+  AuthenticatedInvestigacionAliadosIdRouteImport.update({
+    id: '/investigacion/aliados/$id',
+    path: '/investigacion/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasAliadosIdRoute =
+  AuthenticatedAlianzasAliadosIdRouteImport.update({
+    id: '/alianzas/aliados/$id',
+    path: '/alianzas/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,7 +94,12 @@ export interface FileRoutesByFullPath {
   '/descuentos': typeof AuthenticatedDescuentosRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/aliados/$id': typeof AuthenticatedAliadosIdRoute
+  '/alianzas/descuentos': typeof AuthenticatedAlianzasDescuentosRoute
   '/aliados/': typeof AuthenticatedAliadosIndexRoute
+  '/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
+  '/alianzas/aliados/': typeof AuthenticatedAlianzasAliadosIndexRoute
+  '/investigacion/aliados/': typeof AuthenticatedInvestigacionAliadosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -67,7 +107,12 @@ export interface FileRoutesByTo {
   '/descuentos': typeof AuthenticatedDescuentosRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/aliados/$id': typeof AuthenticatedAliadosIdRoute
+  '/alianzas/descuentos': typeof AuthenticatedAlianzasDescuentosRoute
   '/aliados': typeof AuthenticatedAliadosIndexRoute
+  '/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
+  '/alianzas/aliados': typeof AuthenticatedAlianzasAliadosIndexRoute
+  '/investigacion/aliados': typeof AuthenticatedInvestigacionAliadosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,7 +122,12 @@ export interface FileRoutesById {
   '/_authenticated/descuentos': typeof AuthenticatedDescuentosRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/_authenticated/aliados/$id': typeof AuthenticatedAliadosIdRoute
+  '/_authenticated/alianzas/descuentos': typeof AuthenticatedAlianzasDescuentosRoute
   '/_authenticated/aliados/': typeof AuthenticatedAliadosIndexRoute
+  '/_authenticated/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/_authenticated/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
+  '/_authenticated/alianzas/aliados/': typeof AuthenticatedAlianzasAliadosIndexRoute
+  '/_authenticated/investigacion/aliados/': typeof AuthenticatedInvestigacionAliadosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -87,9 +137,25 @@ export interface FileRouteTypes {
     | '/descuentos'
     | '/usuarios'
     | '/aliados/$id'
+    | '/alianzas/descuentos'
     | '/aliados/'
+    | '/alianzas/aliados/$id'
+    | '/investigacion/aliados/$id'
+    | '/alianzas/aliados/'
+    | '/investigacion/aliados/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/descuentos' | '/usuarios' | '/aliados/$id' | '/aliados'
+  to:
+    | '/'
+    | '/auth'
+    | '/descuentos'
+    | '/usuarios'
+    | '/aliados/$id'
+    | '/alianzas/descuentos'
+    | '/aliados'
+    | '/alianzas/aliados/$id'
+    | '/investigacion/aliados/$id'
+    | '/alianzas/aliados'
+    | '/investigacion/aliados'
   id:
     | '__root__'
     | '/'
@@ -98,7 +164,12 @@ export interface FileRouteTypes {
     | '/_authenticated/descuentos'
     | '/_authenticated/usuarios'
     | '/_authenticated/aliados/$id'
+    | '/_authenticated/alianzas/descuentos'
     | '/_authenticated/aliados/'
+    | '/_authenticated/alianzas/aliados/$id'
+    | '/_authenticated/investigacion/aliados/$id'
+    | '/_authenticated/alianzas/aliados/'
+    | '/_authenticated/investigacion/aliados/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -151,11 +222,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAliadosIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/alianzas/descuentos': {
+      id: '/_authenticated/alianzas/descuentos'
+      path: '/alianzas/descuentos'
+      fullPath: '/alianzas/descuentos'
+      preLoaderRoute: typeof AuthenticatedAlianzasDescuentosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/aliados/$id': {
       id: '/_authenticated/aliados/$id'
       path: '/aliados/$id'
       fullPath: '/aliados/$id'
       preLoaderRoute: typeof AuthenticatedAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/investigacion/aliados/': {
+      id: '/_authenticated/investigacion/aliados/'
+      path: '/investigacion/aliados'
+      fullPath: '/investigacion/aliados/'
+      preLoaderRoute: typeof AuthenticatedInvestigacionAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/aliados/': {
+      id: '/_authenticated/alianzas/aliados/'
+      path: '/alianzas/aliados'
+      fullPath: '/alianzas/aliados/'
+      preLoaderRoute: typeof AuthenticatedAlianzasAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/investigacion/aliados/$id': {
+      id: '/_authenticated/investigacion/aliados/$id'
+      path: '/investigacion/aliados/$id'
+      fullPath: '/investigacion/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedInvestigacionAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/aliados/$id': {
+      id: '/_authenticated/alianzas/aliados/$id'
+      path: '/alianzas/aliados/$id'
+      fullPath: '/alianzas/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedAlianzasAliadosIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
@@ -165,14 +271,27 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDescuentosRoute: typeof AuthenticatedDescuentosRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedAliadosIdRoute: typeof AuthenticatedAliadosIdRoute
+  AuthenticatedAlianzasDescuentosRoute: typeof AuthenticatedAlianzasDescuentosRoute
   AuthenticatedAliadosIndexRoute: typeof AuthenticatedAliadosIndexRoute
+  AuthenticatedAlianzasAliadosIdRoute: typeof AuthenticatedAlianzasAliadosIdRoute
+  AuthenticatedInvestigacionAliadosIdRoute: typeof AuthenticatedInvestigacionAliadosIdRoute
+  AuthenticatedAlianzasAliadosIndexRoute: typeof AuthenticatedAlianzasAliadosIndexRoute
+  AuthenticatedInvestigacionAliadosIndexRoute: typeof AuthenticatedInvestigacionAliadosIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDescuentosRoute: AuthenticatedDescuentosRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedAliadosIdRoute: AuthenticatedAliadosIdRoute,
+  AuthenticatedAlianzasDescuentosRoute: AuthenticatedAlianzasDescuentosRoute,
   AuthenticatedAliadosIndexRoute: AuthenticatedAliadosIndexRoute,
+  AuthenticatedAlianzasAliadosIdRoute: AuthenticatedAlianzasAliadosIdRoute,
+  AuthenticatedInvestigacionAliadosIdRoute:
+    AuthenticatedInvestigacionAliadosIdRoute,
+  AuthenticatedAlianzasAliadosIndexRoute:
+    AuthenticatedAlianzasAliadosIndexRoute,
+  AuthenticatedInvestigacionAliadosIndexRoute:
+    AuthenticatedInvestigacionAliadosIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -186,13 +305,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

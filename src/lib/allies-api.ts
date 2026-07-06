@@ -1,17 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Ally, AllyActivity } from "./allies-types";
+import type { Ally, AllyActivity, AllyDirection } from "./allies-types";
 
-export function useAllies() {
+export function useAllies(direction?: AllyDirection) {
   return useQuery({
-    queryKey: ["allies"],
+    queryKey: ["allies", direction ?? "all"],
     queryFn: async (): Promise<Ally[]> => {
-      const { data, error } = await supabase
-        .from("allies")
-        .select("*")
-        .order("updated_at", { ascending: false });
+      let q = supabase.from("allies").select("*").order("updated_at", { ascending: false });
+      if (direction) q = q.eq("direction", direction);
+      const { data, error } = await q;
       if (error) throw error;
-      return data as Ally[];
+      return data as unknown as Ally[];
     },
   });
 }

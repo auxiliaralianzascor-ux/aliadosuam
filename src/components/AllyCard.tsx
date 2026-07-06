@@ -19,12 +19,12 @@ function isExpired(ally: Ally) {
   return d < today;
 }
 
-export function AllyCard({ ally }: { ally: Ally }) {
+export function AllyCard({ ally, basePath }: { ally: Ally; basePath: "/alianzas/aliados/$id" | "/investigacion/aliados/$id" }) {
   const tl = TRAFFIC_META[ally.traffic_light];
   const expired = isExpired(ally);
   return (
     <Link
-      to="/aliados/$id"
+      to={basePath}
       params={{ id: ally.id }}
       className="block group"
     >

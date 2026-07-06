@@ -1,0 +1,2 @@
+ALTER TABLE public.allies ADD COLUMN IF NOT EXISTS direction TEXT NOT NULL DEFAULT 'alianzas' CHECK (direction IN ('alianzas','investigacion'));
+CREATE INDEX IF NOT EXISTS allies_direction_idx ON public.allies(direction);

@@ -11,6 +11,7 @@ import {
   type Ally,
   type AllyCategory,
   type AllyContact,
+  type AllyDirection,
   type AllyStatus,
   type TrafficLight,
   STATUS_LABEL,
@@ -28,9 +29,10 @@ interface Props {
   onOpenChange: (v: boolean) => void;
   ally?: Ally | null;
   defaultStatus?: AllyStatus;
+  direction?: AllyDirection;
 }
 
-export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
+export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction = "alianzas" }: Props) {
   const save = useSaveAlly();
   const buildInitial = () => {
     const initialContacts = ally ? getAllyContacts(ally) : [];
@@ -82,20 +84,21 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus }: Props) {
       .filter((c) => c.name || c.position || c.email || c.phone);
     const primary = cleanContacts[0];
     try {
-      // Duplicate name check (case-insensitive)
+      // Duplicate name check (case-insensitive) within same direction
       const { supabase } = await import("@/integrations/supabase/client");
-      let dupQuery = supabase.from("allies").select("id,name").ilike("name", name);
+      let dupQuery = supabase.from("allies").select("id,name").ilike("name", name).eq("direction", ally?.direction ?? direction);
       if (ally?.id) dupQuery = dupQuery.neq("id", ally.id);
       const { data: dupes, error: dupErr } = await dupQuery;
       if (dupErr) throw dupErr;
       if (dupes && dupes.length > 0) {
-        return toast.error("Ya existe un aliado con este nombre");
+        return toast.error("Ya existe un aliado con este nombre en esta dirección");
       }
       await save.mutateAsync({
         id: ally?.id,
         name: form.name.trim(),
         sector: form.sector || null,
         status: form.status,
+        direction: ally?.direction ?? direction,
         category: form.status === "active" ? form.category : null,
         traffic_light: form.traffic_light,
         contact_name: primary?.name || null,
