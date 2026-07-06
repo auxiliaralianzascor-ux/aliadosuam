@@ -1,6 +1,12 @@
 export type AllyStatus = "conversation" | "pending" | "active";
 export type AllyCategory = "latente" | "emergente" | "estrategico" | "activo";
 export type TrafficLight = "green" | "yellow" | "red";
+export type AllyDirection = "alianzas" | "investigacion";
+
+export const DIRECTION_LABEL: Record<AllyDirection, string> = {
+  alianzas: "Alianzas y Relaciones Corporativas",
+  investigacion: "Investigación, Innovación y Emprendimiento",
+};
 export type FollowupArea = "direccion" | "econti" | "mercadeo" | "graduados" | "proyectos" | "general";
 
 export interface AllyContact {
