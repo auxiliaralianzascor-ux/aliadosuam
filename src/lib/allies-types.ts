@@ -21,6 +21,7 @@ export interface Ally {
   name: string;
   sector: string | null;
   status: AllyStatus;
+  direction: AllyDirection;
   category: AllyCategory | null;
   traffic_light: TrafficLight;
   contact_name: string | null;
