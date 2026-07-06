@@ -16,6 +16,10 @@ import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedDescuentosRouteImport } from './routes/_authenticated/descuentos'
 import { Route as AuthenticatedAliadosIndexRouteImport } from './routes/_authenticated/aliados/index'
 import { Route as AuthenticatedAliadosIdRouteImport } from './routes/_authenticated/aliados/$id'
+import { Route as AuthenticatedInvestigacionAliadosIndexRouteImport } from './routes/_authenticated/investigacion/aliados/index'
+import { Route as AuthenticatedAlianzasAliadosIndexRouteImport } from './routes/_authenticated/alianzas/aliados/index'
+import { Route as AuthenticatedInvestigacionAliadosIdRouteImport } from './routes/_authenticated/investigacion/aliados/$id'
+import { Route as AuthenticatedAlianzasAliadosIdRouteImport } from './routes/_authenticated/alianzas/aliados/$id'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -52,6 +56,30 @@ const AuthenticatedAliadosIdRoute = AuthenticatedAliadosIdRouteImport.update({
   path: '/aliados/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedInvestigacionAliadosIndexRoute =
+  AuthenticatedInvestigacionAliadosIndexRouteImport.update({
+    id: '/investigacion/aliados/',
+    path: '/investigacion/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasAliadosIndexRoute =
+  AuthenticatedAlianzasAliadosIndexRouteImport.update({
+    id: '/alianzas/aliados/',
+    path: '/alianzas/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInvestigacionAliadosIdRoute =
+  AuthenticatedInvestigacionAliadosIdRouteImport.update({
+    id: '/investigacion/aliados/$id',
+    path: '/investigacion/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasAliadosIdRoute =
+  AuthenticatedAlianzasAliadosIdRouteImport.update({
+    id: '/alianzas/aliados/$id',
+    path: '/alianzas/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -60,6 +88,10 @@ export interface FileRoutesByFullPath {
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/aliados/$id': typeof AuthenticatedAliadosIdRoute
   '/aliados/': typeof AuthenticatedAliadosIndexRoute
+  '/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
+  '/alianzas/aliados/': typeof AuthenticatedAlianzasAliadosIndexRoute
+  '/investigacion/aliados/': typeof AuthenticatedInvestigacionAliadosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -68,6 +100,10 @@ export interface FileRoutesByTo {
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/aliados/$id': typeof AuthenticatedAliadosIdRoute
   '/aliados': typeof AuthenticatedAliadosIndexRoute
+  '/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
+  '/alianzas/aliados': typeof AuthenticatedAlianzasAliadosIndexRoute
+  '/investigacion/aliados': typeof AuthenticatedInvestigacionAliadosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -78,6 +114,10 @@ export interface FileRoutesById {
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/_authenticated/aliados/$id': typeof AuthenticatedAliadosIdRoute
   '/_authenticated/aliados/': typeof AuthenticatedAliadosIndexRoute
+  '/_authenticated/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/_authenticated/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
+  '/_authenticated/alianzas/aliados/': typeof AuthenticatedAlianzasAliadosIndexRoute
+  '/_authenticated/investigacion/aliados/': typeof AuthenticatedInvestigacionAliadosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -88,8 +128,22 @@ export interface FileRouteTypes {
     | '/usuarios'
     | '/aliados/$id'
     | '/aliados/'
+    | '/alianzas/aliados/$id'
+    | '/investigacion/aliados/$id'
+    | '/alianzas/aliados/'
+    | '/investigacion/aliados/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/descuentos' | '/usuarios' | '/aliados/$id' | '/aliados'
+  to:
+    | '/'
+    | '/auth'
+    | '/descuentos'
+    | '/usuarios'
+    | '/aliados/$id'
+    | '/aliados'
+    | '/alianzas/aliados/$id'
+    | '/investigacion/aliados/$id'
+    | '/alianzas/aliados'
+    | '/investigacion/aliados'
   id:
     | '__root__'
     | '/'
@@ -99,6 +153,10 @@ export interface FileRouteTypes {
     | '/_authenticated/usuarios'
     | '/_authenticated/aliados/$id'
     | '/_authenticated/aliados/'
+    | '/_authenticated/alianzas/aliados/$id'
+    | '/_authenticated/investigacion/aliados/$id'
+    | '/_authenticated/alianzas/aliados/'
+    | '/_authenticated/investigacion/aliados/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -158,6 +216,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAliadosIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/investigacion/aliados/': {
+      id: '/_authenticated/investigacion/aliados/'
+      path: '/investigacion/aliados'
+      fullPath: '/investigacion/aliados/'
+      preLoaderRoute: typeof AuthenticatedInvestigacionAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/aliados/': {
+      id: '/_authenticated/alianzas/aliados/'
+      path: '/alianzas/aliados'
+      fullPath: '/alianzas/aliados/'
+      preLoaderRoute: typeof AuthenticatedAlianzasAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/investigacion/aliados/$id': {
+      id: '/_authenticated/investigacion/aliados/$id'
+      path: '/investigacion/aliados/$id'
+      fullPath: '/investigacion/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedInvestigacionAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/aliados/$id': {
+      id: '/_authenticated/alianzas/aliados/$id'
+      path: '/alianzas/aliados/$id'
+      fullPath: '/alianzas/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedAlianzasAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -166,6 +252,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedAliadosIdRoute: typeof AuthenticatedAliadosIdRoute
   AuthenticatedAliadosIndexRoute: typeof AuthenticatedAliadosIndexRoute
+  AuthenticatedAlianzasAliadosIdRoute: typeof AuthenticatedAlianzasAliadosIdRoute
+  AuthenticatedInvestigacionAliadosIdRoute: typeof AuthenticatedInvestigacionAliadosIdRoute
+  AuthenticatedAlianzasAliadosIndexRoute: typeof AuthenticatedAlianzasAliadosIndexRoute
+  AuthenticatedInvestigacionAliadosIndexRoute: typeof AuthenticatedInvestigacionAliadosIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -173,6 +263,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedAliadosIdRoute: AuthenticatedAliadosIdRoute,
   AuthenticatedAliadosIndexRoute: AuthenticatedAliadosIndexRoute,
+  AuthenticatedAlianzasAliadosIdRoute: AuthenticatedAlianzasAliadosIdRoute,
+  AuthenticatedInvestigacionAliadosIdRoute:
+    AuthenticatedInvestigacionAliadosIdRoute,
+  AuthenticatedAlianzasAliadosIndexRoute:
+    AuthenticatedAlianzasAliadosIndexRoute,
+  AuthenticatedInvestigacionAliadosIndexRoute:
+    AuthenticatedInvestigacionAliadosIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
