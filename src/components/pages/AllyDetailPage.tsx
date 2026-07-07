@@ -31,7 +31,7 @@ const ACTIVITY_TYPES = ["Observación", "Reunión", "Correo", "Llamada", "Evento
 interface Props {
   id: string;
   direction: AllyDirection;
-  listPath: "/alianzas/aliados" | "/investigacion/aliados";
+  listPath: string;
   showDiscounts: boolean;
 }
 
