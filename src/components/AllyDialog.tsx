@@ -89,7 +89,7 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
     try {
       // Duplicate name check (case-insensitive) within same direction
       const { supabase } = await import("@/integrations/supabase/client");
-      let dupQuery = supabase.from("allies").select("id,name").ilike("name", name).eq("direction", ally?.direction ?? direction);
+      let dupQuery = supabase.from("allies").select("id,name").ilike("name", name).eq("direction", activeDirection);
       if (ally?.id) dupQuery = dupQuery.neq("id", ally.id);
       const { data: dupes, error: dupErr } = await dupQuery;
       if (dupErr) throw dupErr;
