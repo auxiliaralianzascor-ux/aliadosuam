@@ -91,7 +91,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
     try {
       await deleteAlly.mutateAsync(ally.id);
       toast.success("Aliado eliminado");
-      navigate({ to: listPath });
+      navigate({ to: listPath as never });
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Error");
     }
