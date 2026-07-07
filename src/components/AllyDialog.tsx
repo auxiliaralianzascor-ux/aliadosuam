@@ -35,11 +35,13 @@ interface Props {
 
 export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction = "alianzas" }: Props) {
   const save = useSaveAlly();
+  const activeDirection: AllyDirection = ally?.direction ?? direction;
   const buildInitial = () => {
     const initialContacts = ally ? getAllyContacts(ally) : [];
     return {
       name: ally?.name ?? "",
       sector: ally?.sector ?? "",
+      decanatura: ally?.decanatura ?? "",
       status: (ally?.status ?? defaultStatus ?? "conversation") as AllyStatus,
       category: (ally?.category ?? "activo") as AllyCategory,
       traffic_light: (ally?.traffic_light ?? "yellow") as TrafficLight,
