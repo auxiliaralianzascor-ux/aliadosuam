@@ -24,8 +24,8 @@ export function AllyCard({ ally, basePath }: { ally: Ally; basePath: string }) {
   const expired = isExpired(ally);
   return (
     <Link
-      to={basePath}
-      params={{ id: ally.id }}
+      to={basePath as never}
+      params={{ id: ally.id } as never}
       className="block group"
     >
       <Card className={`p-4 border-l-4 ${tl.border} hover:shadow-md transition-shadow h-full ${expired ? "ring-1 ring-rose-300 dark:ring-rose-900" : ""}`}>
