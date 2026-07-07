@@ -136,6 +136,19 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
               <Label>Sector / Industria</Label>
               <Input value={form.sector} onChange={(e) => setForm({ ...form, sector: e.target.value })} placeholder="Ej. Salud, Tecnología" />
             </div>
+            {activeDirection === "decanaturas" && (
+              <div className="sm:col-span-2">
+                <Label>Decanatura</Label>
+                <Select value={form.decanatura} onValueChange={(v) => setForm({ ...form, decanatura: v })}>
+                  <SelectTrigger><SelectValue placeholder="Selecciona una decanatura" /></SelectTrigger>
+                  <SelectContent>
+                    {DECANATURAS.map((d) => (
+                      <SelectItem key={d} value={d}>{d}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div>
               <Label>Estado</Label>
               <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as AllyStatus })}>
