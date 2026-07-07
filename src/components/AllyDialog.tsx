@@ -14,6 +14,7 @@ import {
   type AllyDirection,
   type AllyStatus,
   type TrafficLight,
+  DECANATURAS,
   STATUS_LABEL,
   CATEGORY_LABEL,
   TRAFFIC_META,
@@ -34,11 +35,13 @@ interface Props {
 
 export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction = "alianzas" }: Props) {
   const save = useSaveAlly();
+  const activeDirection: AllyDirection = ally?.direction ?? direction;
   const buildInitial = () => {
     const initialContacts = ally ? getAllyContacts(ally) : [];
     return {
       name: ally?.name ?? "",
       sector: ally?.sector ?? "",
+      decanatura: ally?.decanatura ?? "",
       status: (ally?.status ?? defaultStatus ?? "conversation") as AllyStatus,
       category: (ally?.category ?? "activo") as AllyCategory,
       traffic_light: (ally?.traffic_light ?? "yellow") as TrafficLight,
@@ -86,7 +89,7 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
     try {
       // Duplicate name check (case-insensitive) within same direction
       const { supabase } = await import("@/integrations/supabase/client");
-      let dupQuery = supabase.from("allies").select("id,name").ilike("name", name).eq("direction", ally?.direction ?? direction);
+      let dupQuery = supabase.from("allies").select("id,name").ilike("name", name).eq("direction", activeDirection);
       if (ally?.id) dupQuery = dupQuery.neq("id", ally.id);
       const { data: dupes, error: dupErr } = await dupQuery;
       if (dupErr) throw dupErr;
@@ -97,8 +100,9 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
         id: ally?.id,
         name: form.name.trim(),
         sector: form.sector || null,
+        decanatura: activeDirection === "decanaturas" ? (form.decanatura || null) : null,
         status: form.status,
-        direction: ally?.direction ?? direction,
+        direction: activeDirection,
         category: form.status === "active" ? form.category : null,
         traffic_light: form.traffic_light,
         contact_name: primary?.name || null,
@@ -132,6 +136,19 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
               <Label>Sector / Industria</Label>
               <Input value={form.sector} onChange={(e) => setForm({ ...form, sector: e.target.value })} placeholder="Ej. Salud, Tecnología" />
             </div>
+            {activeDirection === "decanaturas" && (
+              <div className="sm:col-span-2">
+                <Label>Decanatura</Label>
+                <Select value={form.decanatura} onValueChange={(v) => setForm({ ...form, decanatura: v })}>
+                  <SelectTrigger><SelectValue placeholder="Selecciona una decanatura" /></SelectTrigger>
+                  <SelectContent>
+                    {DECANATURAS.map((d) => (
+                      <SelectItem key={d} value={d}>{d}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
             <div>
               <Label>Estado</Label>
               <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as AllyStatus })}>

@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect, Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Users, LogOut, GraduationCap, ShieldCheck, Handshake, Percent, ChevronDown, Microscope } from "lucide-react";
+import { Users, LogOut, GraduationCap, ShieldCheck, Handshake, Percent, ChevronDown, Microscope, Globe2, BookOpen, Rocket } from "lucide-react";
 import { useMyPermissions } from "@/lib/permissions-api";
 import {
   DropdownMenu,
@@ -29,6 +29,9 @@ function AuthedLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const inAlianzas = pathname.startsWith("/alianzas");
   const inInvestigacion = pathname.startsWith("/investigacion");
+  const inRelaciones = pathname.startsWith("/relaciones-internacionales");
+  const inDecanaturas = pathname.startsWith("/decanaturas");
+  const inProyeccion = pathname.startsWith("/proyeccion");
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -90,6 +93,53 @@ function AuthedLayout() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger className={triggerClass(inRelaciones)}>
+                <Globe2 className="w-4 h-4" />
+                <span className="hidden lg:inline">Relaciones Internacionales</span>
+                <span className="lg:hidden">Relaciones Int.</span>
+                <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuItem asChild>
+                  <Link to="/relaciones-internacionales/aliados" className="cursor-pointer">
+                    <Handshake className="w-4 h-4" /> Aliados
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger className={triggerClass(inDecanaturas)}>
+                <BookOpen className="w-4 h-4" />
+                <span>Decanaturas</span>
+                <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuItem asChild>
+                  <Link to="/decanaturas/aliados" className="cursor-pointer">
+                    <Handshake className="w-4 h-4" /> Aliados
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger className={triggerClass(inProyeccion)}>
+                <Rocket className="w-4 h-4" />
+                <span>Proyección</span>
+                <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuItem asChild>
+                  <Link to="/proyeccion/aliados" className="cursor-pointer">
+                    <Handshake className="w-4 h-4" /> Aliados
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
 
             {perms?.isAdmin && (
               <Link

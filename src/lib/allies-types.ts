@@ -1,13 +1,64 @@
 export type AllyStatus = "conversation" | "pending" | "active";
 export type AllyCategory = "latente" | "emergente" | "estrategico" | "activo";
 export type TrafficLight = "green" | "yellow" | "red";
-export type AllyDirection = "alianzas" | "investigacion";
+export type AllyDirection =
+  | "alianzas"
+  | "investigacion"
+  | "relaciones_internacionales"
+  | "decanaturas"
+  | "proyeccion";
 
 export const DIRECTION_LABEL: Record<AllyDirection, string> = {
   alianzas: "Alianzas y Relaciones Corporativas",
   investigacion: "Investigación, Innovación y Emprendimiento",
+  relaciones_internacionales: "Relaciones Internacionales",
+  decanaturas: "Decanaturas",
+  proyeccion: "Proyección",
 };
-export type FollowupArea = "direccion" | "econti" | "mercadeo" | "graduados" | "proyectos" | "general";
+
+export type FollowupArea =
+  | "direccion"
+  | "econti"
+  | "mercadeo"
+  | "graduados"
+  | "proyectos"
+  | "general"
+  | "investigacion"
+  | "innovacion"
+  | "emprendimiento";
+
+// Áreas de seguimiento visibles por dirección según el estado del aliado.
+export const AREAS_BY_DIRECTION: Record<AllyDirection, { active: FollowupArea[]; inactive: FollowupArea[] }> = {
+  alianzas: {
+    active: ["direccion", "econti", "mercadeo", "graduados", "proyectos"],
+    inactive: ["general"],
+  },
+  investigacion: {
+    active: ["investigacion", "innovacion", "emprendimiento", "general"],
+    inactive: ["general"],
+  },
+  relaciones_internacionales: {
+    active: ["direccion", "econti", "mercadeo", "graduados", "proyectos"],
+    inactive: ["general"],
+  },
+  decanaturas: {
+    active: ["direccion", "econti", "mercadeo", "graduados", "proyectos"],
+    inactive: ["general"],
+  },
+  proyeccion: {
+    active: ["direccion", "econti", "mercadeo", "graduados", "proyectos"],
+    inactive: ["general"],
+  },
+};
+
+// Decanaturas de la Universidad Autónoma de Manizales.
+export const DECANATURAS = [
+  "Facultad de Salud",
+  "Facultad de Ingenierías",
+  "Facultad de Estudios Sociales y Empresariales",
+  "Departamento de Ciencias Básicas",
+] as const;
+export type Decanatura = (typeof DECANATURAS)[number];
 
 export interface AllyContact {
   name: string;
@@ -29,6 +80,7 @@ export interface Ally {
   contact_phone: string | null;
   contacts: AllyContact[] | null;
   notes: string | null;
+  decanatura: string | null;
   valid_from: string | null;
   valid_until: string | null;
   created_by: string | null;
@@ -82,6 +134,9 @@ export const AREA_LABEL: Record<FollowupArea, string> = {
   graduados: "Graduados",
   proyectos: "Proyectos",
   general: "General",
+  investigacion: "Investigación",
+  innovacion: "Innovación",
+  emprendimiento: "Emprendimiento",
 };
 
 export const TRAFFIC_META: Record<

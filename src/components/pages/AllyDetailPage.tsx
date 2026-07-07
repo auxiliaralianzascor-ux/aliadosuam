@@ -19,7 +19,7 @@ import { AllyDialog } from "@/components/AllyDialog";
 import { DiscountDialog } from "@/components/DiscountDialog";
 import { useAllyDiscount, DISCOUNT_CATEGORIES } from "@/lib/discounts-api";
 import {
-  AREA_LABEL, CATEGORY_LABEL, STATUS_LABEL, TRAFFIC_HELP, TRAFFIC_META,
+  AREA_LABEL, AREAS_BY_DIRECTION, CATEGORY_LABEL, STATUS_LABEL, TRAFFIC_HELP, TRAFFIC_META,
   getAllyContacts,
   type AllyDirection,
   type FollowupArea, type AllyStatus,
@@ -31,7 +31,7 @@ const ACTIVITY_TYPES = ["Observación", "Reunión", "Correo", "Llamada", "Evento
 interface Props {
   id: string;
   direction: AllyDirection;
-  listPath: "/alianzas/aliados" | "/investigacion/aliados";
+  listPath: string;
   showDiscounts: boolean;
 }
 
@@ -55,7 +55,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
     return (
       <div className="p-6 text-center text-sm text-muted-foreground">
         Este aliado pertenece a otra dirección.{" "}
-        <Link to={listPath} className="underline">Volver</Link>
+        <Link to={listPath as never} className="underline">Volver</Link>
       </div>
     );
   }
@@ -91,7 +91,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
     try {
       await deleteAlly.mutateAsync(ally.id);
       toast.success("Aliado eliminado");
-      navigate({ to: listPath });
+      navigate({ to: listPath as never });
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Error");
     }
@@ -99,7 +99,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
 
   return (
     <div className="space-y-5">
-      <Link to={listPath} className="text-sm text-muted-foreground inline-flex items-center gap-1 hover:text-foreground">
+      <Link to={listPath as never} className="text-sm text-muted-foreground inline-flex items-center gap-1 hover:text-foreground">
         <ArrowLeft className="w-4 h-4" /> Volver a aliados
       </Link>
 
@@ -118,6 +118,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
               )}
             </div>
             {ally.sector && <p className="text-sm text-muted-foreground mt-1">{ally.sector}</p>}
+            {ally.decanatura && <p className="text-sm text-muted-foreground mt-1"><span className="font-medium">Decanatura:</span> {ally.decanatura}</p>}
             <p className={`text-xs mt-2 ${tl.text}`}>{TRAFFIC_HELP[ally.status][ally.traffic_light]}</p>
 
             {expired && (
@@ -230,7 +231,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
         </Card>
       )}
 
-      <FollowupsSection allyId={ally.id} isActive={isActive} />
+      <FollowupsSection allyId={ally.id} isActive={isActive} direction={direction} />
 
       <AllyDialog open={editOpen} onOpenChange={setEditOpen} ally={ally} direction={direction} />
       {showDiscounts && (
@@ -240,10 +241,9 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
   );
 }
 
-function FollowupsSection({ allyId, isActive }: { allyId: string; isActive: boolean }) {
-  const areas: FollowupArea[] = isActive
-    ? ["direccion", "econti", "mercadeo", "graduados", "proyectos"]
-    : ["general"];
+function FollowupsSection({ allyId, isActive, direction }: { allyId: string; isActive: boolean; direction: AllyDirection }) {
+  const map = AREAS_BY_DIRECTION[direction];
+  const areas: FollowupArea[] = isActive ? map.active : map.inactive;
   const [tab, setTab] = useState<FollowupArea>(areas[0]);
 
   return (
