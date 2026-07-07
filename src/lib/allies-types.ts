@@ -80,6 +80,7 @@ export interface Ally {
   contact_phone: string | null;
   contacts: AllyContact[] | null;
   notes: string | null;
+  decanatura: string | null;
   valid_from: string | null;
   valid_until: string | null;
   created_by: string | null;
