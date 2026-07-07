@@ -23,6 +23,7 @@ export type Database = {
           contacts: Json
           created_at: string
           created_by: string | null
+          decanatura: string | null
           direction: string
           id: string
           name: string
@@ -42,6 +43,7 @@ export type Database = {
           contacts?: Json
           created_at?: string
           created_by?: string | null
+          decanatura?: string | null
           direction?: string
           id?: string
           name: string
@@ -61,6 +63,7 @@ export type Database = {
           contacts?: Json
           created_at?: string
           created_by?: string | null
+          decanatura?: string | null
           direction?: string
           id?: string
           name?: string
@@ -257,6 +260,9 @@ export type Database = {
         | "graduados"
         | "general"
         | "proyectos"
+        | "investigacion"
+        | "innovacion"
+        | "emprendimiento"
       traffic_light: "green" | "yellow" | "red"
     }
     CompositeTypes: {
@@ -395,6 +401,9 @@ export const Constants = {
         "graduados",
         "general",
         "proyectos",
+        "investigacion",
+        "innovacion",
+        "emprendimiento",
       ],
       traffic_light: ["green", "yellow", "red"],
     },
