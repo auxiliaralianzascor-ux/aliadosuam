@@ -25,7 +25,7 @@ import {
 
 interface Props {
   direction: AllyDirection;
-  cardBasePath: "/alianzas/aliados/$id" | "/investigacion/aliados/$id";
+  cardBasePath: string;
   showExport?: boolean;
 }
 
