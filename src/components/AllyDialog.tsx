@@ -14,6 +14,7 @@ import {
   type AllyDirection,
   type AllyStatus,
   type TrafficLight,
+  DECANATURAS,
   STATUS_LABEL,
   CATEGORY_LABEL,
   TRAFFIC_META,
