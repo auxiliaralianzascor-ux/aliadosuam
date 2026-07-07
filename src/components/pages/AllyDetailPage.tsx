@@ -99,7 +99,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
 
   return (
     <div className="space-y-5">
-      <Link to={listPath} className="text-sm text-muted-foreground inline-flex items-center gap-1 hover:text-foreground">
+      <Link to={listPath as never} className="text-sm text-muted-foreground inline-flex items-center gap-1 hover:text-foreground">
         <ArrowLeft className="w-4 h-4" /> Volver a aliados
       </Link>
 
