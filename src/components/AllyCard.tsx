@@ -19,7 +19,7 @@ function isExpired(ally: Ally) {
   return d < today;
 }
 
-export function AllyCard({ ally, basePath }: { ally: Ally; basePath: "/alianzas/aliados/$id" | "/investigacion/aliados/$id" }) {
+export function AllyCard({ ally, basePath }: { ally: Ally; basePath: string }) {
   const tl = TRAFFIC_META[ally.traffic_light];
   const expired = isExpired(ally);
   return (
