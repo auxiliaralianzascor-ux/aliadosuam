@@ -19,7 +19,7 @@ import { AllyDialog } from "@/components/AllyDialog";
 import { DiscountDialog } from "@/components/DiscountDialog";
 import { useAllyDiscount, DISCOUNT_CATEGORIES } from "@/lib/discounts-api";
 import {
-  AREA_LABEL, CATEGORY_LABEL, STATUS_LABEL, TRAFFIC_HELP, TRAFFIC_META,
+  AREA_LABEL, AREAS_BY_DIRECTION, CATEGORY_LABEL, STATUS_LABEL, TRAFFIC_HELP, TRAFFIC_META,
   getAllyContacts,
   type AllyDirection,
   type FollowupArea, type AllyStatus,
