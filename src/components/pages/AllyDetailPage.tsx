@@ -55,7 +55,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
     return (
       <div className="p-6 text-center text-sm text-muted-foreground">
         Este aliado pertenece a otra dirección.{" "}
-        <Link to={listPath} className="underline">Volver</Link>
+        <Link to={listPath as never} className="underline">Volver</Link>
       </div>
     );
   }
