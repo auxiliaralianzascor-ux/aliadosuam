@@ -23,6 +23,7 @@ import { Route as AuthenticatedDecanaturasAliadosIndexRouteImport } from './rout
 import { Route as AuthenticatedAlianzasAliadosIndexRouteImport } from './routes/_authenticated/alianzas/aliados/index'
 import { Route as AuthenticatedRelacionesInternacionalesAliadosIdRouteImport } from './routes/_authenticated/relaciones-internacionales/aliados/$id'
 import { Route as AuthenticatedInvestigacionAliadosIdRouteImport } from './routes/_authenticated/investigacion/aliados/$id'
+import { Route as AuthenticatedDecanaturasAliadosIdRouteImport } from './routes/_authenticated/decanaturas/aliados/$id'
 import { Route as AuthenticatedAlianzasAliadosIdRouteImport } from './routes/_authenticated/alianzas/aliados/$id'
 
 const AuthRoute = AuthRouteImport.update({
@@ -102,6 +103,12 @@ const AuthenticatedInvestigacionAliadosIdRoute =
     path: '/investigacion/aliados/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDecanaturasAliadosIdRoute =
+  AuthenticatedDecanaturasAliadosIdRouteImport.update({
+    id: '/decanaturas/aliados/$id',
+    path: '/decanaturas/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAlianzasAliadosIdRoute =
   AuthenticatedAlianzasAliadosIdRouteImport.update({
     id: '/alianzas/aliados/$id',
@@ -118,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/alianzas/descuentos': typeof AuthenticatedAlianzasDescuentosRoute
   '/aliados/': typeof AuthenticatedAliadosIndexRoute
   '/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/decanaturas/aliados/$id': typeof AuthenticatedDecanaturasAliadosIdRoute
   '/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
   '/relaciones-internacionales/aliados/$id': typeof AuthenticatedRelacionesInternacionalesAliadosIdRoute
   '/alianzas/aliados/': typeof AuthenticatedAlianzasAliadosIndexRoute
@@ -134,6 +142,7 @@ export interface FileRoutesByTo {
   '/alianzas/descuentos': typeof AuthenticatedAlianzasDescuentosRoute
   '/aliados': typeof AuthenticatedAliadosIndexRoute
   '/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/decanaturas/aliados/$id': typeof AuthenticatedDecanaturasAliadosIdRoute
   '/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
   '/relaciones-internacionales/aliados/$id': typeof AuthenticatedRelacionesInternacionalesAliadosIdRoute
   '/alianzas/aliados': typeof AuthenticatedAlianzasAliadosIndexRoute
@@ -152,6 +161,7 @@ export interface FileRoutesById {
   '/_authenticated/alianzas/descuentos': typeof AuthenticatedAlianzasDescuentosRoute
   '/_authenticated/aliados/': typeof AuthenticatedAliadosIndexRoute
   '/_authenticated/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/_authenticated/decanaturas/aliados/$id': typeof AuthenticatedDecanaturasAliadosIdRoute
   '/_authenticated/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
   '/_authenticated/relaciones-internacionales/aliados/$id': typeof AuthenticatedRelacionesInternacionalesAliadosIdRoute
   '/_authenticated/alianzas/aliados/': typeof AuthenticatedAlianzasAliadosIndexRoute
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/alianzas/descuentos'
     | '/aliados/'
     | '/alianzas/aliados/$id'
+    | '/decanaturas/aliados/$id'
     | '/investigacion/aliados/$id'
     | '/relaciones-internacionales/aliados/$id'
     | '/alianzas/aliados/'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/alianzas/descuentos'
     | '/aliados'
     | '/alianzas/aliados/$id'
+    | '/decanaturas/aliados/$id'
     | '/investigacion/aliados/$id'
     | '/relaciones-internacionales/aliados/$id'
     | '/alianzas/aliados'
@@ -203,6 +215,7 @@ export interface FileRouteTypes {
     | '/_authenticated/alianzas/descuentos'
     | '/_authenticated/aliados/'
     | '/_authenticated/alianzas/aliados/$id'
+    | '/_authenticated/decanaturas/aliados/$id'
     | '/_authenticated/investigacion/aliados/$id'
     | '/_authenticated/relaciones-internacionales/aliados/$id'
     | '/_authenticated/alianzas/aliados/'
@@ -317,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInvestigacionAliadosIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/decanaturas/aliados/$id': {
+      id: '/_authenticated/decanaturas/aliados/$id'
+      path: '/decanaturas/aliados/$id'
+      fullPath: '/decanaturas/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedDecanaturasAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/alianzas/aliados/$id': {
       id: '/_authenticated/alianzas/aliados/$id'
       path: '/alianzas/aliados/$id'
@@ -334,6 +354,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAlianzasDescuentosRoute: typeof AuthenticatedAlianzasDescuentosRoute
   AuthenticatedAliadosIndexRoute: typeof AuthenticatedAliadosIndexRoute
   AuthenticatedAlianzasAliadosIdRoute: typeof AuthenticatedAlianzasAliadosIdRoute
+  AuthenticatedDecanaturasAliadosIdRoute: typeof AuthenticatedDecanaturasAliadosIdRoute
   AuthenticatedInvestigacionAliadosIdRoute: typeof AuthenticatedInvestigacionAliadosIdRoute
   AuthenticatedRelacionesInternacionalesAliadosIdRoute: typeof AuthenticatedRelacionesInternacionalesAliadosIdRoute
   AuthenticatedAlianzasAliadosIndexRoute: typeof AuthenticatedAlianzasAliadosIndexRoute
@@ -349,6 +370,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAlianzasDescuentosRoute: AuthenticatedAlianzasDescuentosRoute,
   AuthenticatedAliadosIndexRoute: AuthenticatedAliadosIndexRoute,
   AuthenticatedAlianzasAliadosIdRoute: AuthenticatedAlianzasAliadosIdRoute,
+  AuthenticatedDecanaturasAliadosIdRoute:
+    AuthenticatedDecanaturasAliadosIdRoute,
   AuthenticatedInvestigacionAliadosIdRoute:
     AuthenticatedInvestigacionAliadosIdRoute,
   AuthenticatedRelacionesInternacionalesAliadosIdRoute:
