@@ -133,6 +133,9 @@ export const AREA_LABEL: Record<FollowupArea, string> = {
   graduados: "Graduados",
   proyectos: "Proyectos",
   general: "General",
+  investigacion: "Investigación",
+  innovacion: "Innovación",
+  emprendimiento: "Emprendimiento",
 };
 
 export const TRAFFIC_META: Record<
