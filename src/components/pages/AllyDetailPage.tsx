@@ -118,6 +118,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
               )}
             </div>
             {ally.sector && <p className="text-sm text-muted-foreground mt-1">{ally.sector}</p>}
+            {ally.decanatura && <p className="text-sm text-muted-foreground mt-1"><span className="font-medium">Decanatura:</span> {ally.decanatura}</p>}
             <p className={`text-xs mt-2 ${tl.text}`}>{TRAFFIC_HELP[ally.status][ally.traffic_light]}</p>
 
             {expired && (
