@@ -240,10 +240,9 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
   );
 }
 
-function FollowupsSection({ allyId, isActive }: { allyId: string; isActive: boolean }) {
-  const areas: FollowupArea[] = isActive
-    ? ["direccion", "econti", "mercadeo", "graduados", "proyectos"]
-    : ["general"];
+function FollowupsSection({ allyId, isActive, direction }: { allyId: string; isActive: boolean; direction: AllyDirection }) {
+  const map = AREAS_BY_DIRECTION[direction];
+  const areas: FollowupArea[] = isActive ? map.active : map.inactive;
   const [tab, setTab] = useState<FollowupArea>(areas[0]);
 
   return (
