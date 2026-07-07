@@ -230,7 +230,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
         </Card>
       )}
 
-      <FollowupsSection allyId={ally.id} isActive={isActive} />
+      <FollowupsSection allyId={ally.id} isActive={isActive} direction={direction} />
 
       <AllyDialog open={editOpen} onOpenChange={setEditOpen} ally={ally} direction={direction} />
       {showDiscounts && (
