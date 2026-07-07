@@ -29,6 +29,9 @@ function AuthedLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const inAlianzas = pathname.startsWith("/alianzas");
   const inInvestigacion = pathname.startsWith("/investigacion");
+  const inRelaciones = pathname.startsWith("/relaciones-internacionales");
+  const inDecanaturas = pathname.startsWith("/decanaturas");
+  const inProyeccion = pathname.startsWith("/proyeccion");
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
