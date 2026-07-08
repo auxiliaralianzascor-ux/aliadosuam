@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card } from "@/components/ui/card";
 import { Plus, Search, Loader2, Handshake, Clock, MessageCircle, FileSpreadsheet } from "lucide-react";
 import { useAllies } from "@/lib/allies-api";
-import { useMyPermissions } from "@/lib/permissions-api";
+import { useMyPermissions, canEditDirection } from "@/lib/permissions-api";
 import { AllyDialog } from "@/components/AllyDialog";
 import { AllyCard } from "@/components/AllyCard";
 import { exportAlliesToDrive } from "@/lib/drive-export.functions";
