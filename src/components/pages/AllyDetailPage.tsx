@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useAlly, useActivities, useAddActivity, useDeleteAlly, useDeleteActivity, useSaveAlly } from "@/lib/allies-api";
-import { canEditArea, useMyPermissions } from "@/lib/permissions-api";
+import { canEditArea, canEditDirection, useMyPermissions } from "@/lib/permissions-api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
