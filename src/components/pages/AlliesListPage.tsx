@@ -33,6 +33,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
   const { data: allies = [], isLoading } = useAllies(direction);
   const { data: perms } = useMyPermissions();
   const isAdmin = !!perms?.isAdmin;
+  const canEdit = canEditDirection(perms, direction);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
   const exportFn = useServerFn(exportAlliesToDrive);
