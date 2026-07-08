@@ -207,6 +207,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_directions: {
+        Row: {
+          created_at: string
+          direction: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          direction: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          direction?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -239,6 +260,10 @@ export type Database = {
           _area: Database["public"]["Enums"]["followup_area"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      has_direction: {
+        Args: { _direction: string; _user_id: string }
         Returns: boolean
       }
       has_role: {

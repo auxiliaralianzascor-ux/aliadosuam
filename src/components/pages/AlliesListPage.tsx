@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card } from "@/components/ui/card";
 import { Plus, Search, Loader2, Handshake, Clock, MessageCircle, FileSpreadsheet } from "lucide-react";
 import { useAllies } from "@/lib/allies-api";
-import { useMyPermissions } from "@/lib/permissions-api";
+import { useMyPermissions, canEditDirection } from "@/lib/permissions-api";
 import { AllyDialog } from "@/components/AllyDialog";
 import { AllyCard } from "@/components/AllyCard";
 import { exportAlliesToDrive } from "@/lib/drive-export.functions";
@@ -33,6 +33,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
   const { data: allies = [], isLoading } = useAllies(direction);
   const { data: perms } = useMyPermissions();
   const isAdmin = !!perms?.isAdmin;
+  const canEdit = canEditDirection(perms, direction);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
   const exportFn = useServerFn(exportAlliesToDrive);
@@ -93,9 +94,9 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
             Dirección de {DIRECTION_LABEL[direction]}. Conversaciones, pendientes y aliados activos.
           </p>
         </div>
-        {isAdmin && (
+        {(isAdmin || canEdit) && (
           <div className="flex flex-wrap gap-2">
-            {showExport && (
+            {isAdmin && showExport && (
               <Button
                 variant="outline"
                 disabled={exporting}
@@ -118,9 +119,11 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
                 Exportar a Drive
               </Button>
             )}
-            <Button onClick={() => openNew(tab)}>
-              <Plus className="w-4 h-4" /> Nuevo aliado
-            </Button>
+            {canEdit && (
+              <Button onClick={() => openNew(tab)}>
+                <Plus className="w-4 h-4" /> Nuevo aliado
+              </Button>
+            )}
           </div>
         )}
       </div>
@@ -189,7 +192,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
             ) : filtered.length === 0 ? (
               <Card className="p-10 text-center text-muted-foreground">
                 <p>No hay aliados en esta vista todavía.</p>
-                {isAdmin && (
+                {canEdit && (
                   <Button variant="outline" className="mt-3" onClick={() => openNew(s)}>
                     <Plus className="w-4 h-4" /> Agregar el primero
                   </Button>
