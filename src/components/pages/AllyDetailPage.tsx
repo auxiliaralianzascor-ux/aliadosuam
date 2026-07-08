@@ -167,7 +167,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
           </div>
 
           <div className="flex flex-col gap-2 shrink-0">
-            {isAdmin ? (
+            {canEdit ? (
               <>
                 <Button variant="outline" onClick={() => setEditOpen(true)}><Edit2 className="w-4 h-4" /> Editar</Button>
                 {ally.status !== "active" && (
@@ -176,27 +176,29 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
                     Pasar a {ally.status === "conversation" ? "Pendiente" : "Activo"}
                   </Button>
                 )}
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="ghost" className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /> Eliminar</Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>¿Eliminar este aliado?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Se eliminarán también todos los seguimientos asociados. Esta acción no se puede deshacer.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleDelete}>Eliminar</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                {isAdmin && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" className="text-destructive hover:text-destructive"><Trash2 className="w-4 h-4" /> Eliminar</Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>¿Eliminar este aliado?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Se eliminarán también todos los seguimientos asociados. Esta acción no se puede deshacer.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDelete}>Eliminar</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
               </>
             ) : (
               <div className="text-xs text-muted-foreground flex items-center gap-1.5 rounded-md border px-3 py-2 bg-muted/40">
-                <Lock className="w-3.5 h-3.5" /> Solo administradores editan la ficha
+                <Lock className="w-3.5 h-3.5" /> No tienes permisos para editar esta dirección
               </div>
             )}
           </div>
