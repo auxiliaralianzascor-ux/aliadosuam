@@ -94,9 +94,9 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
             Dirección de {DIRECTION_LABEL[direction]}. Conversaciones, pendientes y aliados activos.
           </p>
         </div>
-        {isAdmin && (
+        {(isAdmin || canEdit) && (
           <div className="flex flex-wrap gap-2">
-            {showExport && (
+            {isAdmin && showExport && (
               <Button
                 variant="outline"
                 disabled={exporting}
@@ -119,9 +119,11 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
                 Exportar a Drive
               </Button>
             )}
-            <Button onClick={() => openNew(tab)}>
-              <Plus className="w-4 h-4" /> Nuevo aliado
-            </Button>
+            {canEdit && (
+              <Button onClick={() => openNew(tab)}>
+                <Plus className="w-4 h-4" /> Nuevo aliado
+              </Button>
+            )}
           </div>
         )}
       </div>
