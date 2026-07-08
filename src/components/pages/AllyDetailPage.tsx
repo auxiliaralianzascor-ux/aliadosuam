@@ -77,7 +77,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
     try {
       await saveAlly.mutateAsync({ id: ally.id, status: next, category: next === "active" ? (ally.category ?? "activo") : null });
       toast.success(`Movido a ${STATUS_LABEL[next]}`);
-      if (showDiscounts && next === "active" && isAdmin) {
+      if (showDiscounts && next === "active" && canEdit) {
         const hasDiscounts = discount && (discount.pregrado || discount.posgrado || discount.ingles || discount.econti);
         if (!hasDiscounts && window.confirm("¿Este aliado lleva descuentos? Puedes registrarlos ahora o más tarde desde su ficha.")) {
           setDiscountOpen(true);
