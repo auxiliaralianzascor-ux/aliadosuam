@@ -40,6 +40,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
   const { data: ally, isLoading } = useAlly(id);
   const { data: perms } = useMyPermissions();
   const isAdmin = !!perms?.isAdmin;
+  const canEdit = canEditDirection(perms, direction);
   const [editOpen, setEditOpen] = useState(false);
   const [discountOpen, setDiscountOpen] = useState(false);
   const deleteAlly = useDeleteAlly();
