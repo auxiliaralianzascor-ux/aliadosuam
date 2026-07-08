@@ -1,7 +1,6 @@
 import { createFileRoute, Outlet, redirect, Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Users, LogOut, GraduationCap, ShieldCheck, Handshake, Percent, ChevronDown, Microscope, Globe2, BookOpen, Rocket } from "lucide-react";
+import { LogOut, GraduationCap, ShieldCheck, Handshake, Percent, ChevronDown, Microscope, Globe2, BookOpen, Rocket, UserCircle2 } from "lucide-react";
 import { useMyPermissions } from "@/lib/permissions-api";
 import {
   DropdownMenu,
