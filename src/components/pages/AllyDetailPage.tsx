@@ -211,7 +211,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Percent className="w-5 h-5" /> Descuentos
             </h2>
-            {isAdmin && (
+            {canEdit && (
               <Button variant="outline" size="sm" onClick={() => setDiscountOpen(true)}>
                 <Edit2 className="w-4 h-4" /> {discount ? "Editar descuentos" : "Agregar descuentos"}
               </Button>
