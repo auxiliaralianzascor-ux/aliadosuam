@@ -192,7 +192,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
             ) : filtered.length === 0 ? (
               <Card className="p-10 text-center text-muted-foreground">
                 <p>No hay aliados en esta vista todavía.</p>
-                {isAdmin && (
+                {canEdit && (
                   <Button variant="outline" className="mt-3" onClick={() => openNew(s)}>
                     <Plus className="w-4 h-4" /> Agregar el primero
                   </Button>
