@@ -110,7 +110,7 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
       if (dupes && dupes.length > 0) {
         return toast.error("Ya existe un aliado con este nombre en esta dirección");
       }
-      await save.mutateAsync({
+      const saved = await save.mutateAsync({
         id: ally?.id,
         name: form.name.trim(),
         sector: form.sector || null,
@@ -127,6 +127,19 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
         valid_until: form.valid_until || null,
         notes: form.notes || null,
       });
+      if (canAddDiscounts && discountsOpen) {
+        const anyValue = Object.values(discounts).some((v) => v.trim());
+        const newId = (saved as { id?: string } | null)?.id;
+        if (anyValue && newId) {
+          await saveDiscount.mutateAsync({
+            ally_id: newId,
+            pregrado: discounts.pregrado.trim() || null,
+            posgrado: discounts.posgrado.trim() || null,
+            econti: discounts.econti.trim() || null,
+            ingles: discounts.ingles.trim() || null,
+          });
+        }
+      }
       toast.success(ally ? "Aliado actualizado" : "Aliado creado");
       onOpenChange(false);
     } catch (err: unknown) {
