@@ -46,19 +46,36 @@ function AuthedLayout() {
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b bg-card sticky top-0 z-40">
-        <div className="container mx-auto px-4 min-h-16 py-2 flex items-center justify-between gap-3 flex-wrap">
-          <Link to="/alianzas/aliados" className="flex items-center gap-3 min-w-0 max-w-[60%] sm:max-w-none">
-            <img
-              src={uamLogo.url}
-              alt="Logo Universidad Autónoma de Manizales"
-              className="w-12 h-12 rounded-md object-contain bg-white shrink-0"
-            />
-            <div className="leading-tight min-w-0">
-              <div className="font-semibold text-sm break-words">UAM · Gestión de Aliados</div>
-              <div className="text-xs text-muted-foreground break-words">Universidad Autónoma de Manizales</div>
-            </div>
-          </Link>
-          <nav className="flex items-center gap-1">
+        <div className="container mx-auto px-4 py-2 flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-3">
+            <Link to="/alianzas/aliados" className="flex items-center gap-3 min-w-0 max-w-[75%]">
+              <img
+                src={uamLogo.url}
+                alt="Logo Universidad Autónoma de Manizales"
+                className="w-12 h-12 rounded-md object-contain bg-white shrink-0"
+              />
+              <div className="leading-tight min-w-0">
+                <div className="font-semibold text-sm break-words">UAM · Gestión de Aliados</div>
+                <div class).text-xs.text-muted-foreground.break-words">Universidad Autónoma de Manizales</div>
+              </div>
+            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-2 rounded-full border px-1 py-1 pr-2 hover:bg-muted/60 transition-colors shrink-0">
+                <span className="w-8 h-8 rounded-full bg-primary/10 text-primary grid place-items-center">
+                  <UserCircle2 className="w-5 h-5" />
+                </span>
+                <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">{user.email}</div>
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                  <LogOut className="w-4 h-4" /> Cerrar sesión
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <nav className="flex items-center gap-1 flex-wrap pb-1">
             <DropdownMenu>
               <DropdownMenuTrigger className={triggerClass(inAlianzas)}>
                 <Handshake className="w-4 h-4" />
@@ -142,7 +159,6 @@ function AuthedLayout() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-
             {perms?.isAdmin && (
               <Link
                 to="/usuarios"
@@ -153,20 +169,6 @@ function AuthedLayout() {
               </Link>
             )}
           </nav>
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2 rounded-full border px-1 py-1 pr-2 hover:bg-muted/60 transition-colors">
-              <span className="w-7 h-7 rounded-full bg-primary/10 text-primary grid place-items-center">
-                <UserCircle2 className="w-4 h-4" />
-              </span>
-              <ChevronDown className="w-3.5 h-3.5 opacity-70" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">{user.email}</div>
-              <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
-                <LogOut className="w-4 h-4" /> Cerrar sesión
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </header>
       <main className="container mx-auto px-4 py-6">
