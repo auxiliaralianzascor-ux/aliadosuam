@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Percent, X } from "lucide-react";
 import { useSaveAlly } from "@/lib/allies-api";
+import { useSaveDiscount, DISCOUNT_CATEGORIES, type DiscountCategory } from "@/lib/discounts-api";
 import {
   type Ally,
   type AllyCategory,
