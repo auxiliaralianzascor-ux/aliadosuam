@@ -313,7 +313,7 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-            <Button type="submit" disabled={save.isPending}>{ally ? "Guardar cambios" : "Crear aliado"}</Button>
+            <Button type="submit" disabled={save.isPending || saveDiscount.isPending}>{ally ? "Guardar cambios" : "Crear aliado"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
