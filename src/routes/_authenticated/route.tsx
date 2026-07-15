@@ -56,7 +56,7 @@ function AuthedLayout() {
               />
               <div className="leading-tight min-w-0">
                 <div className="font-semibold text-sm break-words">UAM · Gestión de Aliados</div>
-                <div class).text-xs.text-muted-foreground.break-words">Universidad Autónoma de Manizales</div>
+                <div className="text-xs text-muted-foreground break-words">Universidad Autónoma de Manizales</div>
               </div>
             </Link>
             <DropdownMenu>
