@@ -268,6 +268,48 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
               <Label>Notas generales</Label>
               <Textarea rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
             </div>
+            {canAddDiscounts && (
+              <div className="sm:col-span-2 space-y-2">
+                {!discountsOpen ? (
+                  <Button type="button" variant="outline" size="sm" onClick={() => setDiscountsOpen(true)}>
+                    <Plus className="w-3.5 h-3.5" /> Agregar descuentos
+                  </Button>
+                ) : (
+                  <div className="rounded-md border p-3 bg-muted/20 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium inline-flex items-center gap-1.5">
+                        <Percent className="w-4 h-4" /> Descuentos del aliado
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                        onClick={() => {
+                          setDiscountsOpen(false);
+                          setDiscounts({ pregrado: "", posgrado: "", econti: "", ingles: "" });
+                        }}
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-2">
+                      {DISCOUNT_CATEGORIES.map((cat) => (
+                        <div key={cat.key}>
+                          <Label className="text-xs">{cat.label}</Label>
+                          <Input
+                            value={discounts[cat.key]}
+                            onChange={(e) => setDiscounts((d) => ({ ...d, [cat.key]: e.target.value }))}
+                            placeholder="Ej. 15%"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground">Deja en blanco las categorías que no aplican.</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
