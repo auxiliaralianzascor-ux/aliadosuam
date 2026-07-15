@@ -64,7 +64,11 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
   });
 
   useEffect(() => {
-    if (open) setForm(buildInitial());
+    if (open) {
+      setForm(buildInitial());
+      setDiscountsOpen(false);
+      setDiscounts({ pregrado: "", posgrado: "", econti: "", ingles: "" });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, ally?.id, defaultStatus]);
 
