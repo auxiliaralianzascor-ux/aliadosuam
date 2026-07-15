@@ -36,7 +36,9 @@ interface Props {
 
 export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction = "alianzas" }: Props) {
   const save = useSaveAlly();
+  const saveDiscount = useSaveDiscount();
   const activeDirection: AllyDirection = ally?.direction ?? direction;
+  const canAddDiscounts = !ally && activeDirection === "alianzas";
   const buildInitial = () => {
     const initialContacts = ally ? getAllyContacts(ally) : [];
     return {
@@ -53,6 +55,13 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
     };
   };
   const [form, setForm] = useState(buildInitial);
+  const [discountsOpen, setDiscountsOpen] = useState(false);
+  const [discounts, setDiscounts] = useState<Record<DiscountCategory, string>>({
+    pregrado: "",
+    posgrado: "",
+    econti: "",
+    ingles: "",
+  });
 
   useEffect(() => {
     if (open) setForm(buildInitial());
