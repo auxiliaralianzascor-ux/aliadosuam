@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Percent, X } from "lucide-react";
 import { useSaveAlly } from "@/lib/allies-api";
+import { useSaveDiscount, DISCOUNT_CATEGORIES, type DiscountCategory } from "@/lib/discounts-api";
 import {
   type Ally,
   type AllyCategory,
@@ -35,7 +36,9 @@ interface Props {
 
 export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction = "alianzas" }: Props) {
   const save = useSaveAlly();
+  const saveDiscount = useSaveDiscount();
   const activeDirection: AllyDirection = ally?.direction ?? direction;
+  const canAddDiscounts = !ally && activeDirection === "alianzas";
   const buildInitial = () => {
     const initialContacts = ally ? getAllyContacts(ally) : [];
     return {
@@ -52,9 +55,20 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
     };
   };
   const [form, setForm] = useState(buildInitial);
+  const [discountsOpen, setDiscountsOpen] = useState(false);
+  const [discounts, setDiscounts] = useState<Record<DiscountCategory, string>>({
+    pregrado: "",
+    posgrado: "",
+    econti: "",
+    ingles: "",
+  });
 
   useEffect(() => {
-    if (open) setForm(buildInitial());
+    if (open) {
+      setForm(buildInitial());
+      setDiscountsOpen(false);
+      setDiscounts({ pregrado: "", posgrado: "", econti: "", ingles: "" });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, ally?.id, defaultStatus]);
 
@@ -96,7 +110,7 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
       if (dupes && dupes.length > 0) {
         return toast.error("Ya existe un aliado con este nombre en esta dirección");
       }
-      await save.mutateAsync({
+      const saved = await save.mutateAsync({
         id: ally?.id,
         name: form.name.trim(),
         sector: form.sector || null,
@@ -113,6 +127,19 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
         valid_until: form.valid_until || null,
         notes: form.notes || null,
       });
+      if (canAddDiscounts && discountsOpen) {
+        const anyValue = Object.values(discounts).some((v) => v.trim());
+        const newId = (saved as { id?: string } | null)?.id;
+        if (anyValue && newId) {
+          await saveDiscount.mutateAsync({
+            ally_id: newId,
+            pregrado: discounts.pregrado.trim() || null,
+            posgrado: discounts.posgrado.trim() || null,
+            econti: discounts.econti.trim() || null,
+            ingles: discounts.ingles.trim() || null,
+          });
+        }
+      }
       toast.success(ally ? "Aliado actualizado" : "Aliado creado");
       onOpenChange(false);
     } catch (err: unknown) {
@@ -241,10 +268,52 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
               <Label>Notas generales</Label>
               <Textarea rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
             </div>
+            {canAddDiscounts && (
+              <div className="sm:col-span-2 space-y-2">
+                {!discountsOpen ? (
+                  <Button type="button" variant="outline" size="sm" onClick={() => setDiscountsOpen(true)}>
+                    <Plus className="w-3.5 h-3.5" /> Agregar descuentos
+                  </Button>
+                ) : (
+                  <div className="rounded-md border p-3 bg-muted/20 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium inline-flex items-center gap-1.5">
+                        <Percent className="w-4 h-4" /> Descuentos del aliado
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                        onClick={() => {
+                          setDiscountsOpen(false);
+                          setDiscounts({ pregrado: "", posgrado: "", econti: "", ingles: "" });
+                        }}
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-2">
+                      {DISCOUNT_CATEGORIES.map((cat) => (
+                        <div key={cat.key}>
+                          <Label className="text-xs">{cat.label}</Label>
+                          <Input
+                            value={discounts[cat.key]}
+                            onChange={(e) => setDiscounts((d) => ({ ...d, [cat.key]: e.target.value }))}
+                            placeholder="Ej. 15%"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground">Deja en blanco las categorías que no aplican.</p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancelar</Button>
-            <Button type="submit" disabled={save.isPending}>{ally ? "Guardar cambios" : "Crear aliado"}</Button>
+            <Button type="submit" disabled={save.isPending || saveDiscount.isPending}>{ally ? "Guardar cambios" : "Crear aliado"}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
