@@ -104,10 +104,18 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
                   setExporting(true);
                   try {
                     const r = await exportFn();
-                    toast.success("Exportado a tu Google Drive", {
-                      description: r.webViewLink ? "Abrir archivo" : r.name,
-                      action: r.webViewLink ? { label: "Abrir", onClick: () => window.open(r.webViewLink!, "_blank") } : undefined,
-                    });
+                    const download = (name: string, csv: string) => {
+                      const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+                      const url = URL.createObjectURL(blob);
+                      const a = document.createElement("a");
+                      a.href = url;
+                      a.download = name;
+                      a.click();
+                      URL.revokeObjectURL(url);
+                    };
+                    download(r.alliesFileName, r.alliesCsv);
+                    if (r.activitiesCsv) download(r.activitiesFileName, r.activitiesCsv);
+                    toast.success("Exportado en CSV");
                   } catch (e: unknown) {
                     toast.error(e instanceof Error ? e.message : "No se pudo exportar");
                   } finally {
@@ -116,8 +124,9 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
                 }}
               >
                 {exporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileSpreadsheet className="w-4 h-4" />}
-                Exportar a Drive
+                Exportar a CSV
               </Button>
+
             )}
             {canEdit && (
               <Button onClick={() => openNew(tab)}>
