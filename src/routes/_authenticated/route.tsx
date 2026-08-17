@@ -1,8 +1,8 @@
 import { createFileRoute, Outlet, redirect, Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, ShieldCheck, Handshake, Percent, ChevronDown, Microscope, Globe2, BookOpen, Rocket, UserCircle2 } from "lucide-react";
+import { LogOut, ShieldCheck, Handshake, Percent, ChevronDown, Microscope, Globe2, BookOpen, Rocket, UserCircle2, BarChart3 } from "lucide-react";
 import uamLogo from "@/assets/uam-logo.png.asset.json";
-import { useMyPermissions } from "@/lib/permissions-api";
+import { useMyPermissions, canEditDirection } from "@/lib/permissions-api";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -94,6 +94,13 @@ function AuthedLayout() {
                     <Percent className="w-4 h-4" /> Descuentos
                   </Link>
                 </DropdownMenuItem>
+                {canEditDirection(perms, "alianzas") && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/alianzas/indicadores" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Indicadores
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -110,6 +117,13 @@ function AuthedLayout() {
                     <Handshake className="w-4 h-4" /> Aliados
                   </Link>
                 </DropdownMenuItem>
+                {canEditDirection(perms, "investigacion") && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/investigacion/indicadores" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Indicadores
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -126,6 +140,13 @@ function AuthedLayout() {
                     <Handshake className="w-4 h-4" /> Aliados
                   </Link>
                 </DropdownMenuItem>
+                {canEditDirection(perms, "relaciones_internacionales") && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/relaciones-internacionales/indicadores" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Indicadores
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -141,6 +162,13 @@ function AuthedLayout() {
                     <Handshake className="w-4 h-4" /> Aliados
                   </Link>
                 </DropdownMenuItem>
+                {canEditDirection(perms, "decanaturas") && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/decanaturas/indicadores" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Indicadores
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -156,6 +184,13 @@ function AuthedLayout() {
                     <Handshake className="w-4 h-4" /> Aliados
                   </Link>
                 </DropdownMenuItem>
+                {canEditDirection(perms, "proyeccion") && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/proyeccion/indicadores" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Indicadores
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

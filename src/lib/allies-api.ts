@@ -7,7 +7,9 @@ export function useAllies(direction?: AllyDirection) {
     queryKey: ["allies", direction ?? "all"],
     queryFn: async (): Promise<Ally[]> => {
       let q = supabase.from("allies").select("*").order("updated_at", { ascending: false });
-      if (direction) q = q.eq("direction", direction);
+      if (direction) {
+        q = q.or(`direction.eq.${direction},shared_with_directions.cs.{${direction}}`);
+      }
       const { data, error } = await q;
       if (error) throw error;
       return data as unknown as Ally[];

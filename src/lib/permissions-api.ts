@@ -4,12 +4,18 @@ import type { AllyDirection, FollowupArea } from "./allies-types";
 
 export type AppRole = "admin" | "member";
 
+export interface IndicatorProfile {
+  direction: AllyDirection;
+  profile: "verificador" | "cargador";
+}
+
 export interface MyPermissions {
   userId: string | null;
   isAdmin: boolean;
   isMember: boolean;
   areas: FollowupArea[];
   directions: AllyDirection[];
+  indicatorProfiles: IndicatorProfile[];
 }
 
 export function useMyPermissions() {
@@ -19,11 +25,12 @@ export function useMyPermissions() {
     queryFn: async (): Promise<MyPermissions> => {
       const { data: u } = await supabase.auth.getUser();
       const user = u.user;
-      if (!user) return { userId: null, isAdmin: false, isMember: false, areas: [], directions: [] };
-      const [{ data: roles }, { data: areas }, { data: directions }] = await Promise.all([
+      if (!user) return { userId: null, isAdmin: false, isMember: false, areas: [], directions: [], indicatorProfiles: [] };
+      const [{ data: roles }, { data: areas }, { data: directions }, { data: indicatorProfiles }] = await Promise.all([
         supabase.from("user_roles").select("role").eq("user_id", user.id),
         supabase.from("user_areas").select("area").eq("user_id", user.id),
         (supabase.from as unknown as (t: string) => { select: (c: string) => { eq: (k: string, v: string) => Promise<{ data: { direction: string }[] | null }> } })("user_directions").select("direction").eq("user_id", user.id),
+        (supabase.from as unknown as (t: string) => { select: (c: string) => { eq: (k: string, v: string) => Promise<{ data: { direction: string; profile: string }[] | null }> } })("user_indicator_profiles").select("direction, profile").eq("user_id", user.id),
       ]);
       const roleSet = new Set((roles ?? []).map((r) => r.role as AppRole));
       return {
@@ -32,6 +39,7 @@ export function useMyPermissions() {
         isMember: roleSet.has("member"),
         areas: (areas ?? []).map((a) => a.area as FollowupArea),
         directions: (directions ?? []).map((d) => d.direction as AllyDirection),
+        indicatorProfiles: (indicatorProfiles ?? []).map(p => ({ direction: p.direction as AllyDirection, profile: p.profile as "verificador"|"cargador" })),
       };
     },
   });
@@ -49,6 +57,18 @@ export function canEditDirection(perms: MyPermissions | undefined, direction: Al
   return perms.directions.includes(direction);
 }
 
+export function canVerifyIndicators(perms: MyPermissions | undefined, direction: AllyDirection) {
+  if (!perms) return false;
+  if (perms.isAdmin) return true;
+  return perms.indicatorProfiles.some(p => p.direction === direction && (p.profile === "verificador" || p.profile === "cargador"));
+}
+
+export function canLoadIndicators(perms: MyPermissions | undefined, direction: AllyDirection) {
+  if (!perms) return false;
+  if (perms.isAdmin) return true;
+  return perms.indicatorProfiles.some(p => p.direction === direction && p.profile === "cargador");
+}
+
 // --- Admin: user management ---
 
 export interface ManagedUser {
@@ -58,22 +78,25 @@ export interface ManagedUser {
   roles: AppRole[];
   areas: FollowupArea[];
   directions: AllyDirection[];
+  indicatorProfiles: IndicatorProfile[];
 }
 
 export function useAllUsers() {
   return useQuery({
     queryKey: ["managed-users"],
     queryFn: async (): Promise<ManagedUser[]> => {
-      const [{ data: profiles, error: pe }, { data: roles, error: re }, { data: areas, error: ae }, dirsRes] = await Promise.all([
+      const [{ data: profiles, error: pe }, { data: roles, error: re }, { data: areas, error: ae }, dirsRes, indRes] = await Promise.all([
         supabase.from("profiles").select("id, email, display_name"),
         supabase.from("user_roles").select("user_id, role"),
         supabase.from("user_areas").select("user_id, area"),
         (supabase.from as unknown as (t: string) => { select: (c: string) => Promise<{ data: { user_id: string; direction: string }[] | null; error: unknown }> })("user_directions").select("user_id, direction"),
+        (supabase.from as unknown as (t: string) => { select: (c: string) => Promise<{ data: { user_id: string; direction: string; profile: string }[] | null; error: unknown }> })("user_indicator_profiles").select("user_id, direction, profile"),
       ]);
       if (pe) throw pe;
       if (re) throw re;
       if (ae) throw ae;
       if (dirsRes.error) throw dirsRes.error;
+      if (indRes.error) throw indRes.error;
       const rolesByUser = new Map<string, AppRole[]>();
       (roles ?? []).forEach((r) => {
         const arr = rolesByUser.get(r.user_id) ?? [];
@@ -92,6 +115,12 @@ export function useAllUsers() {
         arr.push(d.direction as AllyDirection);
         dirsByUser.set(d.user_id, arr);
       });
+      const indByUser = new Map<string, IndicatorProfile[]>();
+      (indRes.data ?? []).forEach((d) => {
+        const arr = indByUser.get(d.user_id) ?? [];
+        arr.push({ direction: d.direction as AllyDirection, profile: d.profile as "verificador"|"cargador" });
+        indByUser.set(d.user_id, arr);
+      });
       return (profiles ?? []).map((p) => ({
         id: p.id,
         email: p.email,
@@ -99,6 +128,7 @@ export function useAllUsers() {
         roles: rolesByUser.get(p.id) ?? [],
         areas: areasByUser.get(p.id) ?? [],
         directions: dirsByUser.get(p.id) ?? [],
+        indicatorProfiles: indByUser.get(p.id) ?? [],
       }));
     },
   });
@@ -155,6 +185,29 @@ export function useToggleUserDirection() {
         if (error) throw error;
       } else {
         const { error } = await table.delete().eq("user_id", userId).eq("direction", direction);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["managed-users"] });
+      qc.invalidateQueries({ queryKey: ["my-permissions"] });
+    },
+  });
+}
+
+export function useToggleUserIndicatorProfile() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ userId, direction, profile, enabled }: { userId: string; direction: AllyDirection; profile: "verificador" | "cargador"; enabled: boolean }) => {
+      const table = (supabase.from as unknown as (t: string) => {
+        upsert: (row: unknown, opts: { onConflict: string }) => Promise<{ error: unknown }>;
+        delete: () => { eq: (k: string, v: string) => { eq: (k: string, v: string) => { eq: (k: string, v: string) => Promise<{ error: unknown }> } } };
+      })("user_indicator_profiles");
+      if (enabled) {
+        const { error } = await table.upsert({ user_id: userId, direction, profile }, { onConflict: "user_id,direction,profile" });
+        if (error) throw error;
+      } else {
+        const { error } = await table.delete().eq("user_id", userId).eq("direction", direction).eq("profile", profile);
         if (error) throw error;
       }
     },
