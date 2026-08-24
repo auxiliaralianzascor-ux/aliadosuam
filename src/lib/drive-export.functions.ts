@@ -125,12 +125,16 @@ export const exportAlliesToDrive = createServerFn({ method: "POST" })
     const activitiesRows = (activities ?? []).map((act) => {
       const ally = alliesById.get(act.ally_id);
       return {
+        "ID aliado": act.ally_id,
         Aliado: ally?.name ?? act.ally_id,
+        Dirección: ally ? DIRECTION_LABEL[ally.direction] ?? ally.direction : "",
+        "Estado aliado": ally ? STATUS_LABEL[ally.status] ?? ally.status : "",
         Área: AREA_LABEL[act.area] ?? act.area,
         Tipo: act.activity_type,
         Fecha: act.activity_date ? new Date(act.activity_date).toLocaleDateString("es-CO") : "",
         Responsable: act.responsible_name,
-        Descripción: act.description,
+        Descripción: (act.description ?? "").replace(/\r?\n/g, " "),
+        Registrado: act.created_at ? new Date(act.created_at).toLocaleString("es-CO") : "",
       };
     });
 
