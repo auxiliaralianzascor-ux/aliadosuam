@@ -13,6 +13,13 @@ const CATEGORY_LABEL: Record<string, string> = {
   activo: "Activo",
 };
 const TRAFFIC_LABEL: Record<string, string> = { green: "Verde", yellow: "Amarillo", red: "Rojo" };
+const DIRECTION_LABEL: Record<string, string> = {
+  alianzas: "Alianzas y Relaciones Corporativas",
+  investigacion: "Investigación, Innovación y Emprendimiento",
+  relaciones_internacionales: "Relaciones Internacionales",
+  decanaturas: "Decanaturas",
+  proyeccion: "Proyección",
+};
 const AREA_LABEL: Record<string, string> = {
   direccion: "Dirección",
   econti: "Econti",
