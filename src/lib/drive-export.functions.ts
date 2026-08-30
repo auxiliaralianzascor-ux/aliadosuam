@@ -13,6 +13,13 @@ const CATEGORY_LABEL: Record<string, string> = {
   activo: "Activo",
 };
 const TRAFFIC_LABEL: Record<string, string> = { green: "Verde", yellow: "Amarillo", red: "Rojo" };
+const DIRECTION_LABEL: Record<string, string> = {
+  alianzas: "Alianzas y Relaciones Corporativas",
+  investigacion: "Investigación, Innovación y Emprendimiento",
+  relaciones_internacionales: "Relaciones Internacionales",
+  decanaturas: "Decanaturas",
+  proyeccion: "Proyección",
+};
 const AREA_LABEL: Record<string, string> = {
   direccion: "Dirección",
   econti: "Econti",
@@ -48,40 +55,86 @@ export const exportAlliesToDrive = createServerFn({ method: "POST" })
     if (roleErr) throw new Error(roleErr.message);
     if (!roleRow) throw new Error("Solo administradores pueden exportar.");
 
-    const [{ data: allies, error: ae }, { data: activities, error: aae }] = await Promise.all([
+    const [
+      { data: allies, error: ae },
+      { data: activities, error: aae },
+      { data: discounts, error: de },
+    ] = await Promise.all([
       supabase.from("allies").select("*").order("name"),
       supabase.from("ally_activities").select("*").order("activity_date", { ascending: false }),
+      supabase.from("ally_discounts").select("*"),
     ]);
     if (ae) throw new Error(ae.message);
     if (aae) throw new Error(aae.message);
+    if (de) throw new Error(de.message);
 
     const alliesById = new Map((allies ?? []).map((a) => [a.id, a]));
+    const discountByAlly = new Map((discounts ?? []).map((d) => [d.ally_id, d]));
 
-    const alliesRows = (allies ?? []).map((a) => ({
-      Nombre: a.name,
-      Dirección: a.direction ?? "",
-      Estado: STATUS_LABEL[a.status] ?? a.status,
-      Categoría: a.category ? CATEGORY_LABEL[a.category] ?? a.category : "",
-      Semáforo: TRAFFIC_LABEL[a.traffic_light] ?? a.traffic_light,
-      Sector: a.sector ?? "",
-      Contacto: a.contact_name ?? "",
-      Correo: a.contact_email ?? "",
-      Teléfono: a.contact_phone ?? "",
-      "Vigencia desde": a.valid_from ?? "",
-      "Vigencia hasta": a.valid_until ?? "",
-      Notas: a.notes ?? "",
-      Actualizado: a.updated_at ? new Date(a.updated_at).toLocaleString("es-CO") : "",
-    }));
+    const fmtDate = (v: string | null) => (v ? new Date(v).toLocaleDateString("es-CO") : "");
+
+    type Contact = { name?: string; position?: string; email?: string; phone?: string };
+    const contactsOf = (a: { contacts: unknown; contact_name: string | null; contact_email: string | null; contact_phone: string | null }): Contact[] => {
+      const list = Array.isArray(a.contacts) ? (a.contacts as Contact[]) : [];
+      if (list.length > 0) return list;
+      if (a.contact_name || a.contact_email || a.contact_phone) {
+        return [{ name: a.contact_name ?? "", position: "", email: a.contact_email ?? "", phone: a.contact_phone ?? "" }];
+      }
+      return [];
+    };
+
+    // Una fila por aliado + contacto (normalizado); aliados sin contacto también salen.
+    const alliesRows = (allies ?? []).flatMap((a) => {
+      const disc = discountByAlly.get(a.id);
+      const vencido =
+        a.status === "active" && a.valid_until && new Date(a.valid_until) < new Date() ? "Sí" : "No";
+      const base = {
+        "ID aliado": a.id,
+        Nombre: a.name,
+        Dirección: DIRECTION_LABEL[a.direction] ?? a.direction ?? "",
+        Decanatura: a.decanatura ?? "",
+        Estado: STATUS_LABEL[a.status] ?? a.status,
+        Categoría: a.category ? CATEGORY_LABEL[a.category] ?? a.category : "",
+        Semáforo: TRAFFIC_LABEL[a.traffic_light] ?? a.traffic_light,
+        Sector: a.sector ?? "",
+        "Vigencia desde": fmtDate(a.valid_from),
+        "Vigencia hasta": fmtDate(a.valid_until),
+        "Convenio vencido": vencido,
+        "Descuento pregrado": disc?.pregrado ?? "",
+        "Descuento posgrado": disc?.posgrado ?? "",
+        "Descuento inglés": disc?.ingles ?? "",
+        "Descuento Econti": disc?.econti ?? "",
+        Notas: (a.notes ?? "").replace(/\r?\n/g, " "),
+        Creado: fmtDate(a.created_at),
+        Actualizado: a.updated_at ? new Date(a.updated_at).toLocaleString("es-CO") : "",
+      };
+      const contacts = contactsOf(a);
+      if (contacts.length === 0) {
+        return [{ ...base, "Contacto #": "", "Contacto nombre": "", "Contacto cargo": "", "Contacto correo": "", "Contacto teléfono": "" }];
+      }
+      return contacts.map((c, i) => ({
+        ...base,
+        "Contacto #": String(i + 1),
+        "Contacto nombre": c.name ?? "",
+        "Contacto cargo": c.position ?? "",
+        "Contacto correo": c.email ?? "",
+        "Contacto teléfono": c.phone ?? "",
+      }));
+    });
 
     const activitiesRows = (activities ?? []).map((act) => {
       const ally = alliesById.get(act.ally_id);
       return {
+        "ID aliado": act.ally_id,
         Aliado: ally?.name ?? act.ally_id,
+        Dirección: ally ? DIRECTION_LABEL[ally.direction] ?? ally.direction : "",
+        "Estado aliado": ally ? STATUS_LABEL[ally.status] ?? ally.status : "",
         Área: AREA_LABEL[act.area] ?? act.area,
         Tipo: act.activity_type,
         Fecha: act.activity_date ? new Date(act.activity_date).toLocaleDateString("es-CO") : "",
         Responsable: act.responsible_name,
-        Descripción: act.description,
+        Descripción: (act.description ?? "").replace(/\r?\n/g, " "),
+        Registrado: act.created_at ? new Date(act.created_at).toLocaleString("es-CO") : "",
       };
     });
 
