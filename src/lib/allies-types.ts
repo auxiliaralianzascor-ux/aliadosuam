@@ -16,6 +16,8 @@ export const DIRECTION_LABEL: Record<AllyDirection, string> = {
   proyeccion: "Proyección",
 };
 
+export const DIRECTIONS: AllyDirection[] = Object.keys(DIRECTION_LABEL) as AllyDirection[];
+
 export type FollowupArea =
   | "direccion"
   | "econti"
@@ -81,6 +83,7 @@ export interface Ally {
   contacts: AllyContact[] | null;
   notes: string | null;
   decanatura: string | null;
+  shared_with_directions: AllyDirection[] | null;
   valid_from: string | null;
   valid_until: string | null;
   created_by: string | null;

@@ -20,6 +20,8 @@ import {
   CATEGORY_LABEL,
   TRAFFIC_META,
   TRAFFIC_HELP,
+  DIRECTIONS,
+  DIRECTION_LABEL,
   getAllyContacts,
 } from "@/lib/allies-types";
 import { toast } from "sonner";
@@ -52,6 +54,7 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
       valid_from: ally?.valid_from ?? "",
       valid_until: ally?.valid_until ?? "",
       notes: ally?.notes ?? "",
+      shared_with_directions: ally?.shared_with_directions ?? [],
     };
   };
   const [form, setForm] = useState(buildInitial);
@@ -126,6 +129,7 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
         valid_from: form.valid_from || null,
         valid_until: form.valid_until || null,
         notes: form.notes || null,
+        shared_with_directions: form.shared_with_directions,
       });
       if (canAddDiscounts && discountsOpen) {
         const anyValue = Object.values(discounts).some((v) => v.trim());
@@ -267,6 +271,29 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
             <div className="sm:col-span-2">
               <Label>Notas generales</Label>
               <Textarea rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+            </div>
+            <div className="sm:col-span-2">
+              <Label>Compartir con otras direcciones</Label>
+              <div className="mt-2 grid sm:grid-cols-2 gap-2">
+                {DIRECTIONS.filter(d => d !== activeDirection).map(d => (
+                  <label key={d} className="flex items-center gap-2 text-sm cursor-pointer border rounded-md p-2 bg-background hover:bg-muted/50">
+                    <input
+                      type="checkbox"
+                      checked={form.shared_with_directions.includes(d)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setForm(f => ({ ...f, shared_with_directions: [...f.shared_with_directions, d] }));
+                        } else {
+                          setForm(f => ({ ...f, shared_with_directions: f.shared_with_directions.filter(x => x !== d) }));
+                        }
+                      }}
+                      className="rounded border-input text-primary focus:ring-primary"
+                    />
+                    {DIRECTION_LABEL[d]}
+                  </label>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Los usuarios de las direcciones seleccionadas podrán ver este aliado y registrar seguimientos.</p>
             </div>
             {canAddDiscounts && (
               <div className="sm:col-span-2 space-y-2">

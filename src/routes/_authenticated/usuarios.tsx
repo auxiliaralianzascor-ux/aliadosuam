@@ -27,6 +27,7 @@ import {
   useSetUserRole,
   useToggleUserArea,
   useToggleUserDirection,
+  useToggleUserIndicatorProfile,
   type ManagedUser,
 } from "@/lib/permissions-api";
 import {
@@ -68,6 +69,7 @@ function UsersPage() {
   const setRole = useSetUserRole();
   const toggleArea = useToggleUserArea();
   const toggleDirection = useToggleUserDirection();
+  const toggleIndicatorProfile = useToggleUserIndicatorProfile();
 
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "admins" | "members">("all");
@@ -122,6 +124,19 @@ function UsersPage() {
   ) => {
     try {
       await toggleDirection.mutateAsync({ userId, direction, enabled });
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Error");
+    }
+  };
+
+  const handleIndicatorProfile = async (
+    userId: string,
+    direction: AllyDirection,
+    profile: "verificador" | "cargador",
+    enabled: boolean,
+  ) => {
+    try {
+      await toggleIndicatorProfile.mutateAsync({ userId, direction, profile, enabled });
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Error");
     }
@@ -209,6 +224,7 @@ function UsersPage() {
               onRole={(v) => handleRole(editing.id, v)}
               onDirection={(d, v) => handleDirection(editing.id, d, v)}
               onArea={(a, v) => handleArea(editing.id, a, v)}
+              onIndicatorProfile={(d, p, v) => handleIndicatorProfile(editing.id, d, p, v)}
             />
           )}
         </SheetContent>
@@ -280,12 +296,14 @@ function PermissionEditor({
   onRole,
   onDirection,
   onArea,
+  onIndicatorProfile,
 }: {
   user: ManagedUser;
   isMe: boolean;
   onRole: (v: boolean) => void;
   onDirection: (d: AllyDirection, v: boolean) => void;
   onArea: (a: FollowupArea, v: boolean) => void;
+  onIndicatorProfile: (d: AllyDirection, p: "verificador" | "cargador", v: boolean) => void;
 }) {
   const isAdmin = user.roles.includes("admin");
   return (
@@ -379,6 +397,49 @@ function PermissionEditor({
         {isAdmin && (
           <p className="text-xs text-muted-foreground mt-3">
             Como administrador ya tiene acceso a todas las áreas.
+          </p>
+        )}
+      </div>
+
+      <Separator />
+
+      <div>
+        <div className="flex items-baseline justify-between mb-2">
+          <h3 className="text-sm font-semibold">Perfiles de Indicadores</h3>
+          <span className="text-xs text-muted-foreground">Verificar o cargar metas</span>
+        </div>
+        <div className="space-y-4">
+          {DIRECTIONS.map((dir) => {
+            const hasVerificador = user.indicatorProfiles.some(p => p.direction === dir && p.profile === "verificador");
+            const hasCargador = user.indicatorProfiles.some(p => p.direction === dir && p.profile === "cargador");
+            return (
+              <div key={dir} className="rounded-md border p-3 bg-card">
+                <div className="text-sm font-medium mb-3 text-muted-foreground">{DIRECTION_LABEL[dir]}</div>
+                <div className="space-y-2">
+                  <label className="flex items-center justify-between gap-3 text-sm cursor-pointer">
+                    <span>Verificador (solo lectura)</span>
+                    <Switch
+                      checked={hasVerificador || isAdmin}
+                      disabled={isAdmin}
+                      onCheckedChange={(v) => onIndicatorProfile(dir, "verificador", v)}
+                    />
+                  </label>
+                  <label className="flex items-center justify-between gap-3 text-sm cursor-pointer">
+                    <span>Cargador (escritura)</span>
+                    <Switch
+                      checked={hasCargador || isAdmin}
+                      disabled={isAdmin}
+                      onCheckedChange={(v) => onIndicatorProfile(dir, "cargador", v)}
+                    />
+                  </label>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {isAdmin && (
+          <p className="text-xs text-muted-foreground mt-3">
+            Como administrador ya tiene acceso a todos los indicadores.
           </p>
         )}
       </div>

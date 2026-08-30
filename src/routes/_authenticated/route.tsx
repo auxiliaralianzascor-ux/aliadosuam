@@ -1,8 +1,8 @@
 import { createFileRoute, Outlet, redirect, Link, useRouter, useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
-import { LogOut, ShieldCheck, Handshake, Percent, ChevronDown, Microscope, Globe2, BookOpen, Rocket, UserCircle2 } from "lucide-react";
+import { LogOut, ShieldCheck, Handshake, Percent, ChevronDown, Microscope, Globe2, BookOpen, Rocket, UserCircle2, BarChart3 } from "lucide-react";
 import uamLogo from "@/assets/uam-logo.png.asset.json";
-import { useMyPermissions } from "@/lib/permissions-api";
+import { useMyPermissions, canVerifyIndicators, canLoadIndicators } from "@/lib/permissions-api";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -94,6 +94,20 @@ function AuthedLayout() {
                     <Percent className="w-4 h-4" /> Descuentos
                   </Link>
                 </DropdownMenuItem>
+                {(canVerifyIndicators(perms, "alianzas") || canLoadIndicators(perms, "alianzas")) && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/alianzas/indicadores" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Indicadores
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {canLoadIndicators(perms, "alianzas") && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/alianzas/indicadores/cargar" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Cargar aporte
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -110,6 +124,20 @@ function AuthedLayout() {
                     <Handshake className="w-4 h-4" /> Aliados
                   </Link>
                 </DropdownMenuItem>
+                {(canVerifyIndicators(perms, "investigacion") || canLoadIndicators(perms, "investigacion")) && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/investigacion/indicadores" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Indicadores
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {canLoadIndicators(perms, "investigacion") && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/investigacion/indicadores/cargar" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Cargar aporte
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -126,6 +154,21 @@ function AuthedLayout() {
                     <Handshake className="w-4 h-4" /> Aliados
                   </Link>
                 </DropdownMenuItem>
+                {(canVerifyIndicators(perms, "relaciones_internacionales") ||
+                  canLoadIndicators(perms, "relaciones_internacionales")) && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/relaciones-internacionales/indicadores" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Indicadores
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {canLoadIndicators(perms, "relaciones_internacionales") && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/relaciones-internacionales/indicadores/cargar" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Cargar aporte
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -141,6 +184,20 @@ function AuthedLayout() {
                     <Handshake className="w-4 h-4" /> Aliados
                   </Link>
                 </DropdownMenuItem>
+                {(canVerifyIndicators(perms, "decanaturas") || canLoadIndicators(perms, "decanaturas")) && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/decanaturas/indicadores" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Indicadores
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {canLoadIndicators(perms, "decanaturas") && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/decanaturas/indicadores/cargar" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Cargar aporte
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -156,6 +213,20 @@ function AuthedLayout() {
                     <Handshake className="w-4 h-4" /> Aliados
                   </Link>
                 </DropdownMenuItem>
+                {(canVerifyIndicators(perms, "proyeccion") || canLoadIndicators(perms, "proyeccion")) && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/proyeccion/indicadores" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Indicadores
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                {canLoadIndicators(perms, "proyeccion") && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/proyeccion/indicadores/cargar" className="cursor-pointer">
+                      <BarChart3 className="w-4 h-4" /> Cargar aporte
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

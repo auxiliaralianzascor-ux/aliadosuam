@@ -7,6 +7,8 @@ import {
   CATEGORY_LABEL,
   STATUS_LABEL,
   TRAFFIC_META,
+  type AllyDirection,
+  DIRECTION_LABEL,
   getAllyContacts,
 } from "@/lib/allies-types";
 
@@ -19,7 +21,7 @@ function isExpired(ally: Ally) {
   return d < today;
 }
 
-export function AllyCard({ ally, basePath }: { ally: Ally; basePath: string }) {
+export function AllyCard({ ally, basePath, currentDirection }: { ally: Ally; basePath: string; currentDirection?: AllyDirection }) {
   const tl = TRAFFIC_META[ally.traffic_light];
   const expired = isExpired(ally);
   return (
@@ -42,6 +44,11 @@ export function AllyCard({ ally, basePath }: { ally: Ally; basePath: string }) {
                 {ally.name}
               </h3>
             </div>
+            {currentDirection && ally.direction !== currentDirection && (
+              <Badge variant="outline" className="mt-1 text-[10px] bg-primary/5 text-primary border-primary/20">
+                Compartido por {DIRECTION_LABEL[ally.direction]}
+              </Badge>
+            )}
             {ally.sector && (
               <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1">
                 <Building2 className="w-3 h-3" />

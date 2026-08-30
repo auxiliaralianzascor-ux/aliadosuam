@@ -42,6 +42,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
   const [tab, setTab] = useState<AllyStatus>("active");
   const [trafficFilter, setTrafficFilter] = useState<TrafficLight | "all">("all");
   const [categoryFilter, setCategoryFilter] = useState<AllyCategory | "all">("all");
+  const [ownershipFilter, setOwnershipFilter] = useState<"all" | "own" | "shared">("all");
 
   const counts = useMemo(() => {
     const c = { conversation: 0, pending: 0, active: 0 } as Record<AllyStatus, number>;
@@ -55,9 +56,11 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
       if (trafficFilter !== "all" && a.traffic_light !== trafficFilter) return false;
       if (tab === "active" && categoryFilter !== "all" && a.category !== categoryFilter) return false;
       if (search && !`${a.name} ${a.sector ?? ""} ${a.contact_name ?? ""}`.toLowerCase().includes(search.toLowerCase())) return false;
+      if (ownershipFilter === "own" && a.direction !== direction) return false;
+      if (ownershipFilter === "shared" && a.direction === direction) return false;
       return true;
     });
-  }, [allies, tab, trafficFilter, categoryFilter, search]);
+  }, [allies, tab, trafficFilter, categoryFilter, search, ownershipFilter, direction]);
 
   const trafficCounts = useMemo(() => {
     const c: Record<TrafficLight, number> = { green: 0, yellow: 0, red: 0 };
@@ -170,6 +173,14 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
                 <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <Input className="pl-9" placeholder="Buscar por nombre, sector o contacto" value={search} onChange={(e) => setSearch(e.target.value)} />
               </div>
+              <Select value={ownershipFilter} onValueChange={(v) => setOwnershipFilter(v as "all" | "own" | "shared")}>
+                <SelectTrigger className="w-full sm:w-44"><SelectValue placeholder="Propiedad" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Propios y compartidos</SelectItem>
+                  <SelectItem value="own">Solo propios</SelectItem>
+                  <SelectItem value="shared">Solo compartidos</SelectItem>
+                </SelectContent>
+              </Select>
               <Select value={trafficFilter} onValueChange={(v) => setTrafficFilter(v as TrafficLight | "all")}>
                 <SelectTrigger className="w-full sm:w-44"><SelectValue placeholder="Semáforo" /></SelectTrigger>
                 <SelectContent>
@@ -209,7 +220,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
               </Card>
             ) : (
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {filtered.map((a) => <AllyCard key={a.id} ally={a} basePath={cardBasePath} />)}
+                {filtered.map((a) => <AllyCard key={a.id} ally={a} basePath={cardBasePath} currentDirection={direction} />)}
               </div>
             )}
           </TabsContent>
