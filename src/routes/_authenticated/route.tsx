@@ -2,7 +2,12 @@ import { createFileRoute, Outlet, redirect, Link, useRouter, useRouterState } fr
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut, ShieldCheck, Handshake, Percent, ChevronDown, Microscope, Globe2, BookOpen, Rocket, UserCircle2, BarChart3 } from "lucide-react";
 import uamLogo from "@/assets/uam-logo.png.asset.json";
-import { useMyPermissions, canVerifyIndicators, canLoadIndicators } from "@/lib/permissions-api";
+import {
+  useMyPermissions,
+  canVerifyIndicators,
+  canLoadIndicators,
+  isAllowedAutonomaEmail,
+} from "@/lib/permissions-api";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +20,10 @@ export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) {
+      throw redirect({ to: "/auth" });
+    }
+    if (!isAllowedAutonomaEmail(data.user.email)) {
+      await supabase.auth.signOut();
       throw redirect({ to: "/auth" });
     }
     return { user: data.user };
