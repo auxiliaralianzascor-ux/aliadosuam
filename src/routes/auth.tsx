@@ -1,6 +1,6 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { hasSupabaseConfig, supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -19,11 +19,8 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const supabaseReady = hasSupabaseConfig();
 
   useEffect(() => {
-    if (!supabaseReady) return;
-
     supabase.auth.getSession().then(async ({ data }) => {
       const email = data.session?.user?.email;
       if (!data.session) return;
@@ -34,14 +31,9 @@ function AuthPage() {
       }
       navigate({ to: "/alianzas/aliados", replace: true });
     });
-  }, [navigate, supabaseReady]);
+  }, [navigate]);
 
   const signInGoogle = async () => {
-    if (!supabaseReady) {
-      toast.error("Supabase no está conectado. Debes conectar la base de datos en Lovable para continuar.");
-      return;
-    }
-
     setLoading(true);
     const result = await lovable.auth.signInWithOAuth("google", {
       redirect_uri: window.location.origin,
@@ -65,26 +57,6 @@ function AuthPage() {
 
     navigate({ to: "/alianzas/aliados", replace: true });
   };
-
-  if (!supabaseReady) {
-    return (
-      <div className="min-h-screen grid place-items-center p-4 bg-slate-950 text-white">
-        <Card className="max-w-lg border border-amber-500/40 bg-slate-900/90 p-6 text-center shadow-2xl">
-          <div className="mb-4 inline-flex rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.12em] text-amber-300">
-            Configuración requerida
-          </div>
-          <h1 className="text-2xl font-bold text-white">La app no está conectada a Supabase</h1>
-          <p className="mt-3 text-sm text-slate-300">
-            Faltan las variables de entorno de la base de datos. Conéctala en Lovable o agrega
-            VITE_SUPABASE_URL y VITE_SUPABASE_PUBLISHABLE_KEY para restaurar el acceso.
-          </p>
-          <Button className="mt-5 w-full" onClick={() => window.location.reload()}>
-            Recargar
-          </Button>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div
