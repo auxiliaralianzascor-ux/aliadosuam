@@ -25,10 +25,6 @@ import {
 } from "@/lib/indicators-api";
 import { DIRECTION_LABEL, type AllyDirection } from "@/lib/allies-types";
 
-// Nombres literales de los proyectos estratégicos del Direccionamiento Estratégico
-// UAM 2024-2030 (pág. 25-58), uno por programa/dirección. Las direcciones que no
-// tienen un programa asociado (proyección, relaciones internacionales) usan un
-// campo de texto libre en su lugar.
 const PROJECTS_BY_DIRECTION: Partial<Record<AllyDirection, string[]>> = {
   alianzas: ["Talentos UAM", "Gestión del relacionamiento", "Posicionamiento"],
   investigacion: [
@@ -40,6 +36,15 @@ const PROJECTS_BY_DIRECTION: Partial<Record<AllyDirection, string[]>> = {
     "Trayectorias Vitales de Aprendizaje",
     "Planeación y Gestión Curricular",
     "Campus Extendido",
+  ],
+  proyeccion: [
+    "Nuestra Responsabilidad Social",
+    "Prácticas Formativas",
+    "Paz y Competitividad",
+    "IPS",
+    "Unidades de Apoyo Académico",
+    "Unidad de Graduados",
+    "Voluntariado",
   ],
 };
 
@@ -74,12 +79,6 @@ export function CargarIndicadoresPage({ direction, dashboardPath }: Props) {
     Number(periodYear),
   );
 
-  // Aliados disponibles para cargar aportes desde esta dirección: los
-  // propios de la dirección y los que fueron compartidos con ella. La base
-  // de datos (ver migración contributions_shared_directions) exige el
-  // perfil "cargador" en la dirección correspondiente (propia o compartida),
-  // así que si el aporte no está permitido para un aliado compartido en
-  // particular, Supabase lo rechazará y se mostrará el error igualmente.
   const ownAllies = useMemo(
     () =>
       allies
@@ -87,6 +86,7 @@ export function CargarIndicadoresPage({ direction, dashboardPath }: Props) {
         .map((a) => ({ ...a, _isShared: a.direction !== direction })),
     [allies, direction],
   );
+
   const selectedIndicator = indicators.find((i) => i.key === indicatorKey);
   const projectOptions = PROJECTS_BY_DIRECTION[direction] ?? [];
   const years = Array.from({ length: 7 }, (_, i) => 2024 + i);
@@ -113,7 +113,6 @@ export function CargarIndicadoresPage({ direction, dashboardPath }: Props) {
           <p className="font-medium text-foreground">Acceso restringido</p>
           <p className="text-sm mt-1">
             Necesitas el perfil "Cargador" en {DIRECTION_LABEL[direction]} para registrar aportes.
-            Pide a un administrador que te lo asigne desde Usuarios.
           </p>
         </Card>
       </div>
@@ -173,8 +172,7 @@ export function CargarIndicadoresPage({ direction, dashboardPath }: Props) {
           <ClipboardList className="w-6 h-6" /> Cargar aporte a indicador
         </h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Dirección de {DIRECTION_LABEL[direction]} · Los aportes se suman al avance mostrado en el
-          dashboard.
+          Dirección de {DIRECTION_LABEL[direction]} · Los aportes se muestran en el dashboard.
         </p>
       </div>
 
@@ -203,8 +201,7 @@ export function CargarIndicadoresPage({ direction, dashboardPath }: Props) {
             </Select>
             {!alliesLoading && ownAllies.length === 0 && (
               <p className="text-xs text-muted-foreground">
-                Todavía no hay aliados propios ni compartidos con {DIRECTION_LABEL[direction]}. Créalos o
-                pide que te compartan uno desde la ficha del aliado.
+                Todavía no hay aliados propios ni compartidos con {DIRECTION_LABEL[direction]}.
               </p>
             )}
           </div>
@@ -229,11 +226,6 @@ export function CargarIndicadoresPage({ direction, dashboardPath }: Props) {
                 ))}
               </SelectContent>
             </Select>
-            {!indicatorsLoading && indicators.length === 0 && (
-              <p className="text-xs text-muted-foreground">
-                Esta dirección no tiene indicadores asignados en el Direccionamiento Estratégico.
-              </p>
-            )}
           </div>
 
           <div className="space-y-1.5">

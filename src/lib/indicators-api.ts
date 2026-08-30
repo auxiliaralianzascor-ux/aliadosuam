@@ -120,3 +120,74 @@ export function useDeleteContribution() {
     },
   });
 }
+
+export interface IndicatorWithoutTarget extends StrategicIndicator {
+  year: number;
+  actual_value: number;
+}
+
+export function useIndicatorsWithoutTarget(direction: string, year: number) {
+  return useQuery({
+    queryKey: ["indicators-no-target", direction, year],
+    queryFn: async (): Promise<IndicatorWithoutTarget[]> => {
+      const { data: allInd, error: e1 } = await supabase
+        .from("strategic_indicators")
+        .select("*")
+        .eq("direction_hint", direction);
+      if (e1) throw e1;
+      if (!allInd || allInd.length === 0) return [];
+
+      const keys = allInd.map((i) => i.key);
+      const { data: targets, error: e2 } = await supabase
+        .from("strategic_indicator_yearly_targets")
+        .select("indicator_key")
+        .in("indicator_key", keys);
+      if (e2) throw e2;
+
+      const withTarget = new Set((targets ?? []).map((t) => t.indicator_key));
+      const noTarget = (allInd as StrategicIndicator[]).filter((i) => !withTarget.has(i.key));
+      if (noTarget.length === 0) return [];
+
+      const { data: contribs, error: e3 } = await supabase
+        .from("ally_indicator_contributions")
+        .select("indicator_key, value")
+        .in(
+          "indicator_key",
+          noTarget.map((i) => i.key),
+        )
+        .eq("period_year", year);
+      if (e3) throw e3;
+
+      const totals: Record<string, number> = {};
+      (contribs ?? []).forEach((c) => {
+        totals[c.indicator_key] = (totals[c.indicator_key] ?? 0) + Number(c.value);
+      });
+
+      return noTarget.map((i) => ({ ...i, year, actual_value: totals[i.key] ?? 0 }));
+    },
+  });
+}
+
+export interface AllyPracticeBreakdown {
+  year: number;
+  ally_id: string;
+  ally_name: string;
+  direction: string;
+  status: string;
+  estudiantes: number;
+}
+
+export function usePracticasPorAliado(year: number) {
+  return useQuery({
+    queryKey: ["practicas-por-aliado", year],
+    queryFn: async (): Promise<AllyPracticeBreakdown[]> => {
+      const { data, error } = await supabase
+        .from("v_practicas_por_aliado")
+        .select("*")
+        .eq("year", year)
+        .order("estudiantes", { ascending: false });
+      if (error) throw error;
+      return data as AllyPracticeBreakdown[];
+    },
+  });
+}

@@ -10,8 +10,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, BarChart3, TrendingUp, Target, AlertTriangle, ClipboardList } from "lucide-react";
-import { useIndicatorsProgress, type IndicatorProgress } from "@/lib/indicators-api";
+import { Loader2, BarChart3, TrendingUp, Target, AlertTriangle, ClipboardList, Users2 } from "lucide-react";
+import {
+  useIndicatorsProgress,
+  useIndicatorsWithoutTarget,
+  usePracticasPorAliado,
+  type IndicatorProgress,
+  type IndicatorWithoutTarget,
+} from "@/lib/indicators-api";
 import { canLoadIndicators, useMyPermissions } from "@/lib/permissions-api";
 import { type AllyDirection, DIRECTION_LABEL } from "@/lib/allies-types";
 
@@ -39,15 +45,25 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(Math.max(2024, Math.min(currentYear, 2030)));
   const { data: progress = [], isLoading } = useIndicatorsProgress(direction, year);
+  const { data: noTargetIndicators = [], isLoading: noTargetLoading } = useIndicatorsWithoutTarget(
+    direction,
+    year,
+  );
+  const { data: practicas = [], isLoading: practicasLoading } = usePracticasPorAliado(year);
   const { data: perms } = useMyPermissions();
 
   const indicators = useMemo(() => {
     return progress.filter((p) => p.direction_hint === direction && p.target_value != null);
   }, [progress, direction]);
 
+  const practicasDeEstaDireccion = useMemo(
+    () => practicas.filter((p) => p.direction === direction),
+    [practicas, direction],
+  );
+
   const years = Array.from({ length: 7 }, (_, i) => 2024 + i);
 
-  if (isLoading) {
+  if (isLoading || noTargetLoading) {
     return (
       <div className="grid place-items-center py-20 text-muted-foreground">
         <Loader2 className="w-6 h-6 animate-spin" />
@@ -89,28 +105,58 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
         </div>
       </div>
 
-      {indicators.length === 0 ? (
+      {indicators.length === 0 && noTargetIndicators.length === 0 ? (
         <Card className="p-10 text-center text-muted-foreground">
           <AlertTriangle className="w-8 h-8 mx-auto mb-3 opacity-50" />
           <p>No hay indicadores asignados a esta dirección para {year}.</p>
-          <p className="text-xs mt-1">
-            Los indicadores se cargan desde la tabla strategic_indicators.
-          </p>
         </Card>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {indicators.map((ind) => (
             <IndicatorCard key={ind.indicator_key} indicator={ind} />
           ))}
+          {noTargetIndicators.map((ind) => (
+            <NoTargetIndicatorCard key={ind.key} indicator={ind} />
+          ))}
         </div>
+      )}
+
+      {direction === "proyeccion" && (
+        <Card className="p-5 space-y-3">
+          <h2 className="text-lg font-semibold flex items-center gap-2">
+            <Users2 className="w-5 h-5" /> Aliados con estudiantes en práctica ({year})
+          </h2>
+          {practicasLoading ? (
+            <div className="py-6 grid place-items-center text-muted-foreground">
+              <Loader2 className="w-5 h-5 animate-spin" />
+            </div>
+          ) : practicasDeEstaDireccion.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Todavía no se han registrado aportes a este indicador para {year}.
+            </p>
+          ) : (
+            <div className="space-y-2">
+              {practicasDeEstaDireccion.map((p) => (
+                <div
+                  key={p.ally_id}
+                  className="flex items-center justify-between gap-3 text-sm border rounded-md px-3 py-2"
+                >
+                  <span className="font-medium truncate">{p.ally_name}</span>
+                  <Badge variant="secondary" className="font-mono shrink-0">
+                    {p.estudiantes.toLocaleString("es-CO")} estudiante{p.estudiantes === 1 ? "" : "s"}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          )}
+        </Card>
       )}
 
       <Card className="p-4 bg-muted/30 text-xs text-muted-foreground space-y-1">
         <p className="font-medium">Fuente de verdad</p>
         <p>
           Las metas se leen directamente de la tabla <code>strategic_indicators</code> y{" "}
-          <code>strategic_indicator_yearly_targets</code>, cargadas desde el Direccionamiento
-          Estratégico UAM 2024-2030 (pág. 56-58).
+          <code>strategic_indicator_yearly_targets</code>.
         </p>
         <p>
           Los valores reales provienen de la vista <code>v_indicator_progress</code>, que suma los
@@ -118,6 +164,40 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
         </p>
       </Card>
     </div>
+  );
+}
+
+function NoTargetIndicatorCard({ indicator }: { indicator: IndicatorWithoutTarget }) {
+  return (
+    <Card className="p-5 space-y-4">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+            <Badge variant="outline" className="text-[10px]">
+              {indicator.objetivo}
+            </Badge>
+            <span className="truncate">{indicator.programa}</span>
+          </div>
+          <h3 className="text-sm font-semibold leading-snug">{indicator.label}</h3>
+        </div>
+        <Badge variant="outline" className="shrink-0 text-[10px]">
+          Sin meta oficial
+        </Badge>
+      </div>
+
+      <div className="rounded-md border p-3 bg-muted/20">
+        <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-0.5">
+          <TrendingUp className="w-3 h-3" /> Total registrado en {indicator.year}
+        </div>
+        <div className="text-lg font-semibold">
+          {fmt(indicator.unit, indicator.actual_value)}
+        </div>
+      </div>
+
+      {indicator.meta_2030_nota && (
+        <p className="text-xs text-muted-foreground">{indicator.meta_2030_nota}</p>
+      )}
+    </Card>
   );
 }
 
