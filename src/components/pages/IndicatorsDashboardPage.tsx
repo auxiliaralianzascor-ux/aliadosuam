@@ -144,6 +144,122 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
     },
   });
 
+  const { data: academicProgramsSummary = [], isLoading: academicProgramsLoading } = useQuery({
+    queryKey: ["decanatura-program-summary", year],
+    enabled: direction === "decanaturas",
+    queryFn: async () => {
+      const { data: alliesData, error: alliesError } = await supabase
+        .from("allies")
+        .select("id, decanatura, direction, shared_with_directions, academic_participation");
+      if (alliesError) throw alliesError;
+
+      const { data: discountsData, error: discountsError } = await supabase
+        .from("ally_discounts")
+        .select("ally_id, ingles, econti");
+      if (discountsError) throw discountsError;
+
+      const relevantAllies = (alliesData ?? []).filter(
+        (ally) =>
+          ally.direction === "decanaturas" ||
+          ally.shared_with_directions?.includes("decanaturas") ||
+          Boolean(ally.decanatura),
+      );
+
+      const decanaturas = Array.from(
+        new Set(relevantAllies.map((ally) => ally.decanatura).filter(Boolean) as string[]),
+      );
+
+      const discountByAlly = new Map<string, { ingles: boolean; econti: boolean }>();
+      for (const item of discountsData ?? []) {
+        discountByAlly.set(item.ally_id, {
+          ingles: Boolean(item.ingles && String(item.ingles).trim()),
+          econti: Boolean(item.econti && String(item.econti).trim()),
+        });
+      }
+
+      const makeProgramValue = (ally: { academic_participation?: any; decanatura?: string | null }) => {
+        const participation = ally.academic_participation ?? {};
+        const employees = participation.empleados ?? {};
+        const relatives = participation.familiares ?? {};
+        return {
+          ingles: Boolean(discountByAlly.get(ally.id)?.ingles ?? false),
+          econti: Boolean(
+            discountByAlly.get(ally.id)?.econti ||
+              employees?.educacion_continuada ||
+              relatives?.educacion_continuada ||
+              false,
+          ),
+        };
+      };
+
+      const overall = {
+        ingles: 0,
+        econti: 0,
+      };
+      const byDecanatura = new Map<string, { ingles: number; econti: number }>();
+
+      for (const decanatura of decanaturas) byDecanatura.set(decanatura, { ingles: 0, econti: 0 });
+
+      for (const ally of relevantAllies) {
+        const programValue = makeProgramValue(ally as any);
+        if (!ally.decanatura) continue;
+
+        const current = byDecanatura.get(ally.decanatura) ?? { ingles: 0, econti: 0 };
+        if (programValue.ingles) {
+          current.ingles += 1;
+          overall.ingles += 1;
+        }
+        if (programValue.econti) {
+          current.econti += 1;
+          overall.econti += 1;
+        }
+        byDecanatura.set(ally.decanatura, current);
+      }
+
+      const totalRelevant = Math.max(relevantAllies.length, 1);
+      const sections = [
+        {
+          key: "ingles",
+          label: "Inglés",
+          total: overall.ingles,
+          pct: (overall.ingles / totalRelevant) * 100,
+        },
+        {
+          key: "econti",
+          label: "Educación continuada",
+          total: overall.econti,
+          pct: (overall.econti / totalRelevant) * 100,
+        },
+      ];
+
+      return {
+        general: sections,
+        decanaturas: decanaturas
+          .map((decanatura) => {
+            const total = byDecanatura.get(decanatura) ?? { ingles: 0, econti: 0 };
+            return {
+              decanatura,
+              programs: [
+                {
+                  key: "ingles",
+                  label: "Inglés",
+                  total: total.ingles,
+                  pct: (total.ingles / Math.max(relevantAllies.filter((ally) => ally.decanatura === decanatura).length, 1)) * 100,
+                },
+                {
+                  key: "econti",
+                  label: "Educación continuada",
+                  total: total.econti,
+                  pct: (total.econti / Math.max(relevantAllies.filter((ally) => ally.decanatura === decanatura).length, 1)) * 100,
+                },
+              ],
+            };
+          })
+          .sort((a, b) => a.decanatura.localeCompare(b.decanatura)),
+      };
+    },
+  });
+
   const practicasDeEstaDireccion = useMemo(
     () => practicas.filter((p) => p.direction === direction),
     [practicas, direction],
@@ -151,7 +267,11 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
 
   const years = Array.from({ length: 7 }, (_, i) => 2024 + i);
 
-  if (isLoading || noTargetLoading || (direction === "decanaturas" && decanaturaLoading)) {
+  if (
+    isLoading ||
+    noTargetLoading ||
+    (direction === "decanaturas" && (decanaturaLoading || academicProgramsLoading))
+  ) {
     return (
       <div className="grid place-items-center py-20 text-muted-foreground">
         <Loader2 className="w-6 h-6 animate-spin" />
@@ -223,35 +343,98 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
       </Card>
 
       {direction === "decanaturas" && decanaturaSummary.length > 0 && (
-        <Card className="p-5">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              <Users2 className="w-5 h-5" /> Desglose por decanatura
-            </h2>
-            <Badge variant="outline">General + por facultad</Badge>
-          </div>
+        <>
+          <Card className="p-5">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-semibold flex items-center gap-2">
+                <Users2 className="w-5 h-5" /> Desglose por decanatura
+              </h2>
+              <Badge variant="outline">General + por facultad</Badge>
+            </div>
 
-          <div className="space-y-3">
-            {decanaturaSummary.map((item) => (
-              <div key={item.decanatura} className="rounded-lg border p-3">
-                <div className="mb-2 flex items-center justify-between gap-3">
-                  <span className="font-medium">{item.decanatura}</span>
-                  <span className="text-sm font-semibold">{item.pct.toFixed(1)}%</span>
+            <div className="space-y-3">
+              {decanaturaSummary.map((item) => (
+                <div key={item.decanatura} className="rounded-lg border p-3">
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <span className="font-medium">{item.decanatura}</span>
+                    <span className="text-sm font-semibold">{item.pct.toFixed(1)}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-muted overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-sky-500 to-cyan-600"
+                      style={{ width: `${Math.min(item.pct, 100)}%` }}
+                    />
+                  </div>
+                  <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Real: {fmt("numero", item.actual)}</span>
+                    <span>Falta: {fmt("numero", item.missing)}</span>
+                  </div>
                 </div>
-                <div className="h-2 rounded-full bg-muted overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-sky-500 to-cyan-600"
-                    style={{ width: `${Math.min(item.pct, 100)}%` }}
-                  />
-                </div>
-                <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Real: {fmt("numero", item.actual)}</span>
-                  <span>Falta: {fmt("numero", item.missing)}</span>
-                </div>
+              ))}
+            </div>
+          </Card>
+
+          {academicProgramsSummary.general?.length > 0 && (
+            <Card className="p-5">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h2 className="text-lg font-semibold flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5" /> Inglés y educación continuada
+                </h2>
+                <Badge variant="outline">Estado general</Badge>
               </div>
-            ))}
-          </div>
-        </Card>
+
+              <div className="grid gap-3 md:grid-cols-2">
+                {academicProgramsSummary.general.map((item) => (
+                  <div key={item.key} className="rounded-lg border p-3">
+                    <div className="mb-2 flex items-center justify-between gap-3">
+                      <span className="font-medium">{item.label}</span>
+                      <span className="text-sm font-semibold">{item.pct.toFixed(1)}%</span>
+                    </div>
+                    <div className="h-2 rounded-full bg-muted overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-violet-500 to-purple-600"
+                        style={{ width: `${Math.min(item.pct, 100)}%` }}
+                      />
+                    </div>
+                    <div className="mt-2 text-xs text-muted-foreground">
+                      {item.total} aliados con {item.label.toLowerCase()}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-5 space-y-3">
+                {academicProgramsSummary.decanaturas.map((item) => (
+                  <div key={item.decanatura} className="rounded-lg border p-3">
+                    <div className="mb-2 flex items-center justify-between gap-3">
+                      <span className="font-medium">{item.decanatura}</span>
+                      <Badge variant="secondary" className="text-[10px]">
+                        {item.programs.reduce((sum, p) => sum + p.total, 0)} registros
+                      </Badge>
+                    </div>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      {item.programs.map((program) => (
+                        <div key={program.key} className="rounded-md border bg-muted/20 p-2.5">
+                          <div className="flex items-center justify-between gap-2 text-sm">
+                            <span>{program.label}</span>
+                            <span className="font-semibold">{program.pct.toFixed(1)}%</span>
+                          </div>
+                          <div className="mt-2 h-2 rounded-full bg-muted overflow-hidden">
+                            <div
+                              className="h-full rounded-full bg-gradient-to-r from-violet-500 to-purple-600"
+                              style={{ width: `${Math.min(program.pct, 100)}%` }}
+                            />
+                          </div>
+                          <div className="mt-1 text-[11px] text-muted-foreground">{program.total} aliados</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+        </>
       )}
 
       {indicators.length === 0 && noTargetIndicators.length === 0 ? (
