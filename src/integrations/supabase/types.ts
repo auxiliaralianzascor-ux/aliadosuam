@@ -29,7 +29,6 @@ export type Database = {
           name: string
           notes: string | null
           sector: string | null
-          shared_with_directions: string[] | null
           status: Database["public"]["Enums"]["ally_status"]
           traffic_light: Database["public"]["Enums"]["traffic_light"]
           updated_at: string
@@ -50,7 +49,6 @@ export type Database = {
           name: string
           notes?: string | null
           sector?: string | null
-          shared_with_directions?: string[] | null
           status?: Database["public"]["Enums"]["ally_status"]
           traffic_light?: Database["public"]["Enums"]["traffic_light"]
           updated_at?: string
@@ -71,7 +69,6 @@ export type Database = {
           name?: string
           notes?: string | null
           sector?: string | null
-          shared_with_directions?: string[] | null
           status?: Database["public"]["Enums"]["ally_status"]
           traffic_light?: Database["public"]["Enums"]["traffic_light"]
           updated_at?: string
@@ -79,60 +76,6 @@ export type Database = {
           valid_until?: string | null
         }
         Relationships: []
-      }
-      ally_indicator_contributions: {
-        Row: {
-          ally_id: string
-          created_at: string
-          created_by: string | null
-          id: string
-          indicator_key: string
-          notes: string | null
-          period_year: number
-          proyecto_estrategico: string | null
-          updated_at: string
-          value: number
-        }
-        Insert: {
-          ally_id: string
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          indicator_key: string
-          notes?: string | null
-          period_year: number
-          proyecto_estrategico?: string | null
-          updated_at?: string
-          value: number
-        }
-        Update: {
-          ally_id?: string
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          indicator_key?: string
-          notes?: string | null
-          period_year?: number
-          proyecto_estrategico?: string | null
-          updated_at?: string
-          value?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ally_indicator_contributions_ally_id_fkey"
-            columns: ["ally_id"]
-            isOneToOne: false
-            referencedRelation: "allies"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ally_indicator_contributions_indicator_key_fkey"
-            columns: ["indicator_key"]
-            isOneToOne: false
-            referencedRelation: "strategic_indicators"
-            referencedColumns: ["key"]
-          },
-        ]
       }
       ally_activities: {
         Row: {
@@ -243,68 +186,6 @@ export type Database = {
         }
         Relationships: []
       }
-      strategic_indicator_yearly_targets: {
-        Row: {
-          id: string
-          indicator_key: string
-          target_value: number
-          year: number
-        }
-        Insert: {
-          id?: string
-          indicator_key: string
-          target_value: number
-          year: number
-        }
-        Update: {
-          id?: string
-          indicator_key?: string
-          target_value?: number
-          year?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "strategic_indicator_yearly_targets_indicator_key_fkey"
-            columns: ["indicator_key"]
-            isOneToOne: false
-            referencedRelation: "strategic_indicators"
-            referencedColumns: ["key"]
-          },
-        ]
-      }
-      strategic_indicators: {
-        Row: {
-          direction_hint: string | null
-          key: string
-          label: string
-          meta_2030: number | null
-          meta_2030_nota: string | null
-          objetivo: string
-          programa: string
-          unit: string
-        }
-        Insert: {
-          direction_hint?: string | null
-          key: string
-          label: string
-          meta_2030?: number | null
-          meta_2030_nota?: string | null
-          objetivo: string
-          programa: string
-          unit: string
-        }
-        Update: {
-          direction_hint?: string | null
-          key?: string
-          label?: string
-          meta_2030?: number | null
-          meta_2030_nota?: string | null
-          objetivo?: string
-          programa?: string
-          unit?: string
-        }
-        Relationships: []
-      }
       user_areas: {
         Row: {
           area: Database["public"]["Enums"]["followup_area"]
@@ -347,27 +228,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_indicator_profiles: {
-        Row: {
-          created_at: string
-          direction: string
-          profile: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          direction: string
-          profile: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          direction?: string
-          profile?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       user_roles: {
         Row: {
           created_at: string
@@ -391,19 +251,7 @@ export type Database = {
       }
     }
     Views: {
-      v_indicator_progress: {
-        Row: {
-          actual_value: number | null
-          direction_hint: string | null
-          indicator_key: string | null
-          label: string | null
-          objetivo: string | null
-          programa: string | null
-          target_value: number | null
-          year: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       has_any_role: { Args: { _user_id: string }; Returns: boolean }
