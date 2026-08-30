@@ -3,6 +3,14 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 import { brokeredPreviewStorage } from './previewAuthStorage';
 
+export const missingSupabaseMessage = 'Supabase no está configurado. Conecta el proyecto desde Lovable o define VITE_SUPABASE_URL y VITE_SUPABASE_PUBLISHABLE_KEY.';
+
+export function hasSupabaseConfig() {
+  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+  const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
+  return !!SUPABASE_URL && !!SUPABASE_PUBLISHABLE_KEY;
+}
+
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith('sb_publishable_') || value.startsWith('sb_secret_');
 }
@@ -28,6 +36,35 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 }
 
 
+function createSupabaseStub() {
+  const throwMissingConfig = () => {
+    throw new Error(missingSupabaseMessage);
+  };
+
+  return {
+    auth: {
+      getSession: async () => ({ data: { session: null }, error: null }),
+      getUser: async () => ({ data: { user: null }, error: null }),
+      signOut: async () => ({ error: null }),
+      setSession: async () => ({ data: { session: null }, error: null }),
+    },
+    from: () => {
+      throwMissingConfig();
+    },
+    rpc: () => {
+      throwMissingConfig();
+    },
+    functions: () => {
+      throwMissingConfig();
+    },
+    storage: {
+      from: () => {
+        throwMissingConfig();
+      },
+    },
+  } as unknown as ReturnType<typeof createSupabaseClient>;
+}
+
 function createSupabaseClient() {
   // Use import.meta.env for client-side (Vite build-time replacement)
   // Fall back to process.env for SSR (server-side rendering)
@@ -40,8 +77,8 @@ function createSupabaseClient() {
       ...(!SUPABASE_PUBLISHABLE_KEY ? ['SUPABASE_PUBLISHABLE_KEY'] : []),
     ];
     const message = `Missing Supabase environment variable(s): ${missing.join(', ')}. Connect Supabase in Lovable Cloud.`;
-    console.error(`[Supabase] ${message}`);
-    throw new Error(message);
+    console.warn(`[Supabase] ${message}`);
+    return createSupabaseStub();
   }
 
   return createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
