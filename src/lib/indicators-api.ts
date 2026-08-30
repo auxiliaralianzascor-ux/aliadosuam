@@ -217,13 +217,14 @@ export function usePracticasPorAliado(year: number) {
   return useQuery({
     queryKey: ["practicas-por-aliado", year],
     queryFn: async (): Promise<AllyPracticeBreakdown[]> => {
-      const { data, error } = await supabase
-        .from("v_practicas_por_aliado")
+      const query = (supabase.from("v_practicas_por_aliado" as never) as any)
         .select("*")
         .eq("year", year)
         .order("estudiantes", { ascending: false });
+
+      const { data, error } = await query;
       if (error) throw error;
-      return data as AllyPracticeBreakdown[];
+      return (data ?? []) as unknown as AllyPracticeBreakdown[];
     },
   });
 }

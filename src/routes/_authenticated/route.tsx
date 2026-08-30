@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet, redirect, Link, useRouter, useRouterState } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut, ShieldCheck, Handshake, Percent, ChevronDown, Microscope, Globe2, BookOpen, Rocket, UserCircle2, BarChart3, SunMedium, MoonStar } from "lucide-react";
 import uamLogo from "@/assets/uam-logo.png.asset.json";
