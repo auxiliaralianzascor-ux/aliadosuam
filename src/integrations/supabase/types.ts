@@ -80,60 +80,6 @@ export type Database = {
         }
         Relationships: []
       }
-      ally_indicator_contributions: {
-        Row: {
-          ally_id: string
-          created_at: string
-          created_by: string | null
-          id: string
-          indicator_key: string
-          notes: string | null
-          period_year: number
-          proyecto_estrategico: string | null
-          updated_at: string
-          value: number
-        }
-        Insert: {
-          ally_id: string
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          indicator_key: string
-          notes?: string | null
-          period_year: number
-          proyecto_estrategico?: string | null
-          updated_at?: string
-          value: number
-        }
-        Update: {
-          ally_id?: string
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          indicator_key?: string
-          notes?: string | null
-          period_year?: number
-          proyecto_estrategico?: string | null
-          updated_at?: string
-          value?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ally_indicator_contributions_ally_id_fkey"
-            columns: ["ally_id"]
-            isOneToOne: false
-            referencedRelation: "allies"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ally_indicator_contributions_indicator_key_fkey"
-            columns: ["indicator_key"]
-            isOneToOne: false
-            referencedRelation: "strategic_indicators"
-            referencedColumns: ["key"]
-          },
-        ]
-      }
       ally_activities: {
         Row: {
           activity_date: string
@@ -219,6 +165,67 @@ export type Database = {
           },
         ]
       }
+      ally_indicator_contributions: {
+        Row: {
+          ally_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          indicator_key: string
+          notes: string | null
+          period_year: number
+          proyecto_estrategico: string | null
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          ally_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          indicator_key: string
+          notes?: string | null
+          period_year: number
+          proyecto_estrategico?: string | null
+          updated_at?: string
+          value: number
+        }
+        Update: {
+          ally_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          indicator_key?: string
+          notes?: string | null
+          period_year?: number
+          proyecto_estrategico?: string | null
+          updated_at?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ally_indicator_contributions_ally_id_fkey"
+            columns: ["ally_id"]
+            isOneToOne: false
+            referencedRelation: "allies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ally_indicator_contributions_indicator_key_fkey"
+            columns: ["indicator_key"]
+            isOneToOne: false
+            referencedRelation: "strategic_indicators"
+            referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "ally_indicator_contributions_indicator_key_fkey"
+            columns: ["indicator_key"]
+            isOneToOne: false
+            referencedRelation: "v_indicator_progress"
+            referencedColumns: ["indicator_key"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -269,6 +276,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "strategic_indicators"
             referencedColumns: ["key"]
+          },
+          {
+            foreignKeyName: "strategic_indicator_yearly_targets_indicator_key_fkey"
+            columns: ["indicator_key"]
+            isOneToOne: false
+            referencedRelation: "v_indicator_progress"
+            referencedColumns: ["indicator_key"]
           },
         ]
       }
