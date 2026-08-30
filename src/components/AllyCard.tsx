@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Building2, CalendarDays, Mail, Phone, AlertTriangle } from "lucide-react";
@@ -11,6 +12,7 @@ import {
   DIRECTION_LABEL,
   getAllyContacts,
 } from "@/lib/allies-types";
+import { prefetchAlly } from "@/lib/allies-api";
 
 function isExpired(ally: Ally) {
   if (ally.status !== "active" || !ally.valid_until) return false;
@@ -24,13 +26,18 @@ function isExpired(ally: Ally) {
 export function AllyCard({ ally, basePath, currentDirection }: { ally: Ally; basePath: string; currentDirection?: AllyDirection }) {
   const tl = TRAFFIC_META[ally.traffic_light];
   const expired = isExpired(ally);
+  const queryClient = useQueryClient();
+  const warm = () => prefetchAlly(queryClient, ally.id);
   return (
     <Link
       to={basePath as never}
       params={{ id: ally.id } as never}
       className="block group"
+      onMouseEnter={warm}
+      onTouchStart={warm}
+      onFocus={warm}
     >
-      <Card className={`p-4 border-l-4 ${tl.border} hover:shadow-md transition-shadow h-full ${expired ? "ring-1 ring-rose-300 dark:ring-rose-900" : ""}`}>
+      <Card className={`p-4 border-l-4 ${tl.border} hover:shadow-lg hover:-translate-y-0.5 transition-all duration-150 h-full ${expired ? "ring-1 ring-rose-300 dark:ring-rose-900" : ""}`}>
         {expired && (
           <div className="mb-2 flex items-center gap-1.5 rounded-md bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 px-2 py-1 text-xs font-medium">
             <AlertTriangle className="w-3.5 h-3.5" /> Contrato vencido

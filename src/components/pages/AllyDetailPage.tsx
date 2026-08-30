@@ -5,6 +5,7 @@ import { canEditArea, canEditDirection, useMyPermissions } from "@/lib/permissio
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -48,7 +49,26 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
   const { data: discount } = useAllyDiscount(showDiscounts ? id : undefined);
 
   if (isLoading || !ally) {
-    return <div className="grid place-items-center py-20 text-muted-foreground"><Loader2 className="w-6 h-6 animate-spin" /></div>;
+    return (
+      <div className="space-y-5">
+        <Skeleton className="h-4 w-32" />
+        <Card className="p-5 space-y-4">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-3 w-3 rounded-full" />
+            <Skeleton className="h-7 w-64" />
+          </div>
+          <Skeleton className="h-4 w-40" />
+          <div className="grid sm:grid-cols-2 gap-3 pt-2">
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-16 w-full" />
+          </div>
+        </Card>
+        <Card className="p-5 space-y-3">
+          <Skeleton className="h-5 w-32" />
+          <Skeleton className="h-24 w-full" />
+        </Card>
+      </div>
+    );
   }
 
   // Guard: if the ally exists in another direction, redirect, unless it is shared.

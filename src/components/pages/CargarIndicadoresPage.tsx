@@ -74,11 +74,17 @@ export function CargarIndicadoresPage({ direction, dashboardPath }: Props) {
     Number(periodYear),
   );
 
-  // Solo aliados propios de esta dirección: la escritura de aportes está
-  // ligada a la dirección dueña del aliado (ver RLS de ally_indicator_contributions),
-  // no a las direcciones con las que el aliado fue compartido.
+  // Aliados disponibles para cargar aportes desde esta dirección: los
+  // propios de la dirección y los que fueron compartidos con ella. La base
+  // de datos (ver migración contributions_shared_directions) exige el
+  // perfil "cargador" en la dirección correspondiente (propia o compartida),
+  // así que si el aporte no está permitido para un aliado compartido en
+  // particular, Supabase lo rechazará y se mostrará el error igualmente.
   const ownAllies = useMemo(
-    () => allies.filter((a) => a.direction === direction),
+    () =>
+      allies
+        .filter((a) => a.direction === direction || a.shared_with_directions?.includes(direction))
+        .map((a) => ({ ...a, _isShared: a.direction !== direction })),
     [allies, direction],
   );
   const selectedIndicator = indicators.find((i) => i.key === indicatorKey);
@@ -183,14 +189,22 @@ export function CargarIndicadoresPage({ direction, dashboardPath }: Props) {
               <SelectContent>
                 {ownAllies.map((a) => (
                   <SelectItem key={a.id} value={a.id}>
-                    {a.name}
+                    <span className="flex items-center gap-2">
+                      {a.name}
+                      {a._isShared && (
+                        <Badge variant="outline" className="text-[10px] font-normal">
+                          Compartido
+                        </Badge>
+                      )}
+                    </span>
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
             {!alliesLoading && ownAllies.length === 0 && (
               <p className="text-xs text-muted-foreground">
-                No hay aliados propios de esta dirección todavía.
+                Todavía no hay aliados propios ni compartidos con {DIRECTION_LABEL[direction]}. Créalos o
+                pide que te compartan uno desde la ficha del aliado.
               </p>
             )}
           </div>

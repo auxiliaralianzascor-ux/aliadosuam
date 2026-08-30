@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Ally, AllyActivity, AllyDirection } from "./allies-types";
 
@@ -26,6 +26,25 @@ export function useAlly(id: string | undefined) {
       if (error) throw error;
       return data as Ally;
     },
+  });
+}
+
+/**
+ * Precarga la ficha de un aliado antes de que el usuario haga click
+ * (se llama en onMouseEnter/onTouchStart de la tarjeta). Como usa la misma
+ * queryKey que useAlly, si el click llega mientras esto ya resolvió (o está
+ * resolviendo) React Query reutiliza el resultado en vez de esperar una
+ * segunda consulta a Supabase — la ficha "aparece ya" al hacer click.
+ */
+export function prefetchAlly(queryClient: QueryClient, id: string) {
+  queryClient.prefetchQuery({
+    queryKey: ["ally", id],
+    queryFn: async (): Promise<Ally> => {
+      const { data, error } = await supabase.from("allies").select("*").eq("id", id).single();
+      if (error) throw error;
+      return data as Ally;
+    },
+    staleTime: 60_000,
   });
 }
 
