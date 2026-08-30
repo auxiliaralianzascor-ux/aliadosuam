@@ -34,6 +34,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
   const { data: perms } = useMyPermissions();
   const isAdmin = !!perms?.isAdmin;
   const canEdit = canEditDirection(perms, direction);
+  const canCreateAlly = direction === "alianzas" && (isAdmin || canEdit);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
   const exportFn = useServerFn(exportAlliesToDrive);
@@ -131,7 +132,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
               </Button>
 
             )}
-            {canEdit && (
+            {canCreateAlly && (
               <Button onClick={() => openNew(tab)}>
                 <Plus className="w-4 h-4" /> Nuevo aliado
               </Button>
@@ -212,7 +213,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
             ) : filtered.length === 0 ? (
               <Card className="p-10 text-center text-muted-foreground">
                 <p>No hay aliados en esta vista todavía.</p>
-                {canEdit && (
+                {canCreateAlly && (
                   <Button variant="outline" className="mt-3" onClick={() => openNew(s)}>
                     <Plus className="w-4 h-4" /> Agregar el primero
                   </Button>

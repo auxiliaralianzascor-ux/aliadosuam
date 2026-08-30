@@ -12,6 +12,20 @@ export interface IndicatorProgress {
   actual_value: number;
 }
 
+const PROYECCION_FALLBACK_INDICATORS: StrategicIndicator[] = [
+  {
+    key: "estudiantes_vinculados_practicas_formativas",
+    objetivo: "OE3",
+    programa: "3. Aliados UAM",
+    label: "Estudiantes vinculados a prácticas formativas",
+    unit: "numero",
+    meta_2030: null,
+    meta_2030_nota:
+      "Indicador de Proyección; se consolida por aportes registrados por aliado y año.",
+    direction_hint: "proyeccion",
+  },
+];
+
 export interface StrategicIndicator {
   key: string;
   objetivo: string;
@@ -53,13 +67,23 @@ export function useStrategicIndicators(direction: string) {
   return useQuery({
     queryKey: ["strategic-indicators", direction],
     queryFn: async (): Promise<StrategicIndicator[]> => {
-      let q = supabase.from("strategic_indicators").select("*");
-      if (direction !== "all") {
-        q = q.eq("direction_hint", direction);
+      try {
+        let q = supabase.from("strategic_indicators").select("*");
+        if (direction !== "all") {
+          q = q.eq("direction_hint", direction);
+        }
+        const { data, error } = await q;
+        if (error) throw error;
+        if (data && data.length > 0) return data as StrategicIndicator[];
+      } catch {
+        // Fallback local para no dejar la vista vacía mientras la base no esté aplicada.
       }
-      const { data, error } = await q;
-      if (error) throw error;
-      return data as StrategicIndicator[];
+
+      if (direction === "proyeccion") {
+        return PROYECCION_FALLBACK_INDICATORS;
+      }
+
+      return [];
     },
   });
 }
@@ -130,40 +154,52 @@ export function useIndicatorsWithoutTarget(direction: string, year: number) {
   return useQuery({
     queryKey: ["indicators-no-target", direction, year],
     queryFn: async (): Promise<IndicatorWithoutTarget[]> => {
-      const { data: allInd, error: e1 } = await supabase
-        .from("strategic_indicators")
-        .select("*")
-        .eq("direction_hint", direction);
-      if (e1) throw e1;
-      if (!allInd || allInd.length === 0) return [];
+      try {
+        const { data: allInd, error: e1 } = await supabase
+          .from("strategic_indicators")
+          .select("*")
+          .eq("direction_hint", direction);
+        if (e1) throw e1;
+        if (!allInd || allInd.length === 0) {
+          if (direction === "proyeccion") {
+            return PROYECCION_FALLBACK_INDICATORS.map((i) => ({ ...i, year, actual_value: 0 }));
+          }
+          return [];
+        }
 
-      const keys = allInd.map((i) => i.key);
-      const { data: targets, error: e2 } = await supabase
-        .from("strategic_indicator_yearly_targets")
-        .select("indicator_key")
-        .in("indicator_key", keys);
-      if (e2) throw e2;
+        const keys = allInd.map((i) => i.key);
+        const { data: targets, error: e2 } = await supabase
+          .from("strategic_indicator_yearly_targets")
+          .select("indicator_key")
+          .in("indicator_key", keys);
+        if (e2) throw e2;
 
-      const withTarget = new Set((targets ?? []).map((t) => t.indicator_key));
-      const noTarget = (allInd as StrategicIndicator[]).filter((i) => !withTarget.has(i.key));
-      if (noTarget.length === 0) return [];
+        const withTarget = new Set((targets ?? []).map((t) => t.indicator_key));
+        const noTarget = (allInd as StrategicIndicator[]).filter((i) => !withTarget.has(i.key));
+        if (noTarget.length === 0) return [];
 
-      const { data: contribs, error: e3 } = await supabase
-        .from("ally_indicator_contributions")
-        .select("indicator_key, value")
-        .in(
-          "indicator_key",
-          noTarget.map((i) => i.key),
-        )
-        .eq("period_year", year);
-      if (e3) throw e3;
+        const { data: contribs, error: e3 } = await supabase
+          .from("ally_indicator_contributions")
+          .select("indicator_key, value")
+          .in(
+            "indicator_key",
+            noTarget.map((i) => i.key),
+          )
+          .eq("period_year", year);
+        if (e3) throw e3;
 
-      const totals: Record<string, number> = {};
-      (contribs ?? []).forEach((c) => {
-        totals[c.indicator_key] = (totals[c.indicator_key] ?? 0) + Number(c.value);
-      });
+        const totals: Record<string, number> = {};
+        (contribs ?? []).forEach((c) => {
+          totals[c.indicator_key] = (totals[c.indicator_key] ?? 0) + Number(c.value);
+        });
 
-      return noTarget.map((i) => ({ ...i, year, actual_value: totals[i.key] ?? 0 }));
+        return noTarget.map((i) => ({ ...i, year, actual_value: totals[i.key] ?? 0 }));
+      } catch {
+        if (direction === "proyeccion") {
+          return PROYECCION_FALLBACK_INDICATORS.map((i) => ({ ...i, year, actual_value: 0 }));
+        }
+        return [];
+      }
     },
   });
 }

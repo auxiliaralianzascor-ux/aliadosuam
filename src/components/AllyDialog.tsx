@@ -40,7 +40,8 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
   const save = useSaveAlly();
   const saveDiscount = useSaveDiscount();
   const activeDirection: AllyDirection = ally?.direction ?? direction;
-  const canAddDiscounts = !ally && activeDirection === "alianzas";
+  const canCreateNewAlly = !ally && activeDirection === "alianzas";
+  const canAddDiscounts = canCreateNewAlly;
   const buildInitial = () => {
     const initialContacts = ally ? getAllyContacts(ally) : [];
     return {
@@ -92,6 +93,9 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (save.isPending) return;
+    if (!ally && activeDirection !== "alianzas") {
+      return toast.error("Solo la dirección de Alianzas puede crear aliados. El resto solo puede compartirlos.");
+    }
     const name = form.name.trim();
     if (!name) return toast.error("El nombre es obligatorio");
     const cleanContacts = form.contacts
