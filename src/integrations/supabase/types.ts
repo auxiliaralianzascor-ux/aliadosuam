@@ -29,6 +29,7 @@ export type Database = {
           name: string
           notes: string | null
           sector: string | null
+          shared_with_directions: string[] | null
           status: Database["public"]["Enums"]["ally_status"]
           traffic_light: Database["public"]["Enums"]["traffic_light"]
           updated_at: string
@@ -49,6 +50,7 @@ export type Database = {
           name: string
           notes?: string | null
           sector?: string | null
+          shared_with_directions?: string[] | null
           status?: Database["public"]["Enums"]["ally_status"]
           traffic_light?: Database["public"]["Enums"]["traffic_light"]
           updated_at?: string
@@ -69,6 +71,7 @@ export type Database = {
           name?: string
           notes?: string | null
           sector?: string | null
+          shared_with_directions?: string[] | null
           status?: Database["public"]["Enums"]["ally_status"]
           traffic_light?: Database["public"]["Enums"]["traffic_light"]
           updated_at?: string
