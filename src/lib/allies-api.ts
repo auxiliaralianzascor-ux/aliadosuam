@@ -2,17 +2,20 @@ import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tansta
 import { supabase } from "@/integrations/supabase/client";
 import type { Ally, AllyActivity, AllyDirection } from "./allies-types";
 
+export function matchesDirectionAccess(ally: Pick<Ally, "direction" | "shared_with_directions">, direction: AllyDirection) {
+  if (ally.direction === direction) return true;
+  return Boolean(ally.shared_with_directions?.includes(direction));
+}
+
 export function useAllies(direction?: AllyDirection) {
   return useQuery({
     queryKey: ["allies", direction ?? "all"],
     queryFn: async (): Promise<Ally[]> => {
-      let q = supabase.from("allies").select("*").order("updated_at", { ascending: false });
-      if (direction) {
-        q = q.or(`direction.eq.${direction},shared_with_directions.cs.{${direction}}`);
-      }
-      const { data, error } = await q;
+      const { data, error } = await supabase.from("allies").select("*").order("updated_at", { ascending: false });
       if (error) throw error;
-      return data as unknown as Ally[];
+      const rows = (data ?? []) as Ally[];
+      if (!direction) return rows;
+      return rows.filter((ally) => matchesDirectionAccess(ally, direction));
     },
   });
 }

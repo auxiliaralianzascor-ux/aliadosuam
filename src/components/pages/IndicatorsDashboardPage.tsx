@@ -98,17 +98,23 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
     queryFn: async () => {
       const { data: alliesData, error: alliesError } = await supabase
         .from("allies")
-        .select("id, decanatura")
-        .eq("direction", "decanaturas");
+        .select("id, decanatura, direction, shared_with_directions");
       if (alliesError) throw alliesError;
 
+      const relevantAllies = (alliesData ?? []).filter(
+        (ally) =>
+          ally.direction === "decanaturas" ||
+          ally.shared_with_directions?.includes("decanaturas") ||
+          Boolean(ally.decanatura),
+      );
+
       const decanaturas = Array.from(
-        new Set((alliesData ?? []).map((ally) => ally.decanatura).filter(Boolean) as string[]),
+        new Set(relevantAllies.map((ally) => ally.decanatura).filter(Boolean) as string[]),
       );
 
       if (!decanaturas.length) return [];
 
-      const allyIds = (alliesData ?? []).map((ally) => ally.id);
+      const allyIds = relevantAllies.map((ally) => ally.id);
       const { data: contributions, error: contributionsError } = await supabase
         .from("ally_indicator_contributions")
         .select("ally_id, value")
@@ -120,7 +126,7 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
       for (const decanatura of decanaturas) actualByDecanatura.set(decanatura, 0);
 
       for (const contribution of contributions ?? []) {
-        const ally = (alliesData ?? []).find((item) => item.id === contribution.ally_id);
+        const ally = relevantAllies.find((item) => item.id === contribution.ally_id);
         if (!ally?.decanatura) continue;
         const current = actualByDecanatura.get(ally.decanatura) ?? 0;
         actualByDecanatura.set(ally.decanatura, current + Number(contribution.value));

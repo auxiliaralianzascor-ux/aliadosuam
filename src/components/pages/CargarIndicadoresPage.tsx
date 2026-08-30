@@ -79,13 +79,17 @@ export function CargarIndicadoresPage({ direction, dashboardPath }: Props) {
     Number(periodYear),
   );
 
-  const ownAllies = useMemo(
-    () =>
-      allies
-        .filter((a) => a.direction === direction || a.shared_with_directions?.includes(direction))
-        .map((a) => ({ ...a, _isShared: a.direction !== direction })),
-    [allies, direction],
-  );
+  const ownAllies = useMemo(() => {
+    const visible = allies
+      .filter((a) => a.direction === direction || a.shared_with_directions?.includes(direction))
+      .map((a) => ({ ...a, _isShared: a.direction !== direction }));
+
+    if (visible.length > 0) return visible;
+
+    return allies
+      .filter((a) => a.decanatura || a.direction === direction || a.shared_with_directions?.includes(direction))
+      .map((a) => ({ ...a, _isShared: a.direction !== direction }));
+  }, [allies, direction]);
 
   const selectedIndicator = indicators.find((i) => i.key === indicatorKey);
   const projectOptions = PROJECTS_BY_DIRECTION[direction] ?? [];
