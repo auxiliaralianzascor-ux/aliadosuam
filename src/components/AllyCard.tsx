@@ -10,6 +10,7 @@ import {
   TRAFFIC_META,
   type AllyDirection,
   DIRECTION_LABEL,
+  ACADEMIC_LEVELS,
   getAllyContacts,
 } from "@/lib/allies-types";
 import { prefetchAlly } from "@/lib/allies-api";
@@ -105,6 +106,19 @@ export function AllyCard({ ally, basePath, currentDirection }: { ally: Ally; bas
               <CalendarDays className="w-3 h-3" /> Vigencia hasta {ally.valid_until}
             </div>
           )}
+          {ally.academic_participation && (() => {
+            const selected = ACADEMIC_LEVELS.filter((level) => {
+              const employees = ally.academic_participation?.empleados[level.key];
+              const relatives = ally.academic_participation?.familiares[level.key];
+              return Boolean(employees || relatives);
+            });
+            if (selected.length === 0) return null;
+            return (
+              <div className="mt-2 rounded-md border bg-muted/20 px-2 py-1.5 text-[11px] text-foreground/80">
+                <span className="font-medium text-muted-foreground">UAM:</span> {selected.map((level) => level.label).join(", ")}
+              </div>
+            );
+          })()}
         </div>
 
       </Card>

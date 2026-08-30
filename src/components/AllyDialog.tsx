@@ -14,8 +14,10 @@ import {
   type AllyContact,
   type AllyDirection,
   type AllyStatus,
+  type AcademicParticipation,
   type TrafficLight,
   DECANATURAS,
+  ACADEMIC_LEVELS,
   STATUS_LABEL,
   CATEGORY_LABEL,
   TRAFFIC_META,
@@ -27,6 +29,27 @@ import {
 import { toast } from "sonner";
 
 const emptyContact = (): AllyContact => ({ name: "", position: "", email: "", phone: "" });
+
+const emptyAcademicParticipation = (): AcademicParticipation => ({
+  empleados: {
+    pregrado: false,
+    posgrado: false,
+    maestria: false,
+    doctorado: false,
+    educacion_continuada: false,
+  },
+  familiares: {
+    pregrado: false,
+    posgrado: false,
+    maestria: false,
+    doctorado: false,
+    educacion_continuada: false,
+  },
+  observaciones: "",
+});
+
+const ensureAcademicParticipation = (value: AcademicParticipation | null | undefined): AcademicParticipation =>
+  value ?? emptyAcademicParticipation();
 
 interface Props {
   open: boolean;
@@ -48,6 +71,7 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
       name: ally?.name ?? "",
       sector: ally?.sector ?? "",
       decanatura: ally?.decanatura ?? "",
+      academic_participation: ensureAcademicParticipation(ally?.academic_participation),
       status: (ally?.status ?? defaultStatus ?? "conversation") as AllyStatus,
       category: (ally?.category ?? "activo") as AllyCategory,
       traffic_light: (ally?.traffic_light ?? "yellow") as TrafficLight,
@@ -122,6 +146,7 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
         name: form.name.trim(),
         sector: form.sector || null,
         decanatura: activeDirection === "decanaturas" ? (form.decanatura || null) : null,
+        academic_participation: form.academic_participation,
         status: form.status,
         direction: activeDirection,
         category: form.status === "active" ? form.category : null,
@@ -275,6 +300,74 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
             <div className="sm:col-span-2">
               <Label>Notas generales</Label>
               <Textarea rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+            </div>
+            <div className="sm:col-span-2 rounded-md border bg-muted/20 p-3 space-y-3">
+              <div>
+                <Label>Participación académica UAM</Label>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Registra si el aliado tiene empleados o familiares vinculados a programas de la UAM en los niveles académicos institucionales.
+                </p>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                {ACADEMIC_LEVELS.map((level) => (
+                  <div key={level.key} className="rounded-md border bg-background p-3">
+                    <div className="font-medium text-sm mb-2">{level.label}</div>
+                    <div className="space-y-2 text-sm">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={ensureAcademicParticipation(form.academic_participation).empleados[level.key]}
+                          onChange={(e) => setForm((f) => ({
+                            ...f,
+                            academic_participation: {
+                              ...ensureAcademicParticipation(f.academic_participation),
+                              empleados: {
+                                ...ensureAcademicParticipation(f.academic_participation).empleados,
+                                [level.key]: e.target.checked,
+                              },
+                            },
+                          }))}
+                          className="rounded border-input text-primary focus:ring-primary"
+                        />
+                        Empleados
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={ensureAcademicParticipation(form.academic_participation).familiares[level.key]}
+                          onChange={(e) => setForm((f) => ({
+                            ...f,
+                            academic_participation: {
+                              ...ensureAcademicParticipation(f.academic_participation),
+                              familiares: {
+                                ...ensureAcademicParticipation(f.academic_participation).familiares,
+                                [level.key]: e.target.checked,
+                              },
+                            },
+                          }))}
+                          className="rounded border-input text-primary focus:ring-primary"
+                        />
+                        Familiares
+                      </label>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <Label className="text-xs">Observaciones</Label>
+                <Textarea
+                  rows={2}
+                  value={ensureAcademicParticipation(form.academic_participation).observaciones ?? ""}
+                  onChange={(e) => setForm((f) => ({
+                    ...f,
+                    academic_participation: {
+                      ...ensureAcademicParticipation(f.academic_participation),
+                      observaciones: e.target.value || null,
+                    },
+                  }))}
+                  placeholder="Ej. El aliado aporta estudiantes de pregrado y maestría..."
+                />
+              </div>
             </div>
             <div className="sm:col-span-2">
               <Label>Compartir con otras direcciones</Label>

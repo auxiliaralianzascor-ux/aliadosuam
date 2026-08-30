@@ -21,6 +21,7 @@ import { DiscountDialog } from "@/components/DiscountDialog";
 import { useAllyDiscount, DISCOUNT_CATEGORIES } from "@/lib/discounts-api";
 import {
   AREA_LABEL, AREAS_BY_DIRECTION, CATEGORY_LABEL, STATUS_LABEL, TRAFFIC_HELP, TRAFFIC_META, DIRECTION_LABEL,
+  ACADEMIC_LEVELS,
   getAllyContacts,
   type AllyDirection,
   type FollowupArea, type AllyStatus,
@@ -190,6 +191,40 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
             {ally.notes && (
               <div className="mt-4 rounded-md bg-muted/40 p-3 text-sm whitespace-pre-wrap">{ally.notes}</div>
             )}
+
+            {ally.academic_participation && (() => {
+              const levels = ACADEMIC_LEVELS.filter((level) => {
+                const employees = ally.academic_participation?.empleados[level.key];
+                const relatives = ally.academic_participation?.familiares[level.key];
+                return Boolean(employees || relatives);
+              });
+              if (levels.length === 0 && !ally.academic_participation.observaciones) return null;
+              return (
+                <div className="mt-4 rounded-md border bg-muted/20 p-3">
+                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Participación académica UAM</div>
+                  <div className="mt-3 grid sm:grid-cols-2 gap-2 text-sm">
+                    {levels.length > 0 ? levels.map((level) => {
+                      const employees = ally.academic_participation?.empleados[level.key];
+                      const relatives = ally.academic_participation?.familiares[level.key];
+                      const tags = [] as string[];
+                      if (employees) tags.push("Empleados");
+                      if (relatives) tags.push("Familiares");
+                      return (
+                        <div key={level.key} className="rounded-md border bg-background p-2">
+                          <div className="font-medium">{level.label}</div>
+                          <div className="text-xs text-muted-foreground mt-1">{tags.join(" · ") || "Sin registro"}</div>
+                        </div>
+                      );
+                    }) : <div className="text-sm text-muted-foreground col-span-full">Sin registros de participación académica.</div>}
+                  </div>
+                  {ally.academic_participation.observaciones && (
+                    <p className="mt-3 text-sm whitespace-pre-wrap text-muted-foreground">
+                      {ally.academic_participation.observaciones}
+                    </p>
+                  )}
+                </div>
+              );
+            })()}
           </div>
 
           <div className="flex flex-col gap-2 shrink-0">

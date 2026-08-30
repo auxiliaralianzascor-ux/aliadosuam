@@ -32,6 +32,17 @@ const AREA_LABEL: Record<string, string> = {
   general: "General",
 };
 
+const academicLabel = (key: string) => {
+  const map: Record<string, string> = {
+    pregrado: "Pregrado",
+    posgrado: "Posgrado",
+    maestria: "Maestría",
+    doctorado: "Doctorado",
+    educacion_continuada: "Educación continuada",
+  };
+  return map[key] ?? key;
+};
+
 function toCsv(rows: Record<string, string>[]): string {
   if (rows.length === 0) return "";
   const headers = Object.keys(rows[0]!);
@@ -83,11 +94,30 @@ export const exportAlliesToDrive = createServerFn({ method: "POST" })
       return [];
     };
 
+    const readAcademicGroup = (value: unknown): Record<string, unknown> => {
+      if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+      return value as Record<string, unknown>;
+    };
+
     // Una fila por aliado + contacto (normalizado); aliados sin contacto también salen.
     const alliesRows = (allies ?? []).flatMap((a) => {
       const disc = discountByAlly.get(a.id);
       const vencido =
         a.status === "active" && a.valid_until && new Date(a.valid_until) < new Date() ? "Sí" : "No";
+      const academic = readAcademicGroup(a.academic_participation);
+      const employeesByLevel = readAcademicGroup(academic.empleados);
+      const relativesByLevel = readAcademicGroup(academic.familiares);
+      const academicObservation = typeof academic.observaciones === "string" ? academic.observaciones : "";
+      const academicSummary = Object.fromEntries(
+        ["pregrado", "posgrado", "maestria", "doctorado", "educacion_continuada"].flatMap((level) => {
+          const employees = Boolean(employeesByLevel[level] === true);
+          const relatives = Boolean(relativesByLevel[level] === true);
+          return [
+            [`Participación UAM - ${academicLabel(level)} - Empleados`, employees ? "Sí" : "No"],
+            [`Participación UAM - ${academicLabel(level)} - Familiares`, relatives ? "Sí" : "No"],
+          ];
+        }),
+      );
       const base = {
         "ID aliado": a.id,
         Nombre: a.name,
@@ -104,6 +134,8 @@ export const exportAlliesToDrive = createServerFn({ method: "POST" })
         "Descuento posgrado": disc?.posgrado ?? "",
         "Descuento inglés": disc?.ingles ?? "",
         "Descuento Econti": disc?.econti ?? "",
+        ...academicSummary,
+        "Observaciones participación académica": academicObservation.replace(/\r?\n/g, " "),
         Notas: (a.notes ?? "").replace(/\r?\n/g, " "),
         Creado: fmtDate(a.created_at),
         Actualizado: a.updated_at ? new Date(a.updated_at).toLocaleString("es-CO") : "",
