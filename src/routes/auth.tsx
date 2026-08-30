@@ -8,7 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { GraduationCap, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import campusBg from "@/assets/campus-bg.webp";
+import accreditationLogo from "@/assets/uam_acreditacion25_vertical_COLOR.jpg";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -69,18 +71,32 @@ function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen grid place-items-center bg-gradient-to-br from-primary/5 via-background to-accent/10 p-4">
+    <div
+      className="min-h-screen grid place-items-center p-4"
+      style={{
+        backgroundImage: `linear-gradient(rgba(12, 18, 41, 0.68), rgba(12, 18, 41, 0.68)), url(${campusBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <div className="w-full max-w-md">
-        <div className="flex flex-col items-center mb-6">
-          <div className="w-14 h-14 rounded-2xl bg-primary text-primary-foreground grid place-items-center shadow-lg">
-            <GraduationCap className="w-7 h-7" />
+        <div className="mb-6 flex flex-col items-center">
+          <div className="rounded-2xl bg-white/90 p-3 shadow-2xl backdrop-blur-sm">
+            <img
+              src={accreditationLogo}
+              alt="Logo UAM Acreditación"
+              className="h-20 w-auto object-contain"
+            />
           </div>
-          <h1 className="mt-3 text-2xl font-semibold text-center">Gestión de Aliados UAM</h1>
-          <p className="text-sm text-muted-foreground text-center mt-1">
+          <h1 className="mt-4 text-2xl font-semibold text-center text-white drop-shadow-sm">
+            Gestión de Aliados UAM
+          </h1>
+          <p className="mt-1 text-center text-sm text-white/85 drop-shadow-sm">
             Universidad Autónoma de Manizales
           </p>
         </div>
-        <Card className="p-6">
+        <Card className="border-white/15 bg-white/95 p-6 shadow-2xl backdrop-blur-sm">
           <Tabs defaultValue="signin">
             <TabsList className="grid grid-cols-2 w-full">
               <TabsTrigger value="signin">Ingresar</TabsTrigger>
