@@ -571,12 +571,18 @@ function IndicatorCard({
     <Card className="p-5 space-y-4">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1 flex-wrap">
             <Badge variant="outline" className="text-[10px]">
               {indicator.objetivo}
             </Badge>
             <span className="truncate">{indicator.programa}</span>
+            {indicator.indicator_key === "nuevos_aliados" && (
+              <Badge variant="secondary" className="text-[10px] font-normal">
+                Automático · aliados activos
+              </Badge>
+            )}
           </div>
+
           <h3 className="text-sm font-semibold leading-snug">{indicator.label}</h3>
         </div>
         <Badge variant="outline" className={`shrink-0 text-[10px] ${statusColor}`}>
