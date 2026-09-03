@@ -495,9 +495,10 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
           <code>strategic_indicator_yearly_targets</code>.
         </p>
         <p>
-          Los valores reales provienen de la vista <code>v_indicator_progress</code>, que suma los
-          aportes registrados en <code>ally_indicator_contributions</code>.
+          Los valores reales suman los aportes registrados por aliado y, en el indicador de nuevas
+          alianzas, el conteo automático de aliados activos según su año de vigencia.
         </p>
+
       </Card>
     </div>
   );
