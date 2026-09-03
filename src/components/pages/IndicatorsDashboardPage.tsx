@@ -404,7 +404,7 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
               </div>
 
               <div className="mt-5 space-y-3">
-                {academicProgramsSummary.decanaturas.map((item) => (
+                {(academicProgramsSummary?.decanaturas ?? []).map((item) => (
                   <div key={item.decanatura} className="rounded-lg border p-3">
                     <div className="mb-2 flex items-center justify-between gap-3">
                       <span className="font-medium">{item.decanatura}</span>
