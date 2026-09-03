@@ -374,7 +374,7 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
             </div>
           </Card>
 
-          {academicProgramsSummary.general?.length > 0 && (
+          {(academicProgramsSummary?.general?.length ?? 0) > 0 && (
             <Card className="p-5">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold flex items-center gap-2">
