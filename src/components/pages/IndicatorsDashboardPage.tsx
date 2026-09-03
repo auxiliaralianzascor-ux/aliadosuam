@@ -144,7 +144,7 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
     },
   });
 
-  const { data: academicProgramsSummary = [], isLoading: academicProgramsLoading } = useQuery({
+  const { data: academicProgramsSummary, isLoading: academicProgramsLoading } = useQuery({
     queryKey: ["decanatura-program-summary", year],
     enabled: direction === "decanaturas",
     queryFn: async () => {
