@@ -144,7 +144,7 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
     },
   });
 
-  const { data: academicProgramsSummary = [], isLoading: academicProgramsLoading } = useQuery({
+  const { data: academicProgramsSummary, isLoading: academicProgramsLoading } = useQuery({
     queryKey: ["decanatura-program-summary", year],
     enabled: direction === "decanaturas",
     queryFn: async () => {
@@ -177,7 +177,7 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
         });
       }
 
-      const makeProgramValue = (ally: { academic_participation?: any; decanatura?: string | null }) => {
+      const makeProgramValue = (ally: { id: string; academic_participation?: any; decanatura?: string | null }) => {
         const participation = ally.academic_participation ?? {};
         const employees = participation.empleados ?? {};
         const relatives = participation.familiares ?? {};
@@ -374,7 +374,7 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
             </div>
           </Card>
 
-          {academicProgramsSummary.general?.length > 0 && (
+          {(academicProgramsSummary?.general?.length ?? 0) > 0 && (
             <Card className="p-5">
               <div className="mb-4 flex items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -384,7 +384,7 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
               </div>
 
               <div className="grid gap-3 md:grid-cols-2">
-                {academicProgramsSummary.general.map((item) => (
+                {(academicProgramsSummary?.general ?? []).map((item) => (
                   <div key={item.key} className="rounded-lg border p-3">
                     <div className="mb-2 flex items-center justify-between gap-3">
                       <span className="font-medium">{item.label}</span>
@@ -404,7 +404,7 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
               </div>
 
               <div className="mt-5 space-y-3">
-                {academicProgramsSummary.decanaturas.map((item) => (
+                {(academicProgramsSummary?.decanaturas ?? []).map((item) => (
                   <div key={item.decanatura} className="rounded-lg border p-3">
                     <div className="mb-2 flex items-center justify-between gap-3">
                       <span className="font-medium">{item.decanatura}</span>
@@ -495,9 +495,10 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
           <code>strategic_indicator_yearly_targets</code>.
         </p>
         <p>
-          Los valores reales provienen de la vista <code>v_indicator_progress</code>, que suma los
-          aportes registrados en <code>ally_indicator_contributions</code>.
+          Los valores reales suman los aportes registrados por aliado y, en el indicador de nuevas
+          alianzas, el conteo automático de aliados activos según su año de vigencia.
         </p>
+
       </Card>
     </div>
   );
@@ -571,12 +572,18 @@ function IndicatorCard({
     <Card className="p-5 space-y-4">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1 flex-wrap">
             <Badge variant="outline" className="text-[10px]">
               {indicator.objetivo}
             </Badge>
             <span className="truncate">{indicator.programa}</span>
+            {indicator.indicator_key === "nuevos_aliados" && (
+              <Badge variant="secondary" className="text-[10px] font-normal">
+                Automático · aliados activos
+              </Badge>
+            )}
           </div>
+
           <h3 className="text-sm font-semibold leading-snug">{indicator.label}</h3>
         </div>
         <Badge variant="outline" className={`shrink-0 text-[10px] ${statusColor}`}>

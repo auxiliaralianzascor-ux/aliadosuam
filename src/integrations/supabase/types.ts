@@ -125,6 +125,13 @@ export type Database = {
             referencedRelation: "allies"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "ally_activities_ally_id_fkey"
+            columns: ["ally_id"]
+            isOneToOne: false
+            referencedRelation: "v_practicas_por_aliado"
+            referencedColumns: ["ally_id"]
+          },
         ]
       }
       ally_discounts: {
@@ -165,6 +172,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "allies"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ally_discounts_ally_id_fkey"
+            columns: ["ally_id"]
+            isOneToOne: true
+            referencedRelation: "v_practicas_por_aliado"
+            referencedColumns: ["ally_id"]
           },
         ]
       }
@@ -212,6 +226,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "allies"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ally_indicator_contributions_ally_id_fkey"
+            columns: ["ally_id"]
+            isOneToOne: false
+            referencedRelation: "v_practicas_por_aliado"
+            referencedColumns: ["ally_id"]
           },
           {
             foreignKeyName: "ally_indicator_contributions_indicator_key_fkey"
@@ -421,6 +442,17 @@ export type Database = {
         }
         Relationships: []
       }
+      v_practicas_por_aliado: {
+        Row: {
+          ally_id: string | null
+          ally_name: string | null
+          direction: string | null
+          estudiantes: number | null
+          status: Database["public"]["Enums"]["ally_status"] | null
+          year: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_any_role: { Args: { _user_id: string }; Returns: boolean }
@@ -473,12 +505,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -502,11 +534,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -527,11 +559,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -552,11 +584,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -569,11 +601,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }

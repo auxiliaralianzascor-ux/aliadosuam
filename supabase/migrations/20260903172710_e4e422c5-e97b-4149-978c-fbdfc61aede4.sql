@@ -1,0 +1,1 @@
+ALTER VIEW public.v_practicas_por_aliado SET (security_invoker = on);
