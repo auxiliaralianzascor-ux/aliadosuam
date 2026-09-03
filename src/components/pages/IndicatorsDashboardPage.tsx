@@ -384,7 +384,7 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
               </div>
 
               <div className="grid gap-3 md:grid-cols-2">
-                {academicProgramsSummary.general.map((item) => (
+                {(academicProgramsSummary?.general ?? []).map((item) => (
                   <div key={item.key} className="rounded-lg border p-3">
                     <div className="mb-2 flex items-center justify-between gap-3">
                       <span className="font-medium">{item.label}</span>
