@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       allies: {
         Row: {
+          academic_participation: Json | null
           category: Database["public"]["Enums"]["ally_category"] | null
           contact_email: string | null
           contact_name: string | null
@@ -37,6 +38,7 @@ export type Database = {
           valid_until: string | null
         }
         Insert: {
+          academic_participation?: Json | null
           category?: Database["public"]["Enums"]["ally_category"] | null
           contact_email?: string | null
           contact_name?: string | null
@@ -58,6 +60,7 @@ export type Database = {
           valid_until?: string | null
         }
         Update: {
+          academic_participation?: Json | null
           category?: Database["public"]["Enums"]["ally_category"] | null
           contact_email?: string | null
           contact_name?: string | null
