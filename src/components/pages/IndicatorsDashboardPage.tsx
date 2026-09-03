@@ -177,7 +177,7 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
         });
       }
 
-      const makeProgramValue = (ally: { academic_participation?: any; decanatura?: string | null }) => {
+      const makeProgramValue = (ally: { id: string; academic_participation?: any; decanatura?: string | null }) => {
         const participation = ally.academic_participation ?? {};
         const employees = participation.empleados ?? {};
         const relatives = participation.familiares ?? {};
