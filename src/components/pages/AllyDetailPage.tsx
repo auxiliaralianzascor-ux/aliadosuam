@@ -194,18 +194,18 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
 
             {ally.academic_participation && (() => {
               const levels = ACADEMIC_LEVELS.filter((level) => {
-                const employees = ally.academic_participation?.empleados[level.key];
-                const relatives = ally.academic_participation?.familiares[level.key];
+                const employees = ally.academic_participation?.empleados?.[level.key];
+                const relatives = ally.academic_participation?.familiares?.[level.key];
                 return Boolean(employees || relatives);
               });
-              if (levels.length === 0 && !ally.academic_participation.observaciones) return null;
+              if (levels.length === 0 && !ally.academic_participation?.observaciones) return null;
               return (
                 <div className="mt-4 rounded-md border bg-muted/20 p-3">
                   <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Participación académica UAM</div>
                   <div className="mt-3 grid sm:grid-cols-2 gap-2 text-sm">
                     {levels.length > 0 ? levels.map((level) => {
-                      const employees = ally.academic_participation?.empleados[level.key];
-                      const relatives = ally.academic_participation?.familiares[level.key];
+                      const employees = ally.academic_participation?.empleados?.[level.key];
+                      const relatives = ally.academic_participation?.familiares?.[level.key];
                       const tags = [] as string[];
                       if (employees) tags.push("Empleados");
                       if (relatives) tags.push("Familiares");
@@ -217,9 +217,9 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
                       );
                     }) : <div className="text-sm text-muted-foreground col-span-full">Sin registros de participación académica.</div>}
                   </div>
-                  {ally.academic_participation.observaciones && (
+                  {ally.academic_participation?.observaciones && (
                     <p className="mt-3 text-sm whitespace-pre-wrap text-muted-foreground">
-                      {ally.academic_participation.observaciones}
+                      {ally.academic_participation?.observaciones}
                     </p>
                   )}
                 </div>
