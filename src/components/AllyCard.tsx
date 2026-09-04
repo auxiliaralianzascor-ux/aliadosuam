@@ -108,8 +108,8 @@ export function AllyCard({ ally, basePath, currentDirection }: { ally: Ally; bas
           )}
           {ally.academic_participation && (() => {
             const selected = ACADEMIC_LEVELS.filter((level) => {
-              const employees = ally.academic_participation?.empleados[level.key];
-              const relatives = ally.academic_participation?.familiares[level.key];
+              const employees = ally.academic_participation?.empleados?.[level.key];
+              const relatives = ally.academic_participation?.familiares?.[level.key];
               return Boolean(employees || relatives);
             });
             if (selected.length === 0) return null;
