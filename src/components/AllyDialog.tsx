@@ -48,8 +48,14 @@ const emptyAcademicParticipation = (): AcademicParticipation => ({
   observaciones: "",
 });
 
-const ensureAcademicParticipation = (value: AcademicParticipation | null | undefined): AcademicParticipation =>
-  value ?? emptyAcademicParticipation();
+const ensureAcademicParticipation = (value: AcademicParticipation | null | undefined): AcademicParticipation => {
+  const empty = emptyAcademicParticipation();
+  return {
+    empleados: { ...empty.empleados, ...(value?.empleados ?? {}) },
+    familiares: { ...empty.familiares, ...(value?.familiares ?? {}) },
+    observaciones: value?.observaciones ?? "",
+  };
+};
 
 interface Props {
   open: boolean;
