@@ -17,7 +17,22 @@ export type Database = {
       allies: {
         Row: {
           academic_participation: Json | null
+          annual_revenue: number
           category: Database["public"]["Enums"]["ally_category"] | null
+          c1_economic: number | null
+          c2_services: number | null
+          c3_age: boolean
+          c3_compliance: boolean
+          c3_events: boolean
+          c3_trust: number | null
+          c4_cocreated_impact: number | null
+          c4_impact: boolean
+          c4_rd_product: boolean
+          c4_students: boolean
+          c5_coherence: number | null
+          c5_ethical_compliance: boolean
+          c5_research_affinity: boolean
+          c5_strategic_plan: boolean
           contact_email: string | null
           contact_name: string | null
           contact_phone: string | null
@@ -28,7 +43,12 @@ export type Database = {
           direction: string
           id: string
           name: string
+          nit: string | null
           notes: string | null
+          management_recommendation: string | null
+          mission_areas: number
+          orchid_type: string | null
+          origin: string | null
           sector: string | null
           shared_with_directions: string[] | null
           status: Database["public"]["Enums"]["ally_status"]
@@ -39,7 +59,22 @@ export type Database = {
         }
         Insert: {
           academic_participation?: Json | null
+          annual_revenue?: number
           category?: Database["public"]["Enums"]["ally_category"] | null
+          c1_economic?: number | null
+          c2_services?: number | null
+          c3_age?: boolean
+          c3_compliance?: boolean
+          c3_events?: boolean
+          c3_trust?: number | null
+          c4_cocreated_impact?: number | null
+          c4_impact?: boolean
+          c4_rd_product?: boolean
+          c4_students?: boolean
+          c5_coherence?: number | null
+          c5_ethical_compliance?: boolean
+          c5_research_affinity?: boolean
+          c5_strategic_plan?: boolean
           contact_email?: string | null
           contact_name?: string | null
           contact_phone?: string | null
@@ -50,7 +85,12 @@ export type Database = {
           direction?: string
           id?: string
           name: string
+          nit?: string | null
           notes?: string | null
+          management_recommendation?: string | null
+          mission_areas?: number
+          orchid_type?: string | null
+          origin?: string | null
           sector?: string | null
           shared_with_directions?: string[] | null
           status?: Database["public"]["Enums"]["ally_status"]
@@ -61,7 +101,22 @@ export type Database = {
         }
         Update: {
           academic_participation?: Json | null
+          annual_revenue?: number
           category?: Database["public"]["Enums"]["ally_category"] | null
+          c1_economic?: number | null
+          c2_services?: number | null
+          c3_age?: boolean
+          c3_compliance?: boolean
+          c3_events?: boolean
+          c3_trust?: number | null
+          c4_cocreated_impact?: number | null
+          c4_impact?: boolean
+          c4_rd_product?: boolean
+          c4_students?: boolean
+          c5_coherence?: number | null
+          c5_ethical_compliance?: boolean
+          c5_research_affinity?: boolean
+          c5_strategic_plan?: boolean
           contact_email?: string | null
           contact_name?: string | null
           contact_phone?: string | null
@@ -72,7 +127,12 @@ export type Database = {
           direction?: string
           id?: string
           name?: string
+          nit?: string | null
           notes?: string | null
+          management_recommendation?: string | null
+          mission_areas?: number
+          orchid_type?: string | null
+          origin?: string | null
           sector?: string | null
           shared_with_directions?: string[] | null
           status?: Database["public"]["Enums"]["ally_status"]

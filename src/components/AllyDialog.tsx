@@ -8,9 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, Trash2, Percent, X } from "lucide-react";
 import { useSaveAlly } from "@/lib/allies-api";
 import { useSaveDiscount, DISCOUNT_CATEGORIES, type DiscountCategory } from "@/lib/discounts-api";
+import { classifyAlly } from "@/lib/ally-classification";
 import {
   type Ally,
-  type AllyCategory,
   type AllyContact,
   type AllyDirection,
   type AllyStatus,
@@ -75,11 +75,23 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
     const initialContacts = ally ? getAllyContacts(ally) : [];
     return {
       name: ally?.name ?? "",
+      nit: ally?.nit ?? "",
+      origin: ally?.origin ?? "Nacional",
       sector: ally?.sector ?? "",
+      annual_revenue: ally?.annual_revenue ?? 0,
+      mission_areas: ally?.mission_areas ?? 0,
+      c3_age: ally?.c3_age ?? false,
+      c3_compliance: ally?.c3_compliance ?? false,
+      c3_events: ally?.c3_events ?? false,
+      c4_students: ally?.c4_students ?? false,
+      c4_rd_product: ally?.c4_rd_product ?? false,
+      c4_impact: ally?.c4_impact ?? false,
+      c5_research_affinity: ally?.c5_research_affinity ?? false,
+      c5_ethical_compliance: ally?.c5_ethical_compliance ?? false,
+      c5_strategic_plan: ally?.c5_strategic_plan ?? false,
       decanatura: ally?.decanatura ?? "",
       academic_participation: ensureAcademicParticipation(ally?.academic_participation),
       status: (ally?.status ?? defaultStatus ?? "conversation") as AllyStatus,
-      category: (ally?.category ?? "activo") as AllyCategory,
       traffic_light: (ally?.traffic_light ?? "yellow") as TrafficLight,
       contacts: initialContacts.length > 0 ? initialContacts : [emptyContact()],
       valid_from: ally?.valid_from ?? "",
@@ -95,6 +107,19 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
     posgrado: "",
     econti: "",
     ingles: "",
+  });
+  const preview = classifyAlly({
+    annual_revenue: Number(form.annual_revenue) || 0,
+    mission_areas: Number(form.mission_areas) || 0,
+    c3_age: form.c3_age,
+    c3_compliance: form.c3_compliance,
+    c3_events: form.c3_events,
+    c4_students: form.c4_students,
+    c4_rd_product: form.c4_rd_product,
+    c4_impact: form.c4_impact,
+    c5_research_affinity: form.c5_research_affinity,
+    c5_ethical_compliance: form.c5_ethical_compliance,
+    c5_strategic_plan: form.c5_strategic_plan,
   });
 
   useEffect(() => {
@@ -137,6 +162,19 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
       }))
       .filter((c) => c.name || c.position || c.email || c.phone);
     const primary = cleanContacts[0];
+    const classification = classifyAlly({
+      annual_revenue: Number(form.annual_revenue) || 0,
+      mission_areas: Number(form.mission_areas) || 0,
+      c3_age: form.c3_age,
+      c3_compliance: form.c3_compliance,
+      c3_events: form.c3_events,
+      c4_students: form.c4_students,
+      c4_rd_product: form.c4_rd_product,
+      c4_impact: form.c4_impact,
+      c5_research_affinity: form.c5_research_affinity,
+      c5_ethical_compliance: form.c5_ethical_compliance,
+      c5_strategic_plan: form.c5_strategic_plan,
+    });
     try {
       // Duplicate name check (case-insensitive) within same direction
       const { supabase } = await import("@/integrations/supabase/client");
@@ -150,12 +188,33 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
       const saved = await save.mutateAsync({
         id: ally?.id,
         name: form.name.trim(),
+        nit: form.nit.trim() || null,
+        origin: form.origin,
         sector: form.sector || null,
+        annual_revenue: Number(form.annual_revenue) || 0,
+        mission_areas: Number(form.mission_areas) || 0,
+        c3_age: form.c3_age,
+        c3_compliance: form.c3_compliance,
+        c3_events: form.c3_events,
+        c4_students: form.c4_students,
+        c4_rd_product: form.c4_rd_product,
+        c4_impact: form.c4_impact,
+        c5_research_affinity: form.c5_research_affinity,
+        c5_ethical_compliance: form.c5_ethical_compliance,
+        c5_strategic_plan: form.c5_strategic_plan,
+        c1_economic: classification.c1_economic,
+        c2_services: classification.c2_services,
+        c3_trust: classification.c3_trust,
+        c4_cocreated_impact: classification.c4_impact,
+        c5_coherence: classification.c5_coherence,
+        ivc_total: classification.ivc_total,
+        category: classification.category,
+        management_recommendation: classification.recommendation,
+        orchid_type: classification.orchid_type,
         decanatura: activeDirection === "decanaturas" ? (form.decanatura || null) : null,
         academic_participation: form.academic_participation,
         status: form.status,
         direction: activeDirection,
-        category: form.status === "active" ? form.category : null,
         traffic_light: form.traffic_light,
         contact_name: primary?.name || null,
         contact_email: primary?.email || null,
@@ -199,8 +258,61 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
             </div>
             <div>
+              <Label>NIT / ID</Label>
+              <Input value={form.nit} onChange={(e) => setForm({ ...form, nit: e.target.value })} />
+            </div>
+            <div>
+              <Label>Origen</Label>
+              <Select value={form.origin} onValueChange={(v) => setForm({ ...form, origin: v as "Nacional" | "Internacional" })}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Nacional">Nacional</SelectItem>
+                  <SelectItem value="Internacional">Internacional</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
               <Label>Sector / Industria</Label>
               <Input value={form.sector} onChange={(e) => setForm({ ...form, sector: e.target.value })} placeholder="Ej. Salud, Tecnología" />
+            </div>
+            <div>
+              <Label>Recaudo anual consolidado (COP)</Label>
+              <Input type="number" min="0" step="1" value={form.annual_revenue} onChange={(e) => setForm({ ...form, annual_revenue: Number(e.target.value) || 0 })} />
+            </div>
+            <div>
+              <Label>Áreas misionales vinculadas (0 a 4)</Label>
+              <Input type="number" min="0" max="4" step="1" value={form.mission_areas} onChange={(e) => setForm({ ...form, mission_areas: Math.min(4, Math.max(0, Number(e.target.value) || 0)) })} />
+            </div>
+            <div className="sm:col-span-2 rounded-md border bg-muted/20 p-3 space-y-3">
+              <div>
+                <Label>Criterios de clasificación de la matriz</Label>
+                <p className="text-xs text-muted-foreground mt-1">Marca 1 (cumple) o deja sin marcar 0 (no cumple), tal como indica la guía del Excel.</p>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                {([
+                  ["c3_age", "C3.1 Antigüedad ≥ 3 años"],
+                  ["c3_compliance", "C3.2 Cumplimiento 100%"],
+                  ["c3_events", "C3.3 Eventos UAM ≥ 2/año"],
+                  ["c4_students", "C4.1 Estudiantes beneficiados"],
+                  ["c4_rd_product", "C4.2 Producto tangible I+D"],
+                  ["c4_impact", "C4.3 Impacto verificado"],
+                  ["c5_research_affinity", "C5.1 Afinidad investigativa"],
+                  ["c5_ethical_compliance", "C5.2 Cumplimiento ético/legal"],
+                  ["c5_strategic_plan", "C5.3 Aporte al Plan Estratégico"],
+                ] as const).map(([key, label]) => (
+                  <label key={key} className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={form[key]} onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.checked }))} className="rounded border-input text-primary focus:ring-primary" />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div className="sm:col-span-2 rounded-md border border-primary/20 bg-primary/5 p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+                <span className="font-medium">Resultado de la matriz</span>
+                <span className="font-semibold">IVC_total: {preview.ivc_total.toFixed(4)} · {CATEGORY_LABEL[preview.category]}</span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">{preview.orchid_type}. {preview.recommendation}</p>
             </div>
             {activeDirection === "decanaturas" && (
               <div className="sm:col-span-2">
@@ -226,20 +338,7 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
                 </SelectContent>
               </Select>
             </div>
-            {form.status === "active" && (
-              <div>
-                <Label>Categoría</Label>
-                <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v as AllyCategory })}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {(Object.keys(CATEGORY_LABEL) as AllyCategory[]).map((c) => (
-                      <SelectItem key={c} value={c}>{CATEGORY_LABEL[c]}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-            <div className={form.status === "active" ? "" : "sm:col-span-2"}>
+            <div>
               <Label>Semáforo</Label>
               <Select value={form.traffic_light} onValueChange={(v) => setForm({ ...form, traffic_light: v as TrafficLight })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>

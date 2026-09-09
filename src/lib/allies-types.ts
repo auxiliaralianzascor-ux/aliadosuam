@@ -87,6 +87,8 @@ export interface AllyContact {
 export interface Ally {
   id: string;
   name: string;
+  nit: string | null;
+  origin: "Nacional" | "Internacional" | null;
   sector: string | null;
   status: AllyStatus;
   direction: AllyDirection;
@@ -99,6 +101,25 @@ export interface Ally {
   notes: string | null;
   decanatura: string | null;
   academic_participation: AcademicParticipation | null;
+  annual_revenue: number;
+  mission_areas: number;
+  c3_age: boolean;
+  c3_compliance: boolean;
+  c3_events: boolean;
+  c4_students: boolean;
+  c4_rd_product: boolean;
+  c4_impact: boolean;
+  c5_research_affinity: boolean;
+  c5_ethical_compliance: boolean;
+  c5_strategic_plan: boolean;
+  c1_economic: number | null;
+  c2_services: number | null;
+  c3_trust: number | null;
+  c4_cocreated_impact: number | null;
+  c5_coherence: number | null;
+  ivc_total: number | null;
+  management_recommendation: string | null;
+  orchid_type: string | null;
   shared_with_directions: AllyDirection[] | null;
   valid_from: string | null;
   valid_until: string | null;

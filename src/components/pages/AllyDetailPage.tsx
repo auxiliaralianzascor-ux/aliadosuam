@@ -133,7 +133,7 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
               <span className={`w-3 h-3 rounded-full ${tl.dot}`} />
               <h1 className="text-2xl font-bold">{ally.name}</h1>
               <Badge variant="secondary">{STATUS_LABEL[ally.status]}</Badge>
-              {isActive && ally.category && <Badge variant="outline">{CATEGORY_LABEL[ally.category]}</Badge>}
+              {ally.category && <Badge variant="outline">{CATEGORY_LABEL[ally.category]}</Badge>}
               {isSharedWithMe && (
                 <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20">
                   Compartido por {DIRECTION_LABEL[ally.direction]}
@@ -146,8 +146,19 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
               )}
             </div>
             {ally.sector && <p className="text-sm text-muted-foreground mt-1">{ally.sector}</p>}
+            {(ally.nit || ally.origin) && <p className="text-sm text-muted-foreground mt-1">{ally.nit ? `NIT / ID: ${ally.nit}` : ""}{ally.nit && ally.origin ? " · " : ""}{ally.origin ?? ""}</p>}
             {ally.decanatura && <p className="text-sm text-muted-foreground mt-1"><span className="font-medium">Decanatura:</span> {ally.decanatura}</p>}
             <p className={`text-xs mt-2 ${tl.text}`}>{TRAFFIC_HELP[ally.status][ally.traffic_light]}</p>
+
+            {ally.ivc_total !== null && (
+              <div className="mt-4 rounded-md border border-primary/20 bg-primary/5 p-3 text-sm">
+                <div className="flex flex-wrap justify-between gap-2 font-medium">
+                  <span>Clasificación de Valor Compartido</span>
+                  <span>IVC_total: {ally.ivc_total.toFixed(4)}</span>
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">{ally.orchid_type ?? ""}. {ally.management_recommendation ?? ""}</div>
+              </div>
+            )}
 
             {expired && (
               <div className="mt-3 flex items-center gap-2 rounded-md border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 px-3 py-2 text-sm">

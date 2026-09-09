@@ -66,13 +66,16 @@ export function AllyCard({ ally, basePath, currentDirection }: { ally: Ally; bas
           </div>
           <div className="flex flex-col items-end gap-1 shrink-0">
             <Badge variant="secondary" className="text-xs">{STATUS_LABEL[ally.status]}</Badge>
-            {ally.status === "active" && ally.category && (
+            {ally.category && (
               <Badge variant="outline" className="text-xs">{CATEGORY_LABEL[ally.category]}</Badge>
             )}
           </div>
         </div>
 
         <div className="mt-3 space-y-1 text-xs text-muted-foreground">
+          {ally.ivc_total !== null && (
+            <div>IVC_total: {ally.ivc_total.toFixed(4)} · {ally.orchid_type ?? ""}</div>
+          )}
           {(() => {
             const contacts = getAllyContacts(ally);
             const primary = contacts[0];
