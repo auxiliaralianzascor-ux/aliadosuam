@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Ally } from "@/lib/allies-types";
 
 const STATUS_LABEL: Record<string, string> = {
   conversation: "Conversación",
@@ -79,7 +80,8 @@ export const exportAlliesToDrive = createServerFn({ method: "POST" })
     if (aae) throw new Error(aae.message);
     if (de) throw new Error(de.message);
 
-    const alliesById = new Map((allies ?? []).map((a) => [a.id, a]));
+    const allyRows = (allies ?? []) as unknown as Ally[];
+    const alliesById = new Map(allyRows.map((a) => [a.id, a]));
     const discountByAlly = new Map((discounts ?? []).map((d) => [d.ally_id, d]));
 
     const fmtDate = (v: string | null) => (v ? new Date(v).toLocaleDateString("es-CO") : "");
@@ -100,7 +102,7 @@ export const exportAlliesToDrive = createServerFn({ method: "POST" })
     };
 
     // Una fila por aliado + contacto (normalizado); aliados sin contacto también salen.
-    const alliesRows = (allies ?? []).flatMap((a) => {
+    const alliesRows = allyRows.flatMap((a) => {
       const disc = discountByAlly.get(a.id);
       const vencido =
         a.status === "active" && a.valid_until && new Date(a.valid_until) < new Date() ? "Sí" : "No";
