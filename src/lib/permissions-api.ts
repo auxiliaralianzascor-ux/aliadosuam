@@ -4,6 +4,17 @@ import type { AllyDirection, FollowupArea } from "./allies-types";
 
 export type AppRole = "admin" | "member";
 
+export const AUTH_ALLOWED_DOMAIN = "@autonoma.edu.co";
+export const SUPER_ADMIN_EMAIL = "auxiliar.alianzascor@autonoma.edu.co";
+
+export function isAllowedAutonomaEmail(email?: string | null) {
+  return !!email && email.trim().toLowerCase().endsWith(AUTH_ALLOWED_DOMAIN);
+}
+
+export function isSuperAdminEmail(email?: string | null) {
+  return email?.trim().toLowerCase() === SUPER_ADMIN_EMAIL;
+}
+
 export interface IndicatorProfile {
   direction: AllyDirection;
   profile: "verificador" | "cargador";
@@ -26,17 +37,24 @@ export function useMyPermissions() {
       const { data: u } = await supabase.auth.getUser();
       const user = u.user;
       if (!user) return { userId: null, isAdmin: false, isMember: false, areas: [], directions: [], indicatorProfiles: [] };
+
+      const isAutonomaUser = isAllowedAutonomaEmail(user.email);
+      const isSuperAdmin = isSuperAdminEmail(user.email);
+
       const [{ data: roles }, { data: areas }, { data: directions }, { data: indicatorProfiles }] = await Promise.all([
         supabase.from("user_roles").select("role").eq("user_id", user.id),
         supabase.from("user_areas").select("area").eq("user_id", user.id),
         (supabase.from as unknown as (t: string) => { select: (c: string) => { eq: (k: string, v: string) => Promise<{ data: { direction: string }[] | null }> } })("user_directions").select("direction").eq("user_id", user.id),
         (supabase.from as unknown as (t: string) => { select: (c: string) => { eq: (k: string, v: string) => Promise<{ data: { direction: string; profile: string }[] | null }> } })("user_indicator_profiles").select("direction, profile").eq("user_id", user.id),
       ]);
+
       const roleSet = new Set((roles ?? []).map((r) => r.role as AppRole));
+      const effectiveAdmin = isAutonomaUser && isSuperAdmin;
+
       return {
         userId: user.id,
-        isAdmin: roleSet.has("admin"),
-        isMember: roleSet.has("member"),
+        isAdmin: effectiveAdmin,
+        isMember: isAutonomaUser && (effectiveAdmin || roleSet.has("member")),
         areas: (areas ?? []).map((a) => a.area as FollowupArea),
         directions: (directions ?? []).map((d) => d.direction as AllyDirection),
         indicatorProfiles: (indicatorProfiles ?? []).map(p => ({ direction: p.direction as AllyDirection, profile: p.profile as "verificador"|"cargador" })),
@@ -92,6 +110,7 @@ export function useAllUsers() {
         (supabase.from as unknown as (t: string) => { select: (c: string) => Promise<{ data: { user_id: string; direction: string }[] | null; error: unknown }> })("user_directions").select("user_id, direction"),
         (supabase.from as unknown as (t: string) => { select: (c: string) => Promise<{ data: { user_id: string; direction: string; profile: string }[] | null; error: unknown }> })("user_indicator_profiles").select("user_id, direction, profile"),
       ]);
+      const authorizedProfiles = (profiles ?? []).filter((p) => isAllowedAutonomaEmail(p.email));
       if (pe) throw pe;
       if (re) throw re;
       if (ae) throw ae;
@@ -121,11 +140,11 @@ export function useAllUsers() {
         arr.push({ direction: d.direction as AllyDirection, profile: d.profile as "verificador"|"cargador" });
         indByUser.set(d.user_id, arr);
       });
-      return (profiles ?? []).map((p) => ({
+      return authorizedProfiles.map((p) => ({
         id: p.id,
         email: p.email,
         display_name: p.display_name,
-        roles: rolesByUser.get(p.id) ?? [],
+        roles: isSuperAdminEmail(p.email) ? ["admin"] : rolesByUser.get(p.id) ?? [],
         areas: areasByUser.get(p.id) ?? [],
         directions: dirsByUser.get(p.id) ?? [],
         indicatorProfiles: indByUser.get(p.id) ?? [],

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { createFileRoute, Navigate, redirect } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +28,7 @@ import {
   useToggleUserArea,
   useToggleUserDirection,
   useToggleUserIndicatorProfile,
+  isSuperAdminEmail,
   type ManagedUser,
 } from "@/lib/permissions-api";
 import {
@@ -40,6 +41,15 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/usuarios")({
   head: () => ({ meta: [{ title: "Usuarios · UAM" }] }),
+  beforeLoad: async () => {
+    const { data, error } = await import("@/integrations/supabase/client").then(({ supabase }) => supabase.auth.getUser());
+    if (error || !data.user) {
+      throw new Error("No autorizado");
+    }
+    if (!isSuperAdminEmail(data.user.email)) {
+      throw redirect({ to: "/alianzas/aliados" });
+    }
+  },
   component: UsersPage,
 });
 
@@ -296,6 +306,7 @@ function PermissionEditor({
   onRole,
   onDirection,
   onArea,
+  onIndicatorProfile,
 }: {
   user: ManagedUser;
   isMe: boolean;

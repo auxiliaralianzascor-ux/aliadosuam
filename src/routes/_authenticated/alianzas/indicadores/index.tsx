@@ -3,5 +3,5 @@ import { IndicatorsDashboardPage } from "@/components/pages/IndicatorsDashboardP
 
 export const Route = createFileRoute("/_authenticated/alianzas/indicadores/")({
   head: () => ({ meta: [{ title: "Indicadores · Alianzas · UAM" }] }),
-  component: () => <IndicatorsDashboardPage direction="alianzas" />,
+  component: () => <IndicatorsDashboardPage direction="alianzas" cargarPath="/alianzas/indicadores/cargar" />,
 });

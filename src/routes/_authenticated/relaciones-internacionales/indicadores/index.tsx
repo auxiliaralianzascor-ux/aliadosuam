@@ -3,5 +3,5 @@ import { IndicatorsDashboardPage } from "@/components/pages/IndicatorsDashboardP
 
 export const Route = createFileRoute("/_authenticated/relaciones-internacionales/indicadores/")({
   head: () => ({ meta: [{ title: "Indicadores · Relaciones Internacionales · UAM" }] }),
-  component: () => <IndicatorsDashboardPage direction="relaciones_internacionales" />,
+  component: () => <IndicatorsDashboardPage direction="relaciones_internacionales" cargarPath="/relaciones-internacionales/indicadores/cargar" />,
 });

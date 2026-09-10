@@ -1,18 +1,45 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Ally, AllyActivity, AllyDirection } from "./allies-types";
+
+const NUMERIC_ALLY_FIELDS = [
+  "annual_revenue",
+  "mission_areas",
+  "c1_economic",
+  "c2_services",
+  "c3_trust",
+  "c4_cocreated_impact",
+  "c5_coherence",
+  "ivc_total",
+] as const;
+
+function normalizeAlly(row: unknown): Ally {
+  const ally = { ...(row as Ally) };
+
+  for (const field of NUMERIC_ALLY_FIELDS) {
+    const value = ally[field];
+    if (value === null || value === undefined) continue;
+    const numberValue = Number(value);
+    ally[field] = Number.isFinite(numberValue) ? numberValue : null;
+  }
+
+  return ally;
+}
+
+export function matchesDirectionAccess(ally: Pick<Ally, "direction" | "shared_with_directions">, direction: AllyDirection) {
+  if (ally.direction === direction) return true;
+  return Boolean(ally.shared_with_directions?.includes(direction));
+}
 
 export function useAllies(direction?: AllyDirection) {
   return useQuery({
     queryKey: ["allies", direction ?? "all"],
     queryFn: async (): Promise<Ally[]> => {
-      let q = supabase.from("allies").select("*").order("updated_at", { ascending: false });
-      if (direction) {
-        q = q.or(`direction.eq.${direction},shared_with_directions.cs.{${direction}}`);
-      }
-      const { data, error } = await q;
+      const { data, error } = await supabase.from("allies").select("*").order("updated_at", { ascending: false });
       if (error) throw error;
-      return data as unknown as Ally[];
+      const rows = (data ?? []).map(normalizeAlly);
+      if (!direction) return rows;
+      return rows.filter((ally) => matchesDirectionAccess(ally, direction));
     },
   });
 }
@@ -24,8 +51,27 @@ export function useAlly(id: string | undefined) {
     queryFn: async (): Promise<Ally> => {
       const { data, error } = await supabase.from("allies").select("*").eq("id", id!).single();
       if (error) throw error;
-      return data as Ally;
+      return normalizeAlly(data);
     },
+  });
+}
+
+/**
+ * Precarga la ficha de un aliado antes de que el usuario haga click
+ * (se llama en onMouseEnter/onTouchStart de la tarjeta). Como usa la misma
+ * queryKey que useAlly, si el click llega mientras esto ya resolvió (o está
+ * resolviendo) React Query reutiliza el resultado en vez de esperar una
+ * segunda consulta a Supabase — la ficha "aparece ya" al hacer click.
+ */
+export function prefetchAlly(queryClient: QueryClient, id: string) {
+  queryClient.prefetchQuery({
+    queryKey: ["ally", id],
+    queryFn: async (): Promise<Ally> => {
+      const { data, error } = await supabase.from("allies").select("*").eq("id", id).single();
+      if (error) throw error;
+      return normalizeAlly(data);
+    },
+    staleTime: 60_000,
   });
 }
 
@@ -60,12 +106,12 @@ export function useSaveAlly() {
           .select()
           .single();
         if (error) throw error;
-        return data;
+        return normalizeAlly(data);
       }
       const insertPayload = { ...rest, created_by: user?.id ?? null } as never;
       const { data, error } = await supabase.from("allies").insert(insertPayload).select().single();
       if (error) throw error;
-      return data;
+      return normalizeAlly(data);
     },
     onSuccess: (_d, vars) => {
       qc.invalidateQueries({ queryKey: ["allies"] });

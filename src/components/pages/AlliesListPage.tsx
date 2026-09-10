@@ -9,6 +9,7 @@ import { useAllies } from "@/lib/allies-api";
 import { useMyPermissions, canEditDirection } from "@/lib/permissions-api";
 import { AllyDialog } from "@/components/AllyDialog";
 import { AllyCard } from "@/components/AllyCard";
+import { AllyGarden } from "@/components/AllyGarden";
 import { exportAlliesToDrive } from "@/lib/drive-export.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -34,6 +35,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
   const { data: perms } = useMyPermissions();
   const isAdmin = !!perms?.isAdmin;
   const canEdit = canEditDirection(perms, direction);
+  const canCreateAlly = direction === "alianzas" && (isAdmin || canEdit);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
   const exportFn = useServerFn(exportAlliesToDrive);
@@ -131,7 +133,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
               </Button>
 
             )}
-            {canEdit && (
+            {canCreateAlly && (
               <Button onClick={() => openNew(tab)}>
                 <Plus className="w-4 h-4" /> Nuevo aliado
               </Button>
@@ -167,6 +169,8 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
         {(["active", "pending", "conversation"] as AllyStatus[]).map((s) => (
           <TabsContent key={s} value={s} className="space-y-4 mt-4">
             <Card className="p-3 bg-muted/30 text-xs text-muted-foreground">{tabMeta[s].help}</Card>
+
+            {s === "active" && <AllyGarden allies={allies.filter((a) => a.status === "active")} />}
 
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative flex-1">
@@ -212,7 +216,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
             ) : filtered.length === 0 ? (
               <Card className="p-10 text-center text-muted-foreground">
                 <p>No hay aliados en esta vista todavía.</p>
-                {canEdit && (
+                {canCreateAlly && (
                   <Button variant="outline" className="mt-3" onClick={() => openNew(s)}>
                     <Plus className="w-4 h-4" /> Agregar el primero
                   </Button>

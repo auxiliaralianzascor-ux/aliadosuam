@@ -3,5 +3,5 @@ import { IndicatorsDashboardPage } from "@/components/pages/IndicatorsDashboardP
 
 export const Route = createFileRoute("/_authenticated/investigacion/indicadores/")({
   head: () => ({ meta: [{ title: "Indicadores · Investigación · UAM" }] }),
-  component: () => <IndicatorsDashboardPage direction="investigacion" />,
+  component: () => <IndicatorsDashboardPage direction="investigacion" cargarPath="/investigacion/indicadores/cargar" />,
 });

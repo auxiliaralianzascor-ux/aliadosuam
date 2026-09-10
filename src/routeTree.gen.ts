@@ -17,15 +17,25 @@ import { Route as AuthenticatedDescuentosRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAliadosIndexRouteImport } from './routes/_authenticated/aliados/index'
 import { Route as AuthenticatedAlianzasDescuentosRouteImport } from './routes/_authenticated/alianzas/descuentos'
 import { Route as AuthenticatedAliadosIdRouteImport } from './routes/_authenticated/aliados/$id'
+import { Route as AuthenticatedRelacionesInternacionalesIndicadoresIndexRouteImport } from './routes/_authenticated/relaciones-internacionales/indicadores/index'
 import { Route as AuthenticatedRelacionesInternacionalesAliadosIndexRouteImport } from './routes/_authenticated/relaciones-internacionales/aliados/index'
+import { Route as AuthenticatedProyeccionIndicadoresIndexRouteImport } from './routes/_authenticated/proyeccion/indicadores/index'
 import { Route as AuthenticatedProyeccionAliadosIndexRouteImport } from './routes/_authenticated/proyeccion/aliados/index'
+import { Route as AuthenticatedInvestigacionIndicadoresIndexRouteImport } from './routes/_authenticated/investigacion/indicadores/index'
 import { Route as AuthenticatedInvestigacionAliadosIndexRouteImport } from './routes/_authenticated/investigacion/aliados/index'
+import { Route as AuthenticatedDecanaturasIndicadoresIndexRouteImport } from './routes/_authenticated/decanaturas/indicadores/index'
 import { Route as AuthenticatedDecanaturasAliadosIndexRouteImport } from './routes/_authenticated/decanaturas/aliados/index'
+import { Route as AuthenticatedAlianzasIndicadoresIndexRouteImport } from './routes/_authenticated/alianzas/indicadores/index'
 import { Route as AuthenticatedAlianzasAliadosIndexRouteImport } from './routes/_authenticated/alianzas/aliados/index'
+import { Route as AuthenticatedRelacionesInternacionalesIndicadoresCargarRouteImport } from './routes/_authenticated/relaciones-internacionales/indicadores/cargar'
 import { Route as AuthenticatedRelacionesInternacionalesAliadosIdRouteImport } from './routes/_authenticated/relaciones-internacionales/aliados/$id'
+import { Route as AuthenticatedProyeccionIndicadoresCargarRouteImport } from './routes/_authenticated/proyeccion/indicadores/cargar'
 import { Route as AuthenticatedProyeccionAliadosIdRouteImport } from './routes/_authenticated/proyeccion/aliados/$id'
+import { Route as AuthenticatedInvestigacionIndicadoresCargarRouteImport } from './routes/_authenticated/investigacion/indicadores/cargar'
 import { Route as AuthenticatedInvestigacionAliadosIdRouteImport } from './routes/_authenticated/investigacion/aliados/$id'
+import { Route as AuthenticatedDecanaturasIndicadoresCargarRouteImport } from './routes/_authenticated/decanaturas/indicadores/cargar'
 import { Route as AuthenticatedDecanaturasAliadosIdRouteImport } from './routes/_authenticated/decanaturas/aliados/$id'
+import { Route as AuthenticatedAlianzasIndicadoresCargarRouteImport } from './routes/_authenticated/alianzas/indicadores/cargar'
 import { Route as AuthenticatedAlianzasAliadosIdRouteImport } from './routes/_authenticated/alianzas/aliados/$id'
 
 const AuthRoute = AuthRouteImport.update({
@@ -69,10 +79,22 @@ const AuthenticatedAliadosIdRoute = AuthenticatedAliadosIdRouteImport.update({
   path: '/aliados/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute =
+  AuthenticatedRelacionesInternacionalesIndicadoresIndexRouteImport.update({
+    id: '/relaciones-internacionales/indicadores/',
+    path: '/relaciones-internacionales/indicadores/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedRelacionesInternacionalesAliadosIndexRoute =
   AuthenticatedRelacionesInternacionalesAliadosIndexRouteImport.update({
     id: '/relaciones-internacionales/aliados/',
     path: '/relaciones-internacionales/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProyeccionIndicadoresIndexRoute =
+  AuthenticatedProyeccionIndicadoresIndexRouteImport.update({
+    id: '/proyeccion/indicadores/',
+    path: '/proyeccion/indicadores/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedProyeccionAliadosIndexRoute =
@@ -81,10 +103,22 @@ const AuthenticatedProyeccionAliadosIndexRoute =
     path: '/proyeccion/aliados/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedInvestigacionIndicadoresIndexRoute =
+  AuthenticatedInvestigacionIndicadoresIndexRouteImport.update({
+    id: '/investigacion/indicadores/',
+    path: '/investigacion/indicadores/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedInvestigacionAliadosIndexRoute =
   AuthenticatedInvestigacionAliadosIndexRouteImport.update({
     id: '/investigacion/aliados/',
     path: '/investigacion/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDecanaturasIndicadoresIndexRoute =
+  AuthenticatedDecanaturasIndicadoresIndexRouteImport.update({
+    id: '/decanaturas/indicadores/',
+    path: '/decanaturas/indicadores/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDecanaturasAliadosIndexRoute =
@@ -93,10 +127,22 @@ const AuthenticatedDecanaturasAliadosIndexRoute =
     path: '/decanaturas/aliados/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAlianzasIndicadoresIndexRoute =
+  AuthenticatedAlianzasIndicadoresIndexRouteImport.update({
+    id: '/alianzas/indicadores/',
+    path: '/alianzas/indicadores/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAlianzasAliadosIndexRoute =
   AuthenticatedAlianzasAliadosIndexRouteImport.update({
     id: '/alianzas/aliados/',
     path: '/alianzas/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedRelacionesInternacionalesIndicadoresCargarRoute =
+  AuthenticatedRelacionesInternacionalesIndicadoresCargarRouteImport.update({
+    id: '/relaciones-internacionales/indicadores/cargar',
+    path: '/relaciones-internacionales/indicadores/cargar',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedRelacionesInternacionalesAliadosIdRoute =
@@ -105,10 +151,22 @@ const AuthenticatedRelacionesInternacionalesAliadosIdRoute =
     path: '/relaciones-internacionales/aliados/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedProyeccionIndicadoresCargarRoute =
+  AuthenticatedProyeccionIndicadoresCargarRouteImport.update({
+    id: '/proyeccion/indicadores/cargar',
+    path: '/proyeccion/indicadores/cargar',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedProyeccionAliadosIdRoute =
   AuthenticatedProyeccionAliadosIdRouteImport.update({
     id: '/proyeccion/aliados/$id',
     path: '/proyeccion/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInvestigacionIndicadoresCargarRoute =
+  AuthenticatedInvestigacionIndicadoresCargarRouteImport.update({
+    id: '/investigacion/indicadores/cargar',
+    path: '/investigacion/indicadores/cargar',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedInvestigacionAliadosIdRoute =
@@ -117,10 +175,22 @@ const AuthenticatedInvestigacionAliadosIdRoute =
     path: '/investigacion/aliados/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDecanaturasIndicadoresCargarRoute =
+  AuthenticatedDecanaturasIndicadoresCargarRouteImport.update({
+    id: '/decanaturas/indicadores/cargar',
+    path: '/decanaturas/indicadores/cargar',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDecanaturasAliadosIdRoute =
   AuthenticatedDecanaturasAliadosIdRouteImport.update({
     id: '/decanaturas/aliados/$id',
     path: '/decanaturas/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasIndicadoresCargarRoute =
+  AuthenticatedAlianzasIndicadoresCargarRouteImport.update({
+    id: '/alianzas/indicadores/cargar',
+    path: '/alianzas/indicadores/cargar',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedAlianzasAliadosIdRoute =
@@ -139,15 +209,25 @@ export interface FileRoutesByFullPath {
   '/alianzas/descuentos': typeof AuthenticatedAlianzasDescuentosRoute
   '/aliados/': typeof AuthenticatedAliadosIndexRoute
   '/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/alianzas/indicadores/cargar': typeof AuthenticatedAlianzasIndicadoresCargarRoute
   '/decanaturas/aliados/$id': typeof AuthenticatedDecanaturasAliadosIdRoute
+  '/decanaturas/indicadores/cargar': typeof AuthenticatedDecanaturasIndicadoresCargarRoute
   '/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
+  '/investigacion/indicadores/cargar': typeof AuthenticatedInvestigacionIndicadoresCargarRoute
   '/proyeccion/aliados/$id': typeof AuthenticatedProyeccionAliadosIdRoute
+  '/proyeccion/indicadores/cargar': typeof AuthenticatedProyeccionIndicadoresCargarRoute
   '/relaciones-internacionales/aliados/$id': typeof AuthenticatedRelacionesInternacionalesAliadosIdRoute
+  '/relaciones-internacionales/indicadores/cargar': typeof AuthenticatedRelacionesInternacionalesIndicadoresCargarRoute
   '/alianzas/aliados/': typeof AuthenticatedAlianzasAliadosIndexRoute
+  '/alianzas/indicadores/': typeof AuthenticatedAlianzasIndicadoresIndexRoute
   '/decanaturas/aliados/': typeof AuthenticatedDecanaturasAliadosIndexRoute
+  '/decanaturas/indicadores/': typeof AuthenticatedDecanaturasIndicadoresIndexRoute
   '/investigacion/aliados/': typeof AuthenticatedInvestigacionAliadosIndexRoute
+  '/investigacion/indicadores/': typeof AuthenticatedInvestigacionIndicadoresIndexRoute
   '/proyeccion/aliados/': typeof AuthenticatedProyeccionAliadosIndexRoute
+  '/proyeccion/indicadores/': typeof AuthenticatedProyeccionIndicadoresIndexRoute
   '/relaciones-internacionales/aliados/': typeof AuthenticatedRelacionesInternacionalesAliadosIndexRoute
+  '/relaciones-internacionales/indicadores/': typeof AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -158,15 +238,25 @@ export interface FileRoutesByTo {
   '/alianzas/descuentos': typeof AuthenticatedAlianzasDescuentosRoute
   '/aliados': typeof AuthenticatedAliadosIndexRoute
   '/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/alianzas/indicadores/cargar': typeof AuthenticatedAlianzasIndicadoresCargarRoute
   '/decanaturas/aliados/$id': typeof AuthenticatedDecanaturasAliadosIdRoute
+  '/decanaturas/indicadores/cargar': typeof AuthenticatedDecanaturasIndicadoresCargarRoute
   '/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
+  '/investigacion/indicadores/cargar': typeof AuthenticatedInvestigacionIndicadoresCargarRoute
   '/proyeccion/aliados/$id': typeof AuthenticatedProyeccionAliadosIdRoute
+  '/proyeccion/indicadores/cargar': typeof AuthenticatedProyeccionIndicadoresCargarRoute
   '/relaciones-internacionales/aliados/$id': typeof AuthenticatedRelacionesInternacionalesAliadosIdRoute
+  '/relaciones-internacionales/indicadores/cargar': typeof AuthenticatedRelacionesInternacionalesIndicadoresCargarRoute
   '/alianzas/aliados': typeof AuthenticatedAlianzasAliadosIndexRoute
+  '/alianzas/indicadores': typeof AuthenticatedAlianzasIndicadoresIndexRoute
   '/decanaturas/aliados': typeof AuthenticatedDecanaturasAliadosIndexRoute
+  '/decanaturas/indicadores': typeof AuthenticatedDecanaturasIndicadoresIndexRoute
   '/investigacion/aliados': typeof AuthenticatedInvestigacionAliadosIndexRoute
+  '/investigacion/indicadores': typeof AuthenticatedInvestigacionIndicadoresIndexRoute
   '/proyeccion/aliados': typeof AuthenticatedProyeccionAliadosIndexRoute
+  '/proyeccion/indicadores': typeof AuthenticatedProyeccionIndicadoresIndexRoute
   '/relaciones-internacionales/aliados': typeof AuthenticatedRelacionesInternacionalesAliadosIndexRoute
+  '/relaciones-internacionales/indicadores': typeof AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -179,15 +269,25 @@ export interface FileRoutesById {
   '/_authenticated/alianzas/descuentos': typeof AuthenticatedAlianzasDescuentosRoute
   '/_authenticated/aliados/': typeof AuthenticatedAliadosIndexRoute
   '/_authenticated/alianzas/aliados/$id': typeof AuthenticatedAlianzasAliadosIdRoute
+  '/_authenticated/alianzas/indicadores/cargar': typeof AuthenticatedAlianzasIndicadoresCargarRoute
   '/_authenticated/decanaturas/aliados/$id': typeof AuthenticatedDecanaturasAliadosIdRoute
+  '/_authenticated/decanaturas/indicadores/cargar': typeof AuthenticatedDecanaturasIndicadoresCargarRoute
   '/_authenticated/investigacion/aliados/$id': typeof AuthenticatedInvestigacionAliadosIdRoute
+  '/_authenticated/investigacion/indicadores/cargar': typeof AuthenticatedInvestigacionIndicadoresCargarRoute
   '/_authenticated/proyeccion/aliados/$id': typeof AuthenticatedProyeccionAliadosIdRoute
+  '/_authenticated/proyeccion/indicadores/cargar': typeof AuthenticatedProyeccionIndicadoresCargarRoute
   '/_authenticated/relaciones-internacionales/aliados/$id': typeof AuthenticatedRelacionesInternacionalesAliadosIdRoute
+  '/_authenticated/relaciones-internacionales/indicadores/cargar': typeof AuthenticatedRelacionesInternacionalesIndicadoresCargarRoute
   '/_authenticated/alianzas/aliados/': typeof AuthenticatedAlianzasAliadosIndexRoute
+  '/_authenticated/alianzas/indicadores/': typeof AuthenticatedAlianzasIndicadoresIndexRoute
   '/_authenticated/decanaturas/aliados/': typeof AuthenticatedDecanaturasAliadosIndexRoute
+  '/_authenticated/decanaturas/indicadores/': typeof AuthenticatedDecanaturasIndicadoresIndexRoute
   '/_authenticated/investigacion/aliados/': typeof AuthenticatedInvestigacionAliadosIndexRoute
+  '/_authenticated/investigacion/indicadores/': typeof AuthenticatedInvestigacionIndicadoresIndexRoute
   '/_authenticated/proyeccion/aliados/': typeof AuthenticatedProyeccionAliadosIndexRoute
+  '/_authenticated/proyeccion/indicadores/': typeof AuthenticatedProyeccionIndicadoresIndexRoute
   '/_authenticated/relaciones-internacionales/aliados/': typeof AuthenticatedRelacionesInternacionalesAliadosIndexRoute
+  '/_authenticated/relaciones-internacionales/indicadores/': typeof AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -200,15 +300,25 @@ export interface FileRouteTypes {
     | '/alianzas/descuentos'
     | '/aliados/'
     | '/alianzas/aliados/$id'
+    | '/alianzas/indicadores/cargar'
     | '/decanaturas/aliados/$id'
+    | '/decanaturas/indicadores/cargar'
     | '/investigacion/aliados/$id'
+    | '/investigacion/indicadores/cargar'
     | '/proyeccion/aliados/$id'
+    | '/proyeccion/indicadores/cargar'
     | '/relaciones-internacionales/aliados/$id'
+    | '/relaciones-internacionales/indicadores/cargar'
     | '/alianzas/aliados/'
+    | '/alianzas/indicadores/'
     | '/decanaturas/aliados/'
+    | '/decanaturas/indicadores/'
     | '/investigacion/aliados/'
+    | '/investigacion/indicadores/'
     | '/proyeccion/aliados/'
+    | '/proyeccion/indicadores/'
     | '/relaciones-internacionales/aliados/'
+    | '/relaciones-internacionales/indicadores/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -219,15 +329,25 @@ export interface FileRouteTypes {
     | '/alianzas/descuentos'
     | '/aliados'
     | '/alianzas/aliados/$id'
+    | '/alianzas/indicadores/cargar'
     | '/decanaturas/aliados/$id'
+    | '/decanaturas/indicadores/cargar'
     | '/investigacion/aliados/$id'
+    | '/investigacion/indicadores/cargar'
     | '/proyeccion/aliados/$id'
+    | '/proyeccion/indicadores/cargar'
     | '/relaciones-internacionales/aliados/$id'
+    | '/relaciones-internacionales/indicadores/cargar'
     | '/alianzas/aliados'
+    | '/alianzas/indicadores'
     | '/decanaturas/aliados'
+    | '/decanaturas/indicadores'
     | '/investigacion/aliados'
+    | '/investigacion/indicadores'
     | '/proyeccion/aliados'
+    | '/proyeccion/indicadores'
     | '/relaciones-internacionales/aliados'
+    | '/relaciones-internacionales/indicadores'
   id:
     | '__root__'
     | '/'
@@ -239,15 +359,25 @@ export interface FileRouteTypes {
     | '/_authenticated/alianzas/descuentos'
     | '/_authenticated/aliados/'
     | '/_authenticated/alianzas/aliados/$id'
+    | '/_authenticated/alianzas/indicadores/cargar'
     | '/_authenticated/decanaturas/aliados/$id'
+    | '/_authenticated/decanaturas/indicadores/cargar'
     | '/_authenticated/investigacion/aliados/$id'
+    | '/_authenticated/investigacion/indicadores/cargar'
     | '/_authenticated/proyeccion/aliados/$id'
+    | '/_authenticated/proyeccion/indicadores/cargar'
     | '/_authenticated/relaciones-internacionales/aliados/$id'
+    | '/_authenticated/relaciones-internacionales/indicadores/cargar'
     | '/_authenticated/alianzas/aliados/'
+    | '/_authenticated/alianzas/indicadores/'
     | '/_authenticated/decanaturas/aliados/'
+    | '/_authenticated/decanaturas/indicadores/'
     | '/_authenticated/investigacion/aliados/'
+    | '/_authenticated/investigacion/indicadores/'
     | '/_authenticated/proyeccion/aliados/'
+    | '/_authenticated/proyeccion/indicadores/'
     | '/_authenticated/relaciones-internacionales/aliados/'
+    | '/_authenticated/relaciones-internacionales/indicadores/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -314,11 +444,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAliadosIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/relaciones-internacionales/indicadores/': {
+      id: '/_authenticated/relaciones-internacionales/indicadores/'
+      path: '/relaciones-internacionales/indicadores'
+      fullPath: '/relaciones-internacionales/indicadores/'
+      preLoaderRoute: typeof AuthenticatedRelacionesInternacionalesIndicadoresIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/relaciones-internacionales/aliados/': {
       id: '/_authenticated/relaciones-internacionales/aliados/'
       path: '/relaciones-internacionales/aliados'
       fullPath: '/relaciones-internacionales/aliados/'
       preLoaderRoute: typeof AuthenticatedRelacionesInternacionalesAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/proyeccion/indicadores/': {
+      id: '/_authenticated/proyeccion/indicadores/'
+      path: '/proyeccion/indicadores'
+      fullPath: '/proyeccion/indicadores/'
+      preLoaderRoute: typeof AuthenticatedProyeccionIndicadoresIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/proyeccion/aliados/': {
@@ -328,11 +472,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProyeccionAliadosIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/investigacion/indicadores/': {
+      id: '/_authenticated/investigacion/indicadores/'
+      path: '/investigacion/indicadores'
+      fullPath: '/investigacion/indicadores/'
+      preLoaderRoute: typeof AuthenticatedInvestigacionIndicadoresIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/investigacion/aliados/': {
       id: '/_authenticated/investigacion/aliados/'
       path: '/investigacion/aliados'
       fullPath: '/investigacion/aliados/'
       preLoaderRoute: typeof AuthenticatedInvestigacionAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/decanaturas/indicadores/': {
+      id: '/_authenticated/decanaturas/indicadores/'
+      path: '/decanaturas/indicadores'
+      fullPath: '/decanaturas/indicadores/'
+      preLoaderRoute: typeof AuthenticatedDecanaturasIndicadoresIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/decanaturas/aliados/': {
@@ -342,11 +500,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDecanaturasAliadosIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/alianzas/indicadores/': {
+      id: '/_authenticated/alianzas/indicadores/'
+      path: '/alianzas/indicadores'
+      fullPath: '/alianzas/indicadores/'
+      preLoaderRoute: typeof AuthenticatedAlianzasIndicadoresIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/alianzas/aliados/': {
       id: '/_authenticated/alianzas/aliados/'
       path: '/alianzas/aliados'
       fullPath: '/alianzas/aliados/'
       preLoaderRoute: typeof AuthenticatedAlianzasAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/relaciones-internacionales/indicadores/cargar': {
+      id: '/_authenticated/relaciones-internacionales/indicadores/cargar'
+      path: '/relaciones-internacionales/indicadores/cargar'
+      fullPath: '/relaciones-internacionales/indicadores/cargar'
+      preLoaderRoute: typeof AuthenticatedRelacionesInternacionalesIndicadoresCargarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/relaciones-internacionales/aliados/$id': {
@@ -356,11 +528,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRelacionesInternacionalesAliadosIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/proyeccion/indicadores/cargar': {
+      id: '/_authenticated/proyeccion/indicadores/cargar'
+      path: '/proyeccion/indicadores/cargar'
+      fullPath: '/proyeccion/indicadores/cargar'
+      preLoaderRoute: typeof AuthenticatedProyeccionIndicadoresCargarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/proyeccion/aliados/$id': {
       id: '/_authenticated/proyeccion/aliados/$id'
       path: '/proyeccion/aliados/$id'
       fullPath: '/proyeccion/aliados/$id'
       preLoaderRoute: typeof AuthenticatedProyeccionAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/investigacion/indicadores/cargar': {
+      id: '/_authenticated/investigacion/indicadores/cargar'
+      path: '/investigacion/indicadores/cargar'
+      fullPath: '/investigacion/indicadores/cargar'
+      preLoaderRoute: typeof AuthenticatedInvestigacionIndicadoresCargarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/investigacion/aliados/$id': {
@@ -370,11 +556,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedInvestigacionAliadosIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/decanaturas/indicadores/cargar': {
+      id: '/_authenticated/decanaturas/indicadores/cargar'
+      path: '/decanaturas/indicadores/cargar'
+      fullPath: '/decanaturas/indicadores/cargar'
+      preLoaderRoute: typeof AuthenticatedDecanaturasIndicadoresCargarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/decanaturas/aliados/$id': {
       id: '/_authenticated/decanaturas/aliados/$id'
       path: '/decanaturas/aliados/$id'
       fullPath: '/decanaturas/aliados/$id'
       preLoaderRoute: typeof AuthenticatedDecanaturasAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/indicadores/cargar': {
+      id: '/_authenticated/alianzas/indicadores/cargar'
+      path: '/alianzas/indicadores/cargar'
+      fullPath: '/alianzas/indicadores/cargar'
+      preLoaderRoute: typeof AuthenticatedAlianzasIndicadoresCargarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/alianzas/aliados/$id': {
@@ -394,15 +594,25 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAlianzasDescuentosRoute: typeof AuthenticatedAlianzasDescuentosRoute
   AuthenticatedAliadosIndexRoute: typeof AuthenticatedAliadosIndexRoute
   AuthenticatedAlianzasAliadosIdRoute: typeof AuthenticatedAlianzasAliadosIdRoute
+  AuthenticatedAlianzasIndicadoresCargarRoute: typeof AuthenticatedAlianzasIndicadoresCargarRoute
   AuthenticatedDecanaturasAliadosIdRoute: typeof AuthenticatedDecanaturasAliadosIdRoute
+  AuthenticatedDecanaturasIndicadoresCargarRoute: typeof AuthenticatedDecanaturasIndicadoresCargarRoute
   AuthenticatedInvestigacionAliadosIdRoute: typeof AuthenticatedInvestigacionAliadosIdRoute
+  AuthenticatedInvestigacionIndicadoresCargarRoute: typeof AuthenticatedInvestigacionIndicadoresCargarRoute
   AuthenticatedProyeccionAliadosIdRoute: typeof AuthenticatedProyeccionAliadosIdRoute
+  AuthenticatedProyeccionIndicadoresCargarRoute: typeof AuthenticatedProyeccionIndicadoresCargarRoute
   AuthenticatedRelacionesInternacionalesAliadosIdRoute: typeof AuthenticatedRelacionesInternacionalesAliadosIdRoute
+  AuthenticatedRelacionesInternacionalesIndicadoresCargarRoute: typeof AuthenticatedRelacionesInternacionalesIndicadoresCargarRoute
   AuthenticatedAlianzasAliadosIndexRoute: typeof AuthenticatedAlianzasAliadosIndexRoute
+  AuthenticatedAlianzasIndicadoresIndexRoute: typeof AuthenticatedAlianzasIndicadoresIndexRoute
   AuthenticatedDecanaturasAliadosIndexRoute: typeof AuthenticatedDecanaturasAliadosIndexRoute
+  AuthenticatedDecanaturasIndicadoresIndexRoute: typeof AuthenticatedDecanaturasIndicadoresIndexRoute
   AuthenticatedInvestigacionAliadosIndexRoute: typeof AuthenticatedInvestigacionAliadosIndexRoute
+  AuthenticatedInvestigacionIndicadoresIndexRoute: typeof AuthenticatedInvestigacionIndicadoresIndexRoute
   AuthenticatedProyeccionAliadosIndexRoute: typeof AuthenticatedProyeccionAliadosIndexRoute
+  AuthenticatedProyeccionIndicadoresIndexRoute: typeof AuthenticatedProyeccionIndicadoresIndexRoute
   AuthenticatedRelacionesInternacionalesAliadosIndexRoute: typeof AuthenticatedRelacionesInternacionalesAliadosIndexRoute
+  AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute: typeof AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -412,23 +622,43 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAlianzasDescuentosRoute: AuthenticatedAlianzasDescuentosRoute,
   AuthenticatedAliadosIndexRoute: AuthenticatedAliadosIndexRoute,
   AuthenticatedAlianzasAliadosIdRoute: AuthenticatedAlianzasAliadosIdRoute,
+  AuthenticatedAlianzasIndicadoresCargarRoute:
+    AuthenticatedAlianzasIndicadoresCargarRoute,
   AuthenticatedDecanaturasAliadosIdRoute:
     AuthenticatedDecanaturasAliadosIdRoute,
+  AuthenticatedDecanaturasIndicadoresCargarRoute:
+    AuthenticatedDecanaturasIndicadoresCargarRoute,
   AuthenticatedInvestigacionAliadosIdRoute:
     AuthenticatedInvestigacionAliadosIdRoute,
+  AuthenticatedInvestigacionIndicadoresCargarRoute:
+    AuthenticatedInvestigacionIndicadoresCargarRoute,
   AuthenticatedProyeccionAliadosIdRoute: AuthenticatedProyeccionAliadosIdRoute,
+  AuthenticatedProyeccionIndicadoresCargarRoute:
+    AuthenticatedProyeccionIndicadoresCargarRoute,
   AuthenticatedRelacionesInternacionalesAliadosIdRoute:
     AuthenticatedRelacionesInternacionalesAliadosIdRoute,
+  AuthenticatedRelacionesInternacionalesIndicadoresCargarRoute:
+    AuthenticatedRelacionesInternacionalesIndicadoresCargarRoute,
   AuthenticatedAlianzasAliadosIndexRoute:
     AuthenticatedAlianzasAliadosIndexRoute,
+  AuthenticatedAlianzasIndicadoresIndexRoute:
+    AuthenticatedAlianzasIndicadoresIndexRoute,
   AuthenticatedDecanaturasAliadosIndexRoute:
     AuthenticatedDecanaturasAliadosIndexRoute,
+  AuthenticatedDecanaturasIndicadoresIndexRoute:
+    AuthenticatedDecanaturasIndicadoresIndexRoute,
   AuthenticatedInvestigacionAliadosIndexRoute:
     AuthenticatedInvestigacionAliadosIndexRoute,
+  AuthenticatedInvestigacionIndicadoresIndexRoute:
+    AuthenticatedInvestigacionIndicadoresIndexRoute,
   AuthenticatedProyeccionAliadosIndexRoute:
     AuthenticatedProyeccionAliadosIndexRoute,
+  AuthenticatedProyeccionIndicadoresIndexRoute:
+    AuthenticatedProyeccionIndicadoresIndexRoute,
   AuthenticatedRelacionesInternacionalesAliadosIndexRoute:
     AuthenticatedRelacionesInternacionalesAliadosIndexRoute,
+  AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute:
+    AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

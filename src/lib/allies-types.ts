@@ -53,14 +53,29 @@ export const AREAS_BY_DIRECTION: Record<AllyDirection, { active: FollowupArea[];
   },
 };
 
-// Decanaturas de la Universidad Autónoma de Manizales.
-export const DECANATURAS = [
+// Facultades de la Universidad Autónoma de Manizales.
+export const FACULTADES_UAM = [
   "Facultad de Salud",
   "Facultad de Ingenierías",
   "Facultad de Estudios Sociales y Empresariales",
-  "Departamento de Ciencias Básicas",
 ] as const;
-export type Decanatura = (typeof DECANATURAS)[number];
+export const DECANATURAS = FACULTADES_UAM;
+export type Decanatura = (typeof FACULTADES_UAM)[number];
+
+export const ACADEMIC_LEVELS = [
+  { key: "pregrado", label: "Pregrado" },
+  { key: "posgrado", label: "Posgrado" },
+  { key: "maestria", label: "Maestría" },
+  { key: "doctorado", label: "Doctorado" },
+  { key: "educacion_continuada", label: "Educación continuada" },
+] as const;
+export type AcademicLevel = (typeof ACADEMIC_LEVELS)[number]["key"];
+
+export type AcademicParticipation = {
+  empleados: Record<AcademicLevel, boolean>;
+  familiares: Record<AcademicLevel, boolean>;
+  observaciones: string | null;
+};
 
 export interface AllyContact {
   name: string;
@@ -72,6 +87,8 @@ export interface AllyContact {
 export interface Ally {
   id: string;
   name: string;
+  nit: string | null;
+  origin: "Nacional" | "Internacional" | null;
   sector: string | null;
   status: AllyStatus;
   direction: AllyDirection;
@@ -83,6 +100,26 @@ export interface Ally {
   contacts: AllyContact[] | null;
   notes: string | null;
   decanatura: string | null;
+  academic_participation: AcademicParticipation | null;
+  annual_revenue: number;
+  mission_areas: number;
+  c3_age: boolean;
+  c3_compliance: boolean;
+  c3_events: boolean;
+  c4_students: boolean;
+  c4_rd_product: boolean;
+  c4_impact: boolean;
+  c5_research_affinity: boolean;
+  c5_ethical_compliance: boolean;
+  c5_strategic_plan: boolean;
+  c1_economic: number | null;
+  c2_services: number | null;
+  c3_trust: number | null;
+  c4_cocreated_impact: number | null;
+  c5_coherence: number | null;
+  ivc_total: number | null;
+  management_recommendation: string | null;
+  orchid_type: string | null;
   shared_with_directions: AllyDirection[] | null;
   valid_from: string | null;
   valid_until: string | null;
@@ -126,7 +163,7 @@ export const STATUS_LABEL: Record<AllyStatus, string> = {
 export const CATEGORY_LABEL: Record<AllyCategory, string> = {
   latente: "Latente",
   emergente: "Emergente",
-  estrategico: "Estratégico",
+  estrategico: "Transformador / Estratégico",
   activo: "Activo",
 };
 
