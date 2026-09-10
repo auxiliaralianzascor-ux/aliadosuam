@@ -73,8 +73,8 @@ export function AllyCard({ ally, basePath, currentDirection }: { ally: Ally; bas
         </div>
 
         <div className="mt-3 space-y-1 text-xs text-muted-foreground">
-          {ally.ivc_total !== null && (
-            <div>IVC_total: {ally.ivc_total.toFixed(4)} · {ally.orchid_type ?? ""}</div>
+          {ally.ivc_total !== null && Number.isFinite(Number(ally.ivc_total)) && (
+            <div>IVC_total: {Number(ally.ivc_total).toFixed(4)} · {ally.orchid_type ?? ""}</div>
           )}
           {(() => {
             const contacts = getAllyContacts(ally);

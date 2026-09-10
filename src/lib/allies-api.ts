@@ -2,6 +2,30 @@ import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tansta
 import { supabase } from "@/integrations/supabase/client";
 import type { Ally, AllyActivity, AllyDirection } from "./allies-types";
 
+const NUMERIC_ALLY_FIELDS = [
+  "annual_revenue",
+  "mission_areas",
+  "c1_economic",
+  "c2_services",
+  "c3_trust",
+  "c4_cocreated_impact",
+  "c5_coherence",
+  "ivc_total",
+] as const;
+
+function normalizeAlly(row: unknown): Ally {
+  const ally = { ...(row as Ally) };
+
+  for (const field of NUMERIC_ALLY_FIELDS) {
+    const value = ally[field];
+    if (value === null || value === undefined) continue;
+    const numberValue = Number(value);
+    ally[field] = Number.isFinite(numberValue) ? numberValue : null;
+  }
+
+  return ally;
+}
+
 export function matchesDirectionAccess(ally: Pick<Ally, "direction" | "shared_with_directions">, direction: AllyDirection) {
   if (ally.direction === direction) return true;
   return Boolean(ally.shared_with_directions?.includes(direction));
@@ -13,7 +37,7 @@ export function useAllies(direction?: AllyDirection) {
     queryFn: async (): Promise<Ally[]> => {
       const { data, error } = await supabase.from("allies").select("*").order("updated_at", { ascending: false });
       if (error) throw error;
-      const rows = (data ?? []) as Ally[];
+      const rows = (data ?? []).map(normalizeAlly);
       if (!direction) return rows;
       return rows.filter((ally) => matchesDirectionAccess(ally, direction));
     },
@@ -27,7 +51,7 @@ export function useAlly(id: string | undefined) {
     queryFn: async (): Promise<Ally> => {
       const { data, error } = await supabase.from("allies").select("*").eq("id", id!).single();
       if (error) throw error;
-      return data as Ally;
+      return normalizeAlly(data);
     },
   });
 }
@@ -45,7 +69,7 @@ export function prefetchAlly(queryClient: QueryClient, id: string) {
     queryFn: async (): Promise<Ally> => {
       const { data, error } = await supabase.from("allies").select("*").eq("id", id).single();
       if (error) throw error;
-      return data as Ally;
+      return normalizeAlly(data);
     },
     staleTime: 60_000,
   });
@@ -82,12 +106,12 @@ export function useSaveAlly() {
           .select()
           .single();
         if (error) throw error;
-        return data;
+        return normalizeAlly(data);
       }
       const insertPayload = { ...rest, created_by: user?.id ?? null } as never;
       const { data, error } = await supabase.from("allies").insert(insertPayload).select().single();
       if (error) throw error;
-      return data;
+      return normalizeAlly(data);
     },
     onSuccess: (_d, vars) => {
       qc.invalidateQueries({ queryKey: ["allies"] });

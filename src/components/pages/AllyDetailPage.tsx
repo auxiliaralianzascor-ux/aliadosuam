@@ -150,11 +150,11 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
             {ally.decanatura && <p className="text-sm text-muted-foreground mt-1"><span className="font-medium">Decanatura:</span> {ally.decanatura}</p>}
             <p className={`text-xs mt-2 ${tl.text}`}>{TRAFFIC_HELP[ally.status][ally.traffic_light]}</p>
 
-            {ally.ivc_total !== null && (
+            {ally.ivc_total !== null && Number.isFinite(Number(ally.ivc_total)) && (
               <div className="mt-4 rounded-md border border-primary/20 bg-primary/5 p-3 text-sm">
                 <div className="flex flex-wrap justify-between gap-2 font-medium">
                   <span>Clasificación de Valor Compartido</span>
-                  <span>IVC_total: {ally.ivc_total.toFixed(4)}</span>
+                  <span>IVC_total: {Number(ally.ivc_total).toFixed(4)}</span>
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">{ally.orchid_type ?? ""}. {ally.management_recommendation ?? ""}</div>
               </div>
