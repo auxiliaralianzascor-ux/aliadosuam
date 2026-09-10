@@ -119,7 +119,7 @@ export function classifyAlly(input: ClassificationInputs): AllyClassification {
     return {
       c1_economic, c2_services, c3_trust, c4_impact, c5_coherence, ivc_total,
       category: "activo",
-      recommendation: "Escalar a Estratégico: Ampliar la diversidad de servicios utilizados, estructurar planes de trabajo bianuales y aumentar la cofinanciación.",
+      recommendation: "Escalar a Transformador: Ampliar la diversidad de servicios utilizados, estructurar planes de trabajo bianuales y aumentar la cofinanciación.",
       orchid_type: "Orquídea Josefina",
     };
   }
