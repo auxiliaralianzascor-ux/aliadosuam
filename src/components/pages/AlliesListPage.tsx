@@ -9,6 +9,7 @@ import { useAllies } from "@/lib/allies-api";
 import { useMyPermissions, canEditDirection } from "@/lib/permissions-api";
 import { AllyDialog } from "@/components/AllyDialog";
 import { AllyCard } from "@/components/AllyCard";
+import { AllyGarden } from "@/components/AllyGarden";
 import { exportAlliesToDrive } from "@/lib/drive-export.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -168,6 +169,8 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
         {(["active", "pending", "conversation"] as AllyStatus[]).map((s) => (
           <TabsContent key={s} value={s} className="space-y-4 mt-4">
             <Card className="p-3 bg-muted/30 text-xs text-muted-foreground">{tabMeta[s].help}</Card>
+
+            {s === "active" && <AllyGarden allies={allies.filter((a) => a.status === "active")} />}
 
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative flex-1">

@@ -22,6 +22,58 @@ export interface ClassificationInputs {
   c5_strategic_plan: boolean;
 }
 
+export type AllyCategoryKey = "latente" | "emergente" | "activo" | "estrategico";
+
+// Categorías, rangos y orquídeas representativas tal como están definidas en la
+// Matriz de Clasificación de Aliados - Ruta de Valor Compartido UAM (v3).
+export const CATEGORY_META: Record<
+  AllyCategoryKey,
+  { label: string; range: string; min: number; orchid: string; orchidScientific: string; state: string; ring: string; text: string }
+> = {
+  estrategico: {
+    label: "Transformador / Estratégico",
+    range: "IVC_total ≥ 0.80",
+    min: 0.8,
+    orchid: "Orquídea Pensamiento",
+    orchidScientific: "Miltoniopsis hibrida",
+    state: "Relación madura, de alto impacto y alineación total.",
+    ring: "bg-[#15803d]",
+    text: "text-white",
+  },
+  activo: {
+    label: "Activo",
+    range: "0.50 ≤ IVC_total < 0.80",
+    min: 0.5,
+    orchid: "Orquídea Josefina",
+    orchidScientific: "Miltoniopsis phalaenopsis",
+    state: "Relación estable con alto potencial de expansión.",
+    ring: "bg-[#4ade80]",
+    text: "text-emerald-950",
+  },
+  emergente: {
+    label: "Emergente",
+    range: "0.20 ≤ IVC_total < 0.50",
+    min: 0.2,
+    orchid: "Orquídea Pescatoria",
+    orchidScientific: "Pescatoria",
+    state: "Relación incipiente o focalizada que requiere fortalecimiento.",
+    ring: "bg-[#86efac]",
+    text: "text-emerald-950",
+  },
+  latente: {
+    label: "Latente",
+    range: "IVC_total < 0.20",
+    min: 0,
+    orchid: "Orquídea Tigre",
+    orchidScientific: "Odontoglossum",
+    state: "Relación débil, inactiva o con baja articulación.",
+    ring: "bg-[#e8f5e9]",
+    text: "text-emerald-950",
+  },
+};
+
+export const CATEGORY_ORDER: AllyCategoryKey[] = ["estrategico", "activo", "emergente", "latente"];
+
 export interface AllyClassification {
   c1_economic: number;
   c2_services: number;
@@ -67,7 +119,7 @@ export function classifyAlly(input: ClassificationInputs): AllyClassification {
     return {
       c1_economic, c2_services, c3_trust, c4_impact, c5_coherence, ivc_total,
       category: "activo",
-      recommendation: "Escalar a Estratégico: Ampliar la diversidad de servicios utilizados, estructurar planes de trabajo bianuales y aumentar la cofinanciación.",
+      recommendation: "Escalar a Transformador: Ampliar la diversidad de servicios utilizados, estructurar planes de trabajo bianuales y aumentar la cofinanciación.",
       orchid_type: "Orquídea Josefina",
     };
   }
