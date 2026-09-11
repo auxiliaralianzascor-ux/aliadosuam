@@ -101,8 +101,8 @@ export interface Ally {
   notes: string | null;
   decanatura: string | null;
   academic_participation: AcademicParticipation | null;
-  annual_revenue: number;
-  mission_areas: number;
+  annual_revenue: number | null;
+  mission_areas: number | null;
   c3_age: boolean;
   c3_compliance: boolean;
   c3_events: boolean;
