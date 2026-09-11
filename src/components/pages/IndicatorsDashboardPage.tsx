@@ -68,10 +68,9 @@ function getTrendPath(values: number[], width = 320, height = 60) {
 
 interface Props {
   direction: AllyDirection;
-  cargarPath?: string;
 }
 
-export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
+export function IndicatorsDashboardPage({ direction }: Props) {
   const currentYear = new Date().getFullYear();
   const [year, setYear] = useState(Math.max(2024, Math.min(currentYear, 2030)));
   const { data: progress = [], isLoading } = useIndicatorsProgress(direction, year);
@@ -303,13 +302,6 @@ export function IndicatorsDashboardPage({ direction, cargarPath }: Props) {
               ))}
             </SelectContent>
           </Select>
-          {cargarPath && canLoadIndicators(perms, direction) && (
-            <Button asChild size="sm">
-              <Link to={cargarPath}>
-                <ClipboardList className="w-4 h-4" /> Cargar aporte
-              </Link>
-            </Button>
-          )}
         </div>
       </div>
 
