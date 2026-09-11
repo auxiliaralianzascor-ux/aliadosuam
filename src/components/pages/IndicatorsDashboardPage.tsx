@@ -1,10 +1,8 @@
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -12,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, BarChart3, TrendingUp, Target, AlertTriangle, ClipboardList, Users2 } from "lucide-react";
+import { Loader2, BarChart3, TrendingUp, Target, AlertTriangle, Users2 } from "lucide-react";
 import {
   useIndicatorsProgress,
   useIndicatorsWithoutTarget,
@@ -20,7 +18,6 @@ import {
   type IndicatorProgress,
   type IndicatorWithoutTarget,
 } from "@/lib/indicators-api";
-import { canLoadIndicators, useMyPermissions } from "@/lib/permissions-api";
 import { type AllyDirection, DIRECTION_LABEL } from "@/lib/allies-types";
 
 const UNIT_FORMAT: Record<string, (v: number) => string> = {
@@ -79,7 +76,6 @@ export function IndicatorsDashboardPage({ direction }: Props) {
     year,
   );
   const { data: practicas = [], isLoading: practicasLoading } = usePracticasPorAliado(year);
-  const { data: perms } = useMyPermissions();
 
   const indicators = useMemo(() => {
     return progress.filter((p) => p.direction_hint === direction && p.target_value != null);
