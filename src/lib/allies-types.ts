@@ -198,6 +198,16 @@ export interface Ally {
   management_recommendation: string | null;
   orchid_type: string | null;
   shared_with_directions: AllyDirection[] | null;
+  agreement_type: string | null;
+  partner_type: string | null;
+  mission_function: string | null;
+  shared_value: string | null;
+  conditions: string | null;
+  applies_to: string | null;
+  close_date: string | null;
+  economic_value: string | null;
+  dependency_origin: string | null;
+  dependency_implementer: string | null;
   valid_from: string | null;
   valid_until: string | null;
   created_by: string | null;
