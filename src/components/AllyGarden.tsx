@@ -4,17 +4,18 @@ import type { Ally } from "@/lib/allies-types";
 
 interface Props {
   allies: Ally[];
+  marcoAllies?: Ally[];
 }
 
 const money = new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 });
 
-export function AllyGarden({ allies }: Props) {
+export function AllyGarden({ allies, marcoAllies = allies }: Props) {
   const counts = CATEGORY_ORDER.reduce((acc, key) => {
     acc[key] = allies.filter((a) => a.category === key).length;
     return acc;
   }, {} as Record<AllyCategoryKey, number>);
   const total = CATEGORY_ORDER.reduce((sum, k) => sum + counts[k], 0);
-  const activeMarcoAllies = allies.filter((ally) => {
+  const activeMarcoAllies = marcoAllies.filter((ally) => {
     if (ally.status !== "active") return false;
     const agreementType = (ally.agreement_type ?? "").trim().toLowerCase();
     return agreementType === "convenio marco";

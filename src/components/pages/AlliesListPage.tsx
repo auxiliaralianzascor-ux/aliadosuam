@@ -32,6 +32,7 @@ interface Props {
 
 export function AlliesListPage({ direction, cardBasePath, showExport = true }: Props) {
   const { data: allies = [], isLoading } = useAllies(direction);
+  const { data: allAllies = [] } = useAllies();
   const { data: perms } = useMyPermissions();
   const isAdmin = !!perms?.isAdmin;
   const canEdit = canEditDirection(perms, direction);
@@ -170,7 +171,12 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
           <TabsContent key={s} value={s} className="space-y-4 mt-4">
             <Card className="p-3 bg-muted/30 text-xs text-muted-foreground">{tabMeta[s].help}</Card>
 
-            {s === "active" && <AllyGarden allies={allies.filter((a) => a.status === "active")} />}
+            {s === "active" && (
+              <AllyGarden
+                allies={allies.filter((a) => a.status === "active")}
+                marcoAllies={allAllies}
+              />
+            )}
 
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative flex-1">
