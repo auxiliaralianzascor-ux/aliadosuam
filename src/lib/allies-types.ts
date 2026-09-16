@@ -3,20 +3,61 @@ export type AllyCategory = "latente" | "emergente" | "estrategico" | "activo";
 export type TrafficLight = "green" | "yellow" | "red";
 export type AllyDirection =
   | "alianzas"
+  | "alianzas_mercadeo"
+  | "alianzas_econti"
+  | "alianzas_proyectos"
+  | "alianzas_graduados"
   | "investigacion"
   | "relaciones_internacionales"
   | "decanaturas"
+  | "decanatura_salud"
+  | "decanatura_ingenierias"
+  | "decanatura_sociales"
   | "proyeccion";
 
 export const DIRECTION_LABEL: Record<AllyDirection, string> = {
   alianzas: "Alianzas y Relaciones Corporativas",
+  alianzas_mercadeo: "Mercadeo Institucional",
+  alianzas_econti: "Educación Continuada (Econti)",
+  alianzas_proyectos: "Proyectos",
+  alianzas_graduados: "Unidad de Graduados",
   investigacion: "Investigación, Innovación y Emprendimiento",
   relaciones_internacionales: "Relaciones Internacionales",
   decanaturas: "Decanaturas",
+  decanatura_salud: "Facultad de Salud",
+  decanatura_ingenierias: "Facultad de Ingenierías",
+  decanatura_sociales: "Facultad de Estudios Sociales y Empresariales",
   proyeccion: "Proyección",
 };
 
 export const DIRECTIONS: AllyDirection[] = Object.keys(DIRECTION_LABEL) as AllyDirection[];
+
+/** Dependencias que dependen de la Dirección de Alianzas y Relaciones Corporativas. */
+export const ALIANZAS_DEPENDENCIES: AllyDirection[] = [
+  "alianzas_mercadeo",
+  "alianzas_econti",
+  "alianzas_proyectos",
+  "alianzas_graduados",
+];
+
+/** Facultades que dependen de Decanaturas. */
+export const DECANATURA_DIRECTIONS: AllyDirection[] = [
+  "decanatura_salud",
+  "decanatura_ingenierias",
+  "decanatura_sociales",
+];
+
+/** Grupo de Alianzas: la dirección y sus dependencias comparten reglas (descuentos, creación). */
+export const ALIANZAS_GROUP: AllyDirection[] = ["alianzas", ...ALIANZAS_DEPENDENCIES];
+
+export function isAlianzasGroup(direction: AllyDirection) {
+  return ALIANZAS_GROUP.includes(direction);
+}
+
+export function isDecanaturaDirection(direction: AllyDirection) {
+  return direction === "decanaturas" || DECANATURA_DIRECTIONS.includes(direction);
+}
+
 
 export type FollowupArea =
   | "direccion"
@@ -35,6 +76,22 @@ export const AREAS_BY_DIRECTION: Record<AllyDirection, { active: FollowupArea[];
     active: ["direccion", "econti", "mercadeo", "graduados", "proyectos"],
     inactive: ["general"],
   },
+  alianzas_mercadeo: {
+    active: ["mercadeo", "direccion", "general"],
+    inactive: ["general"],
+  },
+  alianzas_econti: {
+    active: ["econti", "direccion", "general"],
+    inactive: ["general"],
+  },
+  alianzas_proyectos: {
+    active: ["proyectos", "direccion", "general"],
+    inactive: ["general"],
+  },
+  alianzas_graduados: {
+    active: ["graduados", "direccion", "general"],
+    inactive: ["general"],
+  },
   investigacion: {
     active: ["investigacion", "innovacion", "emprendimiento", "general"],
     inactive: ["general"],
@@ -47,11 +104,31 @@ export const AREAS_BY_DIRECTION: Record<AllyDirection, { active: FollowupArea[];
     active: ["direccion", "econti", "mercadeo", "graduados", "proyectos"],
     inactive: ["general"],
   },
+  decanatura_salud: {
+    active: ["direccion", "proyectos", "investigacion", "general"],
+    inactive: ["general"],
+  },
+  decanatura_ingenierias: {
+    active: ["direccion", "proyectos", "investigacion", "general"],
+    inactive: ["general"],
+  },
+  decanatura_sociales: {
+    active: ["direccion", "proyectos", "investigacion", "general"],
+    inactive: ["general"],
+  },
   proyeccion: {
     active: ["direccion", "econti", "mercadeo", "graduados", "proyectos"],
     inactive: ["general"],
   },
 };
+
+/** Facultad asociada a cada pestaña de Decanaturas. */
+export const DIRECTION_FACULTAD: Partial<Record<AllyDirection, string>> = {
+  decanatura_salud: "Facultad de Salud",
+  decanatura_ingenierias: "Facultad de Ingenierías",
+  decanatura_sociales: "Facultad de Estudios Sociales y Empresariales",
+};
+
 
 // Facultades de la Universidad Autónoma de Manizales.
 export const FACULTADES_UAM = [
@@ -121,6 +198,16 @@ export interface Ally {
   management_recommendation: string | null;
   orchid_type: string | null;
   shared_with_directions: AllyDirection[] | null;
+  agreement_type: string | null;
+  partner_type: string | null;
+  mission_function: string | null;
+  shared_value: string | null;
+  conditions: string | null;
+  applies_to: string | null;
+  close_date: string | null;
+  economic_value: string | null;
+  dependency_origin: string | null;
+  dependency_implementer: string | null;
   valid_from: string | null;
   valid_until: string | null;
   created_by: string | null;
@@ -223,3 +310,27 @@ export const TRAFFIC_HELP: Record<AllyStatus, Record<TrafficLight, string>> = {
     red: "Conversaciones detenidas o sin avance.",
   },
 };
+
+// --- Campos tomados del consolidado de convenios (Excel V4) ---
+export const AGREEMENT_TYPES = ["Convenio Marco", "Proyecto"] as const;
+export const PARTNER_TYPES = ["ALIADO ESTRATEGICO", "ALIADO", "No especificado"] as const;
+export const MISSION_FUNCTIONS = [
+  "FORMACIÓN",
+  "INVESTIGACIÓN",
+  "PROYECCIÓN",
+  "TODOS LOS ANTERIORES",
+  "No especificado",
+] as const;
+export const UAM_DEPENDENCIES = [
+  "Dirección de Alianzas",
+  "Mercadeo Institucional",
+  "Educación Continuada (Econti)",
+  "Proyectos",
+  "Unidad de Graduados",
+  "Investigación",
+  "Relaciones Internacionales",
+  "Decanatura de Salud",
+  "Decanatura de Ingeniería",
+  "Decanatura de Estudios Sociales y Empresariales",
+  "No especificado",
+] as const;

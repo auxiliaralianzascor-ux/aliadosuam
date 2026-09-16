@@ -17,7 +17,9 @@ export type Database = {
       allies: {
         Row: {
           academic_participation: Json | null
+          agreement_type: string | null
           annual_revenue: number
+          applies_to: string | null
           c1_economic: number | null
           c2_services: number | null
           c3_age: boolean
@@ -33,6 +35,8 @@ export type Database = {
           c5_research_affinity: boolean
           c5_strategic_plan: boolean
           category: Database["public"]["Enums"]["ally_category"] | null
+          close_date: string | null
+          conditions: string | null
           contact_email: string | null
           contact_name: string | null
           contact_phone: string | null
@@ -40,17 +44,23 @@ export type Database = {
           created_at: string
           created_by: string | null
           decanatura: string | null
+          dependency_implementer: string | null
+          dependency_origin: string | null
           direction: string
+          economic_value: string | null
           id: string
           ivc_total: number | null
           management_recommendation: string | null
           mission_areas: number
+          mission_function: string | null
           name: string
           nit: string | null
           notes: string | null
           orchid_type: string | null
           origin: string | null
+          partner_type: string | null
           sector: string | null
+          shared_value: string | null
           shared_with_directions: string[] | null
           status: Database["public"]["Enums"]["ally_status"]
           traffic_light: Database["public"]["Enums"]["traffic_light"]
@@ -60,7 +70,9 @@ export type Database = {
         }
         Insert: {
           academic_participation?: Json | null
+          agreement_type?: string | null
           annual_revenue?: number
+          applies_to?: string | null
           c1_economic?: number | null
           c2_services?: number | null
           c3_age?: boolean
@@ -76,6 +88,8 @@ export type Database = {
           c5_research_affinity?: boolean
           c5_strategic_plan?: boolean
           category?: Database["public"]["Enums"]["ally_category"] | null
+          close_date?: string | null
+          conditions?: string | null
           contact_email?: string | null
           contact_name?: string | null
           contact_phone?: string | null
@@ -83,17 +97,23 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           decanatura?: string | null
+          dependency_implementer?: string | null
+          dependency_origin?: string | null
           direction?: string
+          economic_value?: string | null
           id?: string
           ivc_total?: number | null
           management_recommendation?: string | null
           mission_areas?: number
+          mission_function?: string | null
           name: string
           nit?: string | null
           notes?: string | null
           orchid_type?: string | null
           origin?: string | null
+          partner_type?: string | null
           sector?: string | null
+          shared_value?: string | null
           shared_with_directions?: string[] | null
           status?: Database["public"]["Enums"]["ally_status"]
           traffic_light?: Database["public"]["Enums"]["traffic_light"]
@@ -103,7 +123,9 @@ export type Database = {
         }
         Update: {
           academic_participation?: Json | null
+          agreement_type?: string | null
           annual_revenue?: number
+          applies_to?: string | null
           c1_economic?: number | null
           c2_services?: number | null
           c3_age?: boolean
@@ -119,6 +141,8 @@ export type Database = {
           c5_research_affinity?: boolean
           c5_strategic_plan?: boolean
           category?: Database["public"]["Enums"]["ally_category"] | null
+          close_date?: string | null
+          conditions?: string | null
           contact_email?: string | null
           contact_name?: string | null
           contact_phone?: string | null
@@ -126,17 +150,23 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           decanatura?: string | null
+          dependency_implementer?: string | null
+          dependency_origin?: string | null
           direction?: string
+          economic_value?: string | null
           id?: string
           ivc_total?: number | null
           management_recommendation?: string | null
           mission_areas?: number
+          mission_function?: string | null
           name?: string
           nit?: string | null
           notes?: string | null
           orchid_type?: string | null
           origin?: string | null
+          partner_type?: string | null
           sector?: string | null
+          shared_value?: string | null
           shared_with_directions?: string[] | null
           status?: Database["public"]["Enums"]["ally_status"]
           traffic_light?: Database["public"]["Enums"]["traffic_light"]
