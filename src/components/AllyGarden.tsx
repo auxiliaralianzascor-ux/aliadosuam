@@ -20,8 +20,14 @@ export function AllyGarden({ allies }: Props) {
       <div>
         <h2 className="text-sm font-semibold">Jardín de Aliados UAM</h2>
         <p className="text-xs text-muted-foreground">
-          Distribución de aliados activos por categoría de la Matriz de Valor Compartido (IVC_total) y su orquídea representativa.
+          Resumen de aliados activos y distribución por categoría de la Matriz de Valor Compartido (IVC_total).
         </p>
+      </div>
+
+      <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+        <div className="text-xs font-semibold text-muted-foreground">Aliados activos</div>
+        <div className="text-3xl font-bold leading-tight text-primary">{allies.length}</div>
+        <div className="text-[11px] text-muted-foreground">Total real del estado Activo en esta dirección</div>
       </div>
 
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
@@ -30,7 +36,7 @@ export function AllyGarden({ allies }: Props) {
           const pct = total > 0 ? Math.round((counts[key] / total) * 100) : 0;
           return (
             <div key={key} className={`rounded-lg border p-3 ${meta.ring} ${meta.text}`}>
-              <div className="text-xs font-semibold">{meta.label}</div>
+              <div className="text-xs font-semibold">Categoría IVC: {meta.label}</div>
               <div className="text-2xl font-bold leading-tight">{counts[key]}</div>
               <div className="text-[11px] opacity-90">{pct}% del total · {meta.range}</div>
               <div className="text-[11px] mt-1 italic opacity-90">

@@ -250,7 +250,7 @@ export const STATUS_LABEL: Record<AllyStatus, string> = {
 export const CATEGORY_LABEL: Record<AllyCategory, string> = {
   latente: "Latente",
   emergente: "Emergente",
-  estrategico: "Transformador / Estratégico",
+  estrategico: "Estratégico",
   activo: "Activo",
 };
 

@@ -31,7 +31,7 @@ export const CATEGORY_META: Record<
   { label: string; range: string; min: number; orchid: string; orchidScientific: string; state: string; ring: string; text: string }
 > = {
   estrategico: {
-    label: "Transformador / Estratégico",
+    label: "Estratégico",
     range: "IVC_total ≥ 0.80",
     min: 0.8,
     orchid: "Orquídea Pensamiento",
