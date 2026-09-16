@@ -251,7 +251,7 @@ export const CATEGORY_LABEL: Record<AllyCategory, string> = {
   latente: "Latente",
   emergente: "Emergente",
   estrategico: "Estratégico",
-  activo: "Activo",
+  activo: "Estable",
 };
 
 export const AREA_LABEL: Record<FollowupArea, string> = {

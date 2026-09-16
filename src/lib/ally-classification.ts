@@ -41,7 +41,7 @@ export const CATEGORY_META: Record<
     text: "text-white",
   },
   activo: {
-    label: "Activo",
+    label: "Estable",
     range: "0.50 ≤ IVC_total < 0.80",
     min: 0.5,
     orchid: "Orquídea Josefina",

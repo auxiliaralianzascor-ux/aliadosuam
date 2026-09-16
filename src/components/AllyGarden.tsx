@@ -14,6 +14,11 @@ export function AllyGarden({ allies }: Props) {
     return acc;
   }, {} as Record<AllyCategoryKey, number>);
   const total = CATEGORY_ORDER.reduce((sum, k) => sum + counts[k], 0);
+  const activeMarcoAllies = allies.filter((ally) => {
+    if (ally.status !== "active") return false;
+    const agreementType = (ally.agreement_type ?? "").trim().toLowerCase();
+    return agreementType === "convenio marco";
+  }).length;
 
   return (
     <Card className="p-4 space-y-3">
@@ -24,10 +29,18 @@ export function AllyGarden({ allies }: Props) {
         </p>
       </div>
 
-      <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
-        <div className="text-xs font-semibold text-muted-foreground">Aliados activos</div>
-        <div className="text-3xl font-bold leading-tight text-primary">{allies.length}</div>
-        <div className="text-[11px] text-muted-foreground">Total real del estado Activo en esta dirección</div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+          <div className="text-xs font-semibold text-muted-foreground">Aliados activos</div>
+          <div className="text-3xl font-bold leading-tight text-primary">{allies.length}</div>
+          <div className="text-[11px] text-muted-foreground">Total real del estado Activo en esta dirección</div>
+        </div>
+
+        <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-3">
+          <div className="text-xs font-semibold text-muted-foreground">Convenio Marco activos</div>
+          <div className="text-3xl font-bold leading-tight text-amber-700">{activeMarcoAllies}</div>
+          <div className="text-[11px] text-muted-foreground">Aliados activos con tipo de acuerdo Convenio Marco</div>
+        </div>
       </div>
 
       <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
