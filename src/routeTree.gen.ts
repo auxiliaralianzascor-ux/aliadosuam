@@ -32,6 +32,20 @@ import { Route as AuthenticatedProyeccionAliadosIdRouteImport } from './routes/_
 import { Route as AuthenticatedInvestigacionAliadosIdRouteImport } from './routes/_authenticated/investigacion/aliados/$id'
 import { Route as AuthenticatedDecanaturasAliadosIdRouteImport } from './routes/_authenticated/decanaturas/aliados/$id'
 import { Route as AuthenticatedAlianzasAliadosIdRouteImport } from './routes/_authenticated/alianzas/aliados/$id'
+import { Route as AuthenticatedDecanaturasSocialesAliadosIndexRouteImport } from './routes/_authenticated/decanaturas/sociales/aliados/index'
+import { Route as AuthenticatedDecanaturasSaludAliadosIndexRouteImport } from './routes/_authenticated/decanaturas/salud/aliados/index'
+import { Route as AuthenticatedDecanaturasIngenieriasAliadosIndexRouteImport } from './routes/_authenticated/decanaturas/ingenierias/aliados/index'
+import { Route as AuthenticatedAlianzasProyectosAliadosIndexRouteImport } from './routes/_authenticated/alianzas/proyectos/aliados/index'
+import { Route as AuthenticatedAlianzasMercadeoAliadosIndexRouteImport } from './routes/_authenticated/alianzas/mercadeo/aliados/index'
+import { Route as AuthenticatedAlianzasGraduadosAliadosIndexRouteImport } from './routes/_authenticated/alianzas/graduados/aliados/index'
+import { Route as AuthenticatedAlianzasEcontiAliadosIndexRouteImport } from './routes/_authenticated/alianzas/econti/aliados/index'
+import { Route as AuthenticatedDecanaturasSocialesAliadosIdRouteImport } from './routes/_authenticated/decanaturas/sociales/aliados/$id'
+import { Route as AuthenticatedDecanaturasSaludAliadosIdRouteImport } from './routes/_authenticated/decanaturas/salud/aliados/$id'
+import { Route as AuthenticatedDecanaturasIngenieriasAliadosIdRouteImport } from './routes/_authenticated/decanaturas/ingenierias/aliados/$id'
+import { Route as AuthenticatedAlianzasProyectosAliadosIdRouteImport } from './routes/_authenticated/alianzas/proyectos/aliados/$id'
+import { Route as AuthenticatedAlianzasMercadeoAliadosIdRouteImport } from './routes/_authenticated/alianzas/mercadeo/aliados/$id'
+import { Route as AuthenticatedAlianzasGraduadosAliadosIdRouteImport } from './routes/_authenticated/alianzas/graduados/aliados/$id'
+import { Route as AuthenticatedAlianzasEcontiAliadosIdRouteImport } from './routes/_authenticated/alianzas/econti/aliados/$id'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -164,6 +178,90 @@ const AuthenticatedAlianzasAliadosIdRoute =
     path: '/alianzas/aliados/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDecanaturasSocialesAliadosIndexRoute =
+  AuthenticatedDecanaturasSocialesAliadosIndexRouteImport.update({
+    id: '/decanaturas/sociales/aliados/',
+    path: '/decanaturas/sociales/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDecanaturasSaludAliadosIndexRoute =
+  AuthenticatedDecanaturasSaludAliadosIndexRouteImport.update({
+    id: '/decanaturas/salud/aliados/',
+    path: '/decanaturas/salud/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDecanaturasIngenieriasAliadosIndexRoute =
+  AuthenticatedDecanaturasIngenieriasAliadosIndexRouteImport.update({
+    id: '/decanaturas/ingenierias/aliados/',
+    path: '/decanaturas/ingenierias/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasProyectosAliadosIndexRoute =
+  AuthenticatedAlianzasProyectosAliadosIndexRouteImport.update({
+    id: '/alianzas/proyectos/aliados/',
+    path: '/alianzas/proyectos/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasMercadeoAliadosIndexRoute =
+  AuthenticatedAlianzasMercadeoAliadosIndexRouteImport.update({
+    id: '/alianzas/mercadeo/aliados/',
+    path: '/alianzas/mercadeo/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasGraduadosAliadosIndexRoute =
+  AuthenticatedAlianzasGraduadosAliadosIndexRouteImport.update({
+    id: '/alianzas/graduados/aliados/',
+    path: '/alianzas/graduados/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasEcontiAliadosIndexRoute =
+  AuthenticatedAlianzasEcontiAliadosIndexRouteImport.update({
+    id: '/alianzas/econti/aliados/',
+    path: '/alianzas/econti/aliados/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDecanaturasSocialesAliadosIdRoute =
+  AuthenticatedDecanaturasSocialesAliadosIdRouteImport.update({
+    id: '/decanaturas/sociales/aliados/$id',
+    path: '/decanaturas/sociales/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDecanaturasSaludAliadosIdRoute =
+  AuthenticatedDecanaturasSaludAliadosIdRouteImport.update({
+    id: '/decanaturas/salud/aliados/$id',
+    path: '/decanaturas/salud/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDecanaturasIngenieriasAliadosIdRoute =
+  AuthenticatedDecanaturasIngenieriasAliadosIdRouteImport.update({
+    id: '/decanaturas/ingenierias/aliados/$id',
+    path: '/decanaturas/ingenierias/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasProyectosAliadosIdRoute =
+  AuthenticatedAlianzasProyectosAliadosIdRouteImport.update({
+    id: '/alianzas/proyectos/aliados/$id',
+    path: '/alianzas/proyectos/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasMercadeoAliadosIdRoute =
+  AuthenticatedAlianzasMercadeoAliadosIdRouteImport.update({
+    id: '/alianzas/mercadeo/aliados/$id',
+    path: '/alianzas/mercadeo/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasGraduadosAliadosIdRoute =
+  AuthenticatedAlianzasGraduadosAliadosIdRouteImport.update({
+    id: '/alianzas/graduados/aliados/$id',
+    path: '/alianzas/graduados/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAlianzasEcontiAliadosIdRoute =
+  AuthenticatedAlianzasEcontiAliadosIdRouteImport.update({
+    id: '/alianzas/econti/aliados/$id',
+    path: '/alianzas/econti/aliados/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -188,6 +286,20 @@ export interface FileRoutesByFullPath {
   '/proyeccion/indicadores/': typeof AuthenticatedProyeccionIndicadoresIndexRoute
   '/relaciones-internacionales/aliados/': typeof AuthenticatedRelacionesInternacionalesAliadosIndexRoute
   '/relaciones-internacionales/indicadores/': typeof AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute
+  '/alianzas/econti/aliados/$id': typeof AuthenticatedAlianzasEcontiAliadosIdRoute
+  '/alianzas/graduados/aliados/$id': typeof AuthenticatedAlianzasGraduadosAliadosIdRoute
+  '/alianzas/mercadeo/aliados/$id': typeof AuthenticatedAlianzasMercadeoAliadosIdRoute
+  '/alianzas/proyectos/aliados/$id': typeof AuthenticatedAlianzasProyectosAliadosIdRoute
+  '/decanaturas/ingenierias/aliados/$id': typeof AuthenticatedDecanaturasIngenieriasAliadosIdRoute
+  '/decanaturas/salud/aliados/$id': typeof AuthenticatedDecanaturasSaludAliadosIdRoute
+  '/decanaturas/sociales/aliados/$id': typeof AuthenticatedDecanaturasSocialesAliadosIdRoute
+  '/alianzas/econti/aliados/': typeof AuthenticatedAlianzasEcontiAliadosIndexRoute
+  '/alianzas/graduados/aliados/': typeof AuthenticatedAlianzasGraduadosAliadosIndexRoute
+  '/alianzas/mercadeo/aliados/': typeof AuthenticatedAlianzasMercadeoAliadosIndexRoute
+  '/alianzas/proyectos/aliados/': typeof AuthenticatedAlianzasProyectosAliadosIndexRoute
+  '/decanaturas/ingenierias/aliados/': typeof AuthenticatedDecanaturasIngenieriasAliadosIndexRoute
+  '/decanaturas/salud/aliados/': typeof AuthenticatedDecanaturasSaludAliadosIndexRoute
+  '/decanaturas/sociales/aliados/': typeof AuthenticatedDecanaturasSocialesAliadosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -212,6 +324,20 @@ export interface FileRoutesByTo {
   '/proyeccion/indicadores': typeof AuthenticatedProyeccionIndicadoresIndexRoute
   '/relaciones-internacionales/aliados': typeof AuthenticatedRelacionesInternacionalesAliadosIndexRoute
   '/relaciones-internacionales/indicadores': typeof AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute
+  '/alianzas/econti/aliados/$id': typeof AuthenticatedAlianzasEcontiAliadosIdRoute
+  '/alianzas/graduados/aliados/$id': typeof AuthenticatedAlianzasGraduadosAliadosIdRoute
+  '/alianzas/mercadeo/aliados/$id': typeof AuthenticatedAlianzasMercadeoAliadosIdRoute
+  '/alianzas/proyectos/aliados/$id': typeof AuthenticatedAlianzasProyectosAliadosIdRoute
+  '/decanaturas/ingenierias/aliados/$id': typeof AuthenticatedDecanaturasIngenieriasAliadosIdRoute
+  '/decanaturas/salud/aliados/$id': typeof AuthenticatedDecanaturasSaludAliadosIdRoute
+  '/decanaturas/sociales/aliados/$id': typeof AuthenticatedDecanaturasSocialesAliadosIdRoute
+  '/alianzas/econti/aliados': typeof AuthenticatedAlianzasEcontiAliadosIndexRoute
+  '/alianzas/graduados/aliados': typeof AuthenticatedAlianzasGraduadosAliadosIndexRoute
+  '/alianzas/mercadeo/aliados': typeof AuthenticatedAlianzasMercadeoAliadosIndexRoute
+  '/alianzas/proyectos/aliados': typeof AuthenticatedAlianzasProyectosAliadosIndexRoute
+  '/decanaturas/ingenierias/aliados': typeof AuthenticatedDecanaturasIngenieriasAliadosIndexRoute
+  '/decanaturas/salud/aliados': typeof AuthenticatedDecanaturasSaludAliadosIndexRoute
+  '/decanaturas/sociales/aliados': typeof AuthenticatedDecanaturasSocialesAliadosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -238,6 +364,20 @@ export interface FileRoutesById {
   '/_authenticated/proyeccion/indicadores/': typeof AuthenticatedProyeccionIndicadoresIndexRoute
   '/_authenticated/relaciones-internacionales/aliados/': typeof AuthenticatedRelacionesInternacionalesAliadosIndexRoute
   '/_authenticated/relaciones-internacionales/indicadores/': typeof AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute
+  '/_authenticated/alianzas/econti/aliados/$id': typeof AuthenticatedAlianzasEcontiAliadosIdRoute
+  '/_authenticated/alianzas/graduados/aliados/$id': typeof AuthenticatedAlianzasGraduadosAliadosIdRoute
+  '/_authenticated/alianzas/mercadeo/aliados/$id': typeof AuthenticatedAlianzasMercadeoAliadosIdRoute
+  '/_authenticated/alianzas/proyectos/aliados/$id': typeof AuthenticatedAlianzasProyectosAliadosIdRoute
+  '/_authenticated/decanaturas/ingenierias/aliados/$id': typeof AuthenticatedDecanaturasIngenieriasAliadosIdRoute
+  '/_authenticated/decanaturas/salud/aliados/$id': typeof AuthenticatedDecanaturasSaludAliadosIdRoute
+  '/_authenticated/decanaturas/sociales/aliados/$id': typeof AuthenticatedDecanaturasSocialesAliadosIdRoute
+  '/_authenticated/alianzas/econti/aliados/': typeof AuthenticatedAlianzasEcontiAliadosIndexRoute
+  '/_authenticated/alianzas/graduados/aliados/': typeof AuthenticatedAlianzasGraduadosAliadosIndexRoute
+  '/_authenticated/alianzas/mercadeo/aliados/': typeof AuthenticatedAlianzasMercadeoAliadosIndexRoute
+  '/_authenticated/alianzas/proyectos/aliados/': typeof AuthenticatedAlianzasProyectosAliadosIndexRoute
+  '/_authenticated/decanaturas/ingenierias/aliados/': typeof AuthenticatedDecanaturasIngenieriasAliadosIndexRoute
+  '/_authenticated/decanaturas/salud/aliados/': typeof AuthenticatedDecanaturasSaludAliadosIndexRoute
+  '/_authenticated/decanaturas/sociales/aliados/': typeof AuthenticatedDecanaturasSocialesAliadosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -264,6 +404,20 @@ export interface FileRouteTypes {
     | '/proyeccion/indicadores/'
     | '/relaciones-internacionales/aliados/'
     | '/relaciones-internacionales/indicadores/'
+    | '/alianzas/econti/aliados/$id'
+    | '/alianzas/graduados/aliados/$id'
+    | '/alianzas/mercadeo/aliados/$id'
+    | '/alianzas/proyectos/aliados/$id'
+    | '/decanaturas/ingenierias/aliados/$id'
+    | '/decanaturas/salud/aliados/$id'
+    | '/decanaturas/sociales/aliados/$id'
+    | '/alianzas/econti/aliados/'
+    | '/alianzas/graduados/aliados/'
+    | '/alianzas/mercadeo/aliados/'
+    | '/alianzas/proyectos/aliados/'
+    | '/decanaturas/ingenierias/aliados/'
+    | '/decanaturas/salud/aliados/'
+    | '/decanaturas/sociales/aliados/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -288,6 +442,20 @@ export interface FileRouteTypes {
     | '/proyeccion/indicadores'
     | '/relaciones-internacionales/aliados'
     | '/relaciones-internacionales/indicadores'
+    | '/alianzas/econti/aliados/$id'
+    | '/alianzas/graduados/aliados/$id'
+    | '/alianzas/mercadeo/aliados/$id'
+    | '/alianzas/proyectos/aliados/$id'
+    | '/decanaturas/ingenierias/aliados/$id'
+    | '/decanaturas/salud/aliados/$id'
+    | '/decanaturas/sociales/aliados/$id'
+    | '/alianzas/econti/aliados'
+    | '/alianzas/graduados/aliados'
+    | '/alianzas/mercadeo/aliados'
+    | '/alianzas/proyectos/aliados'
+    | '/decanaturas/ingenierias/aliados'
+    | '/decanaturas/salud/aliados'
+    | '/decanaturas/sociales/aliados'
   id:
     | '__root__'
     | '/'
@@ -313,6 +481,20 @@ export interface FileRouteTypes {
     | '/_authenticated/proyeccion/indicadores/'
     | '/_authenticated/relaciones-internacionales/aliados/'
     | '/_authenticated/relaciones-internacionales/indicadores/'
+    | '/_authenticated/alianzas/econti/aliados/$id'
+    | '/_authenticated/alianzas/graduados/aliados/$id'
+    | '/_authenticated/alianzas/mercadeo/aliados/$id'
+    | '/_authenticated/alianzas/proyectos/aliados/$id'
+    | '/_authenticated/decanaturas/ingenierias/aliados/$id'
+    | '/_authenticated/decanaturas/salud/aliados/$id'
+    | '/_authenticated/decanaturas/sociales/aliados/$id'
+    | '/_authenticated/alianzas/econti/aliados/'
+    | '/_authenticated/alianzas/graduados/aliados/'
+    | '/_authenticated/alianzas/mercadeo/aliados/'
+    | '/_authenticated/alianzas/proyectos/aliados/'
+    | '/_authenticated/decanaturas/ingenierias/aliados/'
+    | '/_authenticated/decanaturas/salud/aliados/'
+    | '/_authenticated/decanaturas/sociales/aliados/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -484,6 +666,104 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAlianzasAliadosIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/decanaturas/sociales/aliados/': {
+      id: '/_authenticated/decanaturas/sociales/aliados/'
+      path: '/decanaturas/sociales/aliados'
+      fullPath: '/decanaturas/sociales/aliados/'
+      preLoaderRoute: typeof AuthenticatedDecanaturasSocialesAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/decanaturas/salud/aliados/': {
+      id: '/_authenticated/decanaturas/salud/aliados/'
+      path: '/decanaturas/salud/aliados'
+      fullPath: '/decanaturas/salud/aliados/'
+      preLoaderRoute: typeof AuthenticatedDecanaturasSaludAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/decanaturas/ingenierias/aliados/': {
+      id: '/_authenticated/decanaturas/ingenierias/aliados/'
+      path: '/decanaturas/ingenierias/aliados'
+      fullPath: '/decanaturas/ingenierias/aliados/'
+      preLoaderRoute: typeof AuthenticatedDecanaturasIngenieriasAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/proyectos/aliados/': {
+      id: '/_authenticated/alianzas/proyectos/aliados/'
+      path: '/alianzas/proyectos/aliados'
+      fullPath: '/alianzas/proyectos/aliados/'
+      preLoaderRoute: typeof AuthenticatedAlianzasProyectosAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/mercadeo/aliados/': {
+      id: '/_authenticated/alianzas/mercadeo/aliados/'
+      path: '/alianzas/mercadeo/aliados'
+      fullPath: '/alianzas/mercadeo/aliados/'
+      preLoaderRoute: typeof AuthenticatedAlianzasMercadeoAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/graduados/aliados/': {
+      id: '/_authenticated/alianzas/graduados/aliados/'
+      path: '/alianzas/graduados/aliados'
+      fullPath: '/alianzas/graduados/aliados/'
+      preLoaderRoute: typeof AuthenticatedAlianzasGraduadosAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/econti/aliados/': {
+      id: '/_authenticated/alianzas/econti/aliados/'
+      path: '/alianzas/econti/aliados'
+      fullPath: '/alianzas/econti/aliados/'
+      preLoaderRoute: typeof AuthenticatedAlianzasEcontiAliadosIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/decanaturas/sociales/aliados/$id': {
+      id: '/_authenticated/decanaturas/sociales/aliados/$id'
+      path: '/decanaturas/sociales/aliados/$id'
+      fullPath: '/decanaturas/sociales/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedDecanaturasSocialesAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/decanaturas/salud/aliados/$id': {
+      id: '/_authenticated/decanaturas/salud/aliados/$id'
+      path: '/decanaturas/salud/aliados/$id'
+      fullPath: '/decanaturas/salud/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedDecanaturasSaludAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/decanaturas/ingenierias/aliados/$id': {
+      id: '/_authenticated/decanaturas/ingenierias/aliados/$id'
+      path: '/decanaturas/ingenierias/aliados/$id'
+      fullPath: '/decanaturas/ingenierias/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedDecanaturasIngenieriasAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/proyectos/aliados/$id': {
+      id: '/_authenticated/alianzas/proyectos/aliados/$id'
+      path: '/alianzas/proyectos/aliados/$id'
+      fullPath: '/alianzas/proyectos/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedAlianzasProyectosAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/mercadeo/aliados/$id': {
+      id: '/_authenticated/alianzas/mercadeo/aliados/$id'
+      path: '/alianzas/mercadeo/aliados/$id'
+      fullPath: '/alianzas/mercadeo/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedAlianzasMercadeoAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/graduados/aliados/$id': {
+      id: '/_authenticated/alianzas/graduados/aliados/$id'
+      path: '/alianzas/graduados/aliados/$id'
+      fullPath: '/alianzas/graduados/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedAlianzasGraduadosAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/alianzas/econti/aliados/$id': {
+      id: '/_authenticated/alianzas/econti/aliados/$id'
+      path: '/alianzas/econti/aliados/$id'
+      fullPath: '/alianzas/econti/aliados/$id'
+      preLoaderRoute: typeof AuthenticatedAlianzasEcontiAliadosIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -508,6 +788,20 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProyeccionIndicadoresIndexRoute: typeof AuthenticatedProyeccionIndicadoresIndexRoute
   AuthenticatedRelacionesInternacionalesAliadosIndexRoute: typeof AuthenticatedRelacionesInternacionalesAliadosIndexRoute
   AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute: typeof AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute
+  AuthenticatedAlianzasEcontiAliadosIdRoute: typeof AuthenticatedAlianzasEcontiAliadosIdRoute
+  AuthenticatedAlianzasGraduadosAliadosIdRoute: typeof AuthenticatedAlianzasGraduadosAliadosIdRoute
+  AuthenticatedAlianzasMercadeoAliadosIdRoute: typeof AuthenticatedAlianzasMercadeoAliadosIdRoute
+  AuthenticatedAlianzasProyectosAliadosIdRoute: typeof AuthenticatedAlianzasProyectosAliadosIdRoute
+  AuthenticatedDecanaturasIngenieriasAliadosIdRoute: typeof AuthenticatedDecanaturasIngenieriasAliadosIdRoute
+  AuthenticatedDecanaturasSaludAliadosIdRoute: typeof AuthenticatedDecanaturasSaludAliadosIdRoute
+  AuthenticatedDecanaturasSocialesAliadosIdRoute: typeof AuthenticatedDecanaturasSocialesAliadosIdRoute
+  AuthenticatedAlianzasEcontiAliadosIndexRoute: typeof AuthenticatedAlianzasEcontiAliadosIndexRoute
+  AuthenticatedAlianzasGraduadosAliadosIndexRoute: typeof AuthenticatedAlianzasGraduadosAliadosIndexRoute
+  AuthenticatedAlianzasMercadeoAliadosIndexRoute: typeof AuthenticatedAlianzasMercadeoAliadosIndexRoute
+  AuthenticatedAlianzasProyectosAliadosIndexRoute: typeof AuthenticatedAlianzasProyectosAliadosIndexRoute
+  AuthenticatedDecanaturasIngenieriasAliadosIndexRoute: typeof AuthenticatedDecanaturasIngenieriasAliadosIndexRoute
+  AuthenticatedDecanaturasSaludAliadosIndexRoute: typeof AuthenticatedDecanaturasSaludAliadosIndexRoute
+  AuthenticatedDecanaturasSocialesAliadosIndexRoute: typeof AuthenticatedDecanaturasSocialesAliadosIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -544,6 +838,34 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedRelacionesInternacionalesAliadosIndexRoute,
   AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute:
     AuthenticatedRelacionesInternacionalesIndicadoresIndexRoute,
+  AuthenticatedAlianzasEcontiAliadosIdRoute:
+    AuthenticatedAlianzasEcontiAliadosIdRoute,
+  AuthenticatedAlianzasGraduadosAliadosIdRoute:
+    AuthenticatedAlianzasGraduadosAliadosIdRoute,
+  AuthenticatedAlianzasMercadeoAliadosIdRoute:
+    AuthenticatedAlianzasMercadeoAliadosIdRoute,
+  AuthenticatedAlianzasProyectosAliadosIdRoute:
+    AuthenticatedAlianzasProyectosAliadosIdRoute,
+  AuthenticatedDecanaturasIngenieriasAliadosIdRoute:
+    AuthenticatedDecanaturasIngenieriasAliadosIdRoute,
+  AuthenticatedDecanaturasSaludAliadosIdRoute:
+    AuthenticatedDecanaturasSaludAliadosIdRoute,
+  AuthenticatedDecanaturasSocialesAliadosIdRoute:
+    AuthenticatedDecanaturasSocialesAliadosIdRoute,
+  AuthenticatedAlianzasEcontiAliadosIndexRoute:
+    AuthenticatedAlianzasEcontiAliadosIndexRoute,
+  AuthenticatedAlianzasGraduadosAliadosIndexRoute:
+    AuthenticatedAlianzasGraduadosAliadosIndexRoute,
+  AuthenticatedAlianzasMercadeoAliadosIndexRoute:
+    AuthenticatedAlianzasMercadeoAliadosIndexRoute,
+  AuthenticatedAlianzasProyectosAliadosIndexRoute:
+    AuthenticatedAlianzasProyectosAliadosIndexRoute,
+  AuthenticatedDecanaturasIngenieriasAliadosIndexRoute:
+    AuthenticatedDecanaturasIngenieriasAliadosIndexRoute,
+  AuthenticatedDecanaturasSaludAliadosIndexRoute:
+    AuthenticatedDecanaturasSaludAliadosIndexRoute,
+  AuthenticatedDecanaturasSocialesAliadosIndexRoute:
+    AuthenticatedDecanaturasSocialesAliadosIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
