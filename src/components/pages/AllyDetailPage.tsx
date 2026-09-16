@@ -167,6 +167,24 @@ export function AllyDetailPage({ id, direction, listPath, showDiscounts }: Props
               </div>
             )}
 
+            {(ally.agreement_type || ally.partner_type || ally.mission_function || ally.close_date || ally.economic_value || ally.dependency_origin || ally.dependency_implementer || ally.applies_to || ally.shared_value || ally.conditions) && (
+              <div className="mt-4 rounded-md border bg-muted/20 p-3 space-y-3">
+                <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Datos del convenio</div>
+                <div className="grid sm:grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                  {ally.agreement_type && <div><div className="text-xs text-muted-foreground">Tipo de acuerdo</div><div>{ally.agreement_type}</div></div>}
+                  {ally.partner_type && <div><div className="text-xs text-muted-foreground">Tipo de aliado</div><div>{ally.partner_type}</div></div>}
+                  {ally.mission_function && <div><div className="text-xs text-muted-foreground">Función misional</div><div>{ally.mission_function}</div></div>}
+                  {ally.close_date && <div><div className="text-xs text-muted-foreground">Fecha de cierre</div><div>{ally.close_date}</div></div>}
+                  {ally.economic_value && <div><div className="text-xs text-muted-foreground">Valor económico</div><div>{ally.economic_value}</div></div>}
+                  {ally.applies_to && <div><div className="text-xs text-muted-foreground">Aplica para</div><div>{ally.applies_to}</div></div>}
+                  {ally.dependency_origin && <div><div className="text-xs text-muted-foreground">Dependencia que genera</div><div>{ally.dependency_origin}</div></div>}
+                  {ally.dependency_implementer && <div><div className="text-xs text-muted-foreground">Dependencia que implementa</div><div>{ally.dependency_implementer}</div></div>}
+                </div>
+                {ally.shared_value && <div><div className="text-xs text-muted-foreground">Valor compartido</div><div className="text-sm whitespace-pre-wrap">{ally.shared_value}</div></div>}
+                {ally.conditions && <div><div className="text-xs text-muted-foreground">Condiciones</div><div className="text-sm whitespace-pre-wrap">{ally.conditions}</div></div>}
+              </div>
+            )}
+
             {(() => {
               const contacts = getAllyContacts(ally);
               if (contacts.length === 0) return null;

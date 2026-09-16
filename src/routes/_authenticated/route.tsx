@@ -123,6 +123,26 @@ function AuthedLayout() {
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
+                  <Link to="/alianzas/mercadeo/aliados" className="cursor-pointer">
+                    <Handshake className="w-4 h-4" /> Mercadeo Institucional
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/alianzas/econti/aliados" className="cursor-pointer">
+                    <Handshake className="w-4 h-4" /> Educación Continuada
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/alianzas/proyectos/aliados" className="cursor-pointer">
+                    <Handshake className="w-4 h-4" /> Proyectos
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/alianzas/graduados/aliados" className="cursor-pointer">
+                    <Handshake className="w-4 h-4" /> Unidad de Graduados
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/alianzas/descuentos" className="cursor-pointer">
                     <Percent className="w-4 h-4" /> Descuentos
                   </Link>
@@ -194,6 +214,21 @@ function AuthedLayout() {
                 <DropdownMenuItem asChild>
                   <Link to="/decanaturas/aliados" className="cursor-pointer">
                     <Handshake className="w-4 h-4" /> Aliados
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/decanaturas/salud/aliados" className="cursor-pointer">
+                    <Handshake className="w-4 h-4" /> Facultad de Salud
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/decanaturas/ingenierias/aliados" className="cursor-pointer">
+                    <Handshake className="w-4 h-4" /> Facultad de Ingenierías
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/decanaturas/sociales/aliados" className="cursor-pointer">
+                    <Handshake className="w-4 h-4" /> Estudios Sociales y Empresariales
                   </Link>
                 </DropdownMenuItem>
                 {(canVerifyIndicators(perms, "decanaturas") || canLoadIndicators(perms, "decanaturas")) && (

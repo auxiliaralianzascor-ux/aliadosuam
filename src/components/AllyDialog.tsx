@@ -25,6 +25,10 @@ import {
   DIRECTIONS,
   DIRECTION_LABEL,
   getAllyContacts,
+  AGREEMENT_TYPES,
+  PARTNER_TYPES,
+  MISSION_FUNCTIONS,
+  UAM_DEPENDENCIES,
 } from "@/lib/allies-types";
 import { toast } from "sonner";
 
@@ -69,8 +73,8 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
   const save = useSaveAlly();
   const saveDiscount = useSaveDiscount();
   const activeDirection: AllyDirection = ally?.direction ?? direction;
-  const canCreateNewAlly = !ally && activeDirection === "alianzas";
-  const canAddDiscounts = canCreateNewAlly;
+  const canCreateNewAlly = !ally && (activeDirection === "alianzas" || activeDirection.startsWith("alianzas_") || activeDirection.startsWith("decanatura_"));
+  const canAddDiscounts = activeDirection === "alianzas";
   const buildInitial = () => {
     const initialContacts = ally ? getAllyContacts(ally) : [];
     return {
@@ -98,6 +102,16 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
       valid_until: ally?.valid_until ?? "",
       notes: ally?.notes ?? "",
       shared_with_directions: ally?.shared_with_directions ?? [],
+      agreement_type: ally?.agreement_type ?? "",
+      partner_type: ally?.partner_type ?? "",
+      mission_function: ally?.mission_function ?? "",
+      shared_value: ally?.shared_value ?? "",
+      conditions: ally?.conditions ?? "",
+      applies_to: ally?.applies_to ?? "",
+      close_date: ally?.close_date ?? "",
+      economic_value: ally?.economic_value ?? "",
+      dependency_origin: ally?.dependency_origin ?? "",
+      dependency_implementer: ally?.dependency_implementer ?? "",
     };
   };
   const [form, setForm] = useState(buildInitial);
@@ -148,8 +162,8 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (save.isPending) return;
-    if (!ally && activeDirection !== "alianzas") {
-      return toast.error("Solo la dirección de Alianzas puede crear aliados. El resto solo puede compartirlos.");
+    if (!ally && !canCreateNewAlly) {
+      return toast.error("No tienes permisos para crear aliados en esta dirección.");
     }
     const name = form.name.trim();
     if (!name) return toast.error("El nombre es obligatorio");
@@ -224,6 +238,16 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
         valid_until: form.valid_until || null,
         notes: form.notes || null,
         shared_with_directions: form.shared_with_directions,
+        agreement_type: form.agreement_type || null,
+        partner_type: form.partner_type || null,
+        mission_function: form.mission_function || null,
+        shared_value: form.shared_value || null,
+        conditions: form.conditions || null,
+        applies_to: form.applies_to || null,
+        close_date: form.close_date || null,
+        economic_value: form.economic_value || null,
+        dependency_origin: form.dependency_origin || null,
+        dependency_implementer: form.dependency_implementer || null,
       });
       if (canAddDiscounts && discountsOpen) {
         const anyValue = Object.values(discounts).some((v) => v.trim());
@@ -327,6 +351,77 @@ export function AllyDialog({ open, onOpenChange, ally, defaultStatus, direction 
                 </Select>
               </div>
             )}
+            <div className="sm:col-span-2 rounded-md border bg-muted/20 p-3 space-y-3">
+              <div className="text-sm font-medium">Datos del convenio</div>
+              <div className="grid sm:grid-cols-2 gap-3">
+                <div>
+                  <Label>Tipo de acuerdo</Label>
+                  <Select value={form.agreement_type || "none"} onValueChange={(v) => setForm({ ...form, agreement_type: v === "none" ? "" : v })}>
+                    <SelectTrigger><SelectValue placeholder="Selecciona el tipo" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">No especificado</SelectItem>
+                      {AGREEMENT_TYPES.map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Tipo de aliado</Label>
+                  <Select value={form.partner_type || "none"} onValueChange={(v) => setForm({ ...form, partner_type: v === "none" ? "" : v })}>
+                    <SelectTrigger><SelectValue placeholder="Selecciona el tipo" /></SelectTrigger>
+                    <SelectContent>
+                      {PARTNER_TYPES.map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Función misional</Label>
+                  <Select value={form.mission_function || "none"} onValueChange={(v) => setForm({ ...form, mission_function: v === "none" ? "" : v })}>
+                    <SelectTrigger><SelectValue placeholder="Selecciona la función" /></SelectTrigger>
+                    <SelectContent>
+                      {MISSION_FUNCTIONS.map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Fecha de cierre</Label>
+                  <Input type="date" value={form.close_date} onChange={(e) => setForm({ ...form, close_date: e.target.value })} />
+                </div>
+                <div>
+                  <Label>Dependencia UAM que genera</Label>
+                  <Select value={form.dependency_origin || "none"} onValueChange={(v) => setForm({ ...form, dependency_origin: v === "none" ? "" : v })}>
+                    <SelectTrigger><SelectValue placeholder="Selecciona la dependencia" /></SelectTrigger>
+                    <SelectContent>
+                      {UAM_DEPENDENCIES.map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Dependencia UAM que implementa</Label>
+                  <Select value={form.dependency_implementer || "none"} onValueChange={(v) => setForm({ ...form, dependency_implementer: v === "none" ? "" : v })}>
+                    <SelectTrigger><SelectValue placeholder="Selecciona la dependencia" /></SelectTrigger>
+                    <SelectContent>
+                      {UAM_DEPENDENCIES.map((value) => <SelectItem key={value} value={value}>{value}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Valor económico</Label>
+                  <Input value={form.economic_value} onChange={(e) => setForm({ ...form, economic_value: e.target.value })} />
+                </div>
+                <div>
+                  <Label>¿Para quién aplica?</Label>
+                  <Input value={form.applies_to} onChange={(e) => setForm({ ...form, applies_to: e.target.value })} />
+                </div>
+                <div className="sm:col-span-2">
+                  <Label>Valor compartido</Label>
+                  <Textarea rows={2} value={form.shared_value} onChange={(e) => setForm({ ...form, shared_value: e.target.value })} />
+                </div>
+                <div className="sm:col-span-2">
+                  <Label>Condiciones</Label>
+                  <Textarea rows={2} value={form.conditions} onChange={(e) => setForm({ ...form, conditions: e.target.value })} />
+                </div>
+              </div>
+            </div>
             <div>
               <Label>Estado</Label>
               <Select value={form.status} onValueChange={(v) => setForm({ ...form, status: v as AllyStatus })}>

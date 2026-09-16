@@ -55,9 +55,16 @@ export const Route = createFileRoute("/_authenticated/usuarios")({
 
 const DIRECTIONS: AllyDirection[] = [
   "alianzas",
+  "alianzas_mercadeo",
+  "alianzas_econti",
+  "alianzas_proyectos",
+  "alianzas_graduados",
   "investigacion",
   "relaciones_internacionales",
   "decanaturas",
+  "decanatura_salud",
+  "decanatura_ingenierias",
+  "decanatura_sociales",
   "proyeccion",
 ];
 

@@ -35,7 +35,7 @@ export function AlliesListPage({ direction, cardBasePath, showExport = true }: P
   const { data: perms } = useMyPermissions();
   const isAdmin = !!perms?.isAdmin;
   const canEdit = canEditDirection(perms, direction);
-  const canCreateAlly = direction === "alianzas" && (isAdmin || canEdit);
+  const canCreateAlly = (direction === "alianzas" || direction.startsWith("alianzas_") || direction.startsWith("decanatura_")) && (isAdmin || canEdit);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
   const exportFn = useServerFn(exportAlliesToDrive);
