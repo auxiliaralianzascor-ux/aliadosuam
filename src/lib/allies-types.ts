@@ -310,3 +310,27 @@ export const TRAFFIC_HELP: Record<AllyStatus, Record<TrafficLight, string>> = {
     red: "Conversaciones detenidas o sin avance.",
   },
 };
+
+// --- Campos tomados del consolidado de convenios (Excel V4) ---
+export const AGREEMENT_TYPES = ["Convenio Marco", "Proyecto"] as const;
+export const PARTNER_TYPES = ["ALIADO ESTRATEGICO", "ALIADO", "No especificado"] as const;
+export const MISSION_FUNCTIONS = [
+  "FORMACIÓN",
+  "INVESTIGACIÓN",
+  "PROYECCIÓN",
+  "TODOS LOS ANTERIORES",
+  "No especificado",
+] as const;
+export const UAM_DEPENDENCIES = [
+  "Dirección de Alianzas",
+  "Mercadeo Institucional",
+  "Educación Continuada (Econti)",
+  "Proyectos",
+  "Unidad de Graduados",
+  "Investigación",
+  "Relaciones Internacionales",
+  "Decanatura de Salud",
+  "Decanatura de Ingeniería",
+  "Decanatura de Estudios Sociales y Empresariales",
+  "No especificado",
+] as const;
