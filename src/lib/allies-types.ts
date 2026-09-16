@@ -76,6 +76,22 @@ export const AREAS_BY_DIRECTION: Record<AllyDirection, { active: FollowupArea[];
     active: ["direccion", "econti", "mercadeo", "graduados", "proyectos"],
     inactive: ["general"],
   },
+  alianzas_mercadeo: {
+    active: ["mercadeo", "direccion", "general"],
+    inactive: ["general"],
+  },
+  alianzas_econti: {
+    active: ["econti", "direccion", "general"],
+    inactive: ["general"],
+  },
+  alianzas_proyectos: {
+    active: ["proyectos", "direccion", "general"],
+    inactive: ["general"],
+  },
+  alianzas_graduados: {
+    active: ["graduados", "direccion", "general"],
+    inactive: ["general"],
+  },
   investigacion: {
     active: ["investigacion", "innovacion", "emprendimiento", "general"],
     inactive: ["general"],
@@ -88,11 +104,31 @@ export const AREAS_BY_DIRECTION: Record<AllyDirection, { active: FollowupArea[];
     active: ["direccion", "econti", "mercadeo", "graduados", "proyectos"],
     inactive: ["general"],
   },
+  decanatura_salud: {
+    active: ["direccion", "proyectos", "investigacion", "general"],
+    inactive: ["general"],
+  },
+  decanatura_ingenierias: {
+    active: ["direccion", "proyectos", "investigacion", "general"],
+    inactive: ["general"],
+  },
+  decanatura_sociales: {
+    active: ["direccion", "proyectos", "investigacion", "general"],
+    inactive: ["general"],
+  },
   proyeccion: {
     active: ["direccion", "econti", "mercadeo", "graduados", "proyectos"],
     inactive: ["general"],
   },
 };
+
+/** Facultad asociada a cada pestaña de Decanaturas. */
+export const DIRECTION_FACULTAD: Partial<Record<AllyDirection, string>> = {
+  decanatura_salud: "Facultad de Salud",
+  decanatura_ingenierias: "Facultad de Ingenierías",
+  decanatura_sociales: "Facultad de Estudios Sociales y Empresariales",
+};
+
 
 // Facultades de la Universidad Autónoma de Manizales.
 export const FACULTADES_UAM = [
