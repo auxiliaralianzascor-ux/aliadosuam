@@ -3,20 +3,61 @@ export type AllyCategory = "latente" | "emergente" | "estrategico" | "activo";
 export type TrafficLight = "green" | "yellow" | "red";
 export type AllyDirection =
   | "alianzas"
+  | "alianzas_mercadeo"
+  | "alianzas_econti"
+  | "alianzas_proyectos"
+  | "alianzas_graduados"
   | "investigacion"
   | "relaciones_internacionales"
   | "decanaturas"
+  | "decanatura_salud"
+  | "decanatura_ingenierias"
+  | "decanatura_sociales"
   | "proyeccion";
 
 export const DIRECTION_LABEL: Record<AllyDirection, string> = {
   alianzas: "Alianzas y Relaciones Corporativas",
+  alianzas_mercadeo: "Mercadeo Institucional",
+  alianzas_econti: "Educación Continuada (Econti)",
+  alianzas_proyectos: "Proyectos",
+  alianzas_graduados: "Unidad de Graduados",
   investigacion: "Investigación, Innovación y Emprendimiento",
   relaciones_internacionales: "Relaciones Internacionales",
   decanaturas: "Decanaturas",
+  decanatura_salud: "Facultad de Salud",
+  decanatura_ingenierias: "Facultad de Ingenierías",
+  decanatura_sociales: "Facultad de Estudios Sociales y Empresariales",
   proyeccion: "Proyección",
 };
 
 export const DIRECTIONS: AllyDirection[] = Object.keys(DIRECTION_LABEL) as AllyDirection[];
+
+/** Dependencias que dependen de la Dirección de Alianzas y Relaciones Corporativas. */
+export const ALIANZAS_DEPENDENCIES: AllyDirection[] = [
+  "alianzas_mercadeo",
+  "alianzas_econti",
+  "alianzas_proyectos",
+  "alianzas_graduados",
+];
+
+/** Facultades que dependen de Decanaturas. */
+export const DECANATURA_DIRECTIONS: AllyDirection[] = [
+  "decanatura_salud",
+  "decanatura_ingenierias",
+  "decanatura_sociales",
+];
+
+/** Grupo de Alianzas: la dirección y sus dependencias comparten reglas (descuentos, creación). */
+export const ALIANZAS_GROUP: AllyDirection[] = ["alianzas", ...ALIANZAS_DEPENDENCIES];
+
+export function isAlianzasGroup(direction: AllyDirection) {
+  return ALIANZAS_GROUP.includes(direction);
+}
+
+export function isDecanaturaDirection(direction: AllyDirection) {
+  return direction === "decanaturas" || DECANATURA_DIRECTIONS.includes(direction);
+}
+
 
 export type FollowupArea =
   | "direccion"
