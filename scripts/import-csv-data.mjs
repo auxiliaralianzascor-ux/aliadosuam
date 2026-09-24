@@ -56,18 +56,84 @@ function quoteIdentifier(identifier) {
   return `"${identifier}"`;
 }
 
-function normalizeValue(column, value) {
+function parseJsonValue(value, column) {
+  let candidate = value.trim();
+
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const isArray = candidate.startsWith("[") && candidate.endsWith("]");
+    const isObject = candidate.startsWith("{") && candidate.endsWith("}");
+
+    if (isArray || isObject) {
+      try {
+        return JSON.parse(candidate);
+      } catch {
+        // Continue below and remove an extra level of escaping.
+      }
+    }
+
+    if (candidate.length >= 2 && candidate.startsWith('"') && candidate.endsWith('"')) {
+      const inner = candidate.slice(1, -1);
+      try {
+        const parsed = JSON.parse(candidate);
+        if (typeof parsed !== "string") return parsed;
+        candidate = parsed.trim();
+        continue;
+      } catch {
+        candidate = inner;
+      }
+    }
+
+    // CSV exports can contain JSON escaped once or more than once.
+    const unescaped = candidate
+      .replaceAll("\\\\", "\\")
+      .replaceAll('\\"', '"')
+      .trim();
+
+    if (unescaped === candidate) break;
+    candidate = unescaped;
+  }
+
+  try {
+    return JSON.parse(candidate);
+  } catch (error) {
+    throw new Error(`El valor JSON de ${column} no es válido: ${value}`, { cause: error });
+  }
+}
+
+function normalizeValue(column, value, columnTypes) {
   if (value === "") return null;
   if (["created_by", "responsible_id"].includes(column)) return null;
+
+  const columnType = columnTypes.get(column);
+  if (columnType?.isArray) {
+    const parsed = parseJsonValue(value, column);
+    if (!Array.isArray(parsed)) {
+      throw new Error(`El valor de ${column} debe ser un array JSON: ${value}`);
+    }
+    return parsed;
+  }
+
+  if (columnType?.isJson) {
+    return parseJsonValue(value, column);
+  }
+
   return value;
 }
 
 async function getTableColumns(client, table) {
   const result = await client.query(
-    `select column_name from information_schema.columns where table_schema = 'public' and table_name = $1 order by ordinal_position`,
+    `select column_name, data_type, udt_name
+       from information_schema.columns
+      where table_schema = 'public' and table_name = $1
+      order by ordinal_position`,
     [table],
   );
-  return new Set(result.rows.map((row) => row.column_name));
+  return new Map(
+    result.rows.map((row) => [row.column_name, {
+      isArray: row.data_type === "ARRAY",
+      isJson: row.data_type === "json" || row.data_type === "jsonb",
+    }]),
+  );
 }
 
 async function importTable(client, table, filename) {
@@ -89,7 +155,9 @@ async function importTable(client, table, filename) {
   let imported = 0;
 
   for (const sourceRow of parsed.slice(1)) {
-    const values = positions.map((position, index) => normalizeValue(columns[index], sourceRow[position] ?? ""));
+    const values = positions.map((position, index) =>
+      normalizeValue(columns[index], sourceRow[position] ?? "", tableColumns),
+    );
     const placeholders = values.map((_, index) => `$${index + 1}`).join(", ");
     await client.query(
       `insert into public.${quoteIdentifier(table)} (${columnSql}) values (${placeholders}) on conflict do nothing`,

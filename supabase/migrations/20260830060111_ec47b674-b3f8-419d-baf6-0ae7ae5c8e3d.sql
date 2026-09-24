@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS public.strategic_indicators (
 GRANT SELECT ON public.strategic_indicators TO authenticated;
 GRANT ALL ON public.strategic_indicators TO service_role;
 ALTER TABLE public.strategic_indicators ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "strategic_indicators_select_any_role" ON public.strategic_indicators;
+DROP POLICY IF EXISTS "strategic_indicators_admin_manage" ON public.strategic_indicators;
 CREATE POLICY "strategic_indicators_select_any_role" ON public.strategic_indicators
   FOR SELECT TO authenticated
   USING (true);
@@ -44,6 +46,8 @@ CREATE TABLE IF NOT EXISTS public.strategic_indicator_yearly_targets (
 GRANT SELECT ON public.strategic_indicator_yearly_targets TO authenticated;
 GRANT ALL ON public.strategic_indicator_yearly_targets TO service_role;
 ALTER TABLE public.strategic_indicator_yearly_targets ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "yearly_targets_select_any_role" ON public.strategic_indicator_yearly_targets;
+DROP POLICY IF EXISTS "yearly_targets_admin_manage" ON public.strategic_indicator_yearly_targets;
 CREATE POLICY "yearly_targets_select_any_role" ON public.strategic_indicator_yearly_targets
   FOR SELECT TO authenticated 
   USING (true);
@@ -81,6 +85,11 @@ CREATE TABLE IF NOT EXISTS public.ally_indicator_contributions (
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.ally_indicator_contributions TO authenticated;
 GRANT ALL ON public.ally_indicator_contributions TO service_role;
 ALTER TABLE public.ally_indicator_contributions ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "contributions_select_scoped" ON public.ally_indicator_contributions;
+DROP POLICY IF EXISTS "contributions_write_scoped" ON public.ally_indicator_contributions;
+DROP POLICY IF EXISTS "contributions_update_scoped" ON public.ally_indicator_contributions;
+DROP POLICY IF EXISTS "contributions_delete_admin" ON public.ally_indicator_contributions;
 
 CREATE INDEX IF NOT EXISTS ally_indicator_contributions_ally_idx ON public.ally_indicator_contributions(ally_id);
 CREATE INDEX IF NOT EXISTS ally_indicator_contributions_key_idx ON public.ally_indicator_contributions(indicator_key);
@@ -122,6 +131,7 @@ CREATE POLICY "contributions_delete_admin" ON public.ally_indicator_contribution
   FOR DELETE TO authenticated
   USING (public.has_role(auth.uid(), 'admin'::public.app_role));
 
+DROP TRIGGER IF EXISTS trg_contributions_updated ON public.ally_indicator_contributions;
 CREATE TRIGGER trg_contributions_updated BEFORE UPDATE ON public.ally_indicator_contributions
 FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 

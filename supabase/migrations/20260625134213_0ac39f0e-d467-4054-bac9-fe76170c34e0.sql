@@ -80,6 +80,7 @@ CREATE POLICY "allies_update_admin" ON public.allies
   USING (public.has_role(auth.uid(), 'admin'))
   WITH CHECK (public.has_role(auth.uid(), 'admin'));
 
+DROP POLICY IF EXISTS "allies_delete_admin" ON public.allies;
 CREATE POLICY "allies_delete_admin" ON public.allies
   FOR DELETE TO authenticated
   USING (public.has_role(auth.uid(), 'admin'));

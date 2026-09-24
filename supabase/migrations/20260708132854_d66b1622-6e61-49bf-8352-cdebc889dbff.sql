@@ -57,6 +57,7 @@ CREATE POLICY allies_update_direction ON public.allies
   );
 
 -- Broaden SELECT to include users assigned to that direction
+DROP POLICY IF EXISTS allies_select_scoped ON public.allies;
 CREATE POLICY allies_select_scoped ON public.allies
   FOR SELECT TO authenticated
   USING (
