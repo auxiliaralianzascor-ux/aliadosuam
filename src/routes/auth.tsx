@@ -1,7 +1,6 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -35,27 +34,18 @@ function AuthPage() {
 
   const signInGoogle = async () => {
     setLoading(true);
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth`,
+      },
     });
-    if (result.error) {
+    if (error || !data.url) {
       setLoading(false);
       toast.error("No fue posible iniciar sesión con Google");
       return;
     }
-    if (result.redirected) return;
-
-    const { data: userData } = await supabase.auth.getUser();
-    const email = userData.user?.email;
-    if (!isAllowedAutonomaEmail(email)) {
-      await supabase.auth.signOut();
-      setLoading(false);
-      toast.error("Solo se permite acceso con Google desde @autonoma.edu.co");
-      navigate({ to: "/auth", replace: true });
-      return;
-    }
-
-    navigate({ to: "/alianzas/aliados", replace: true });
+    window.location.assign(data.url);
   };
 
   return (
