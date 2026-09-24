@@ -9,6 +9,8 @@ import campusBg from "@/assets/campus-bg.webp";
 import accreditationLogo from "@/assets/uam_acreditacion25_vertical_COLOR.jpg";
 import { isAllowedAutonomaEmail } from "@/lib/permissions-api";
 
+const PRODUCTION_AUTH_REDIRECT = "https://aliadosuam.netlify.app/auth";
+
 export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({ meta: [{ title: "Acceso · UAM Aliados" }] }),
@@ -37,7 +39,7 @@ function AuthPage() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth`,
+        redirectTo: PRODUCTION_AUTH_REDIRECT,
       },
     });
     if (error || !data.url) {
